@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+
+  # frontend:
+  #   build: ./app/frontend
+
+  backend:
+    build: ./app/backend
+    ports:
+      - "8080:8000"
+    env_file:
+      - .env
+    environment:
+      - PORT=8000
+    depends_on:
+      - db
+
+  db:
+    image: mysql
+    volumes:
+      - type: volume
+        source: mysql_data
+        target: /var/lib/mysql
+    expose:
+      - "3306"
+    env_file:
+      - .env
+
+
+volumes:
+  mysql_data:
