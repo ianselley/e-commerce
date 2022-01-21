@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-alpine3.10
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9-slim
 
 RUN mkdir app
 WORKDIR /app
