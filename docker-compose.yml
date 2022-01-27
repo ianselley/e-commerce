@@ -7,9 +7,6 @@ services:
 
   backend:
     build: ./app/backend
-    volumes:
-      # only needed in development, to reload fastapi
-      - ./app/backend:/app
     links:
       - db
     ports:
