@@ -1,8 +1,6 @@
 from pydantic import BaseModel
 import datetime
 
-from db.schemas.item import ItemReturn, BuyerReturn
-
 
 class OrderBase(BaseModel):
     buyer_id: int
@@ -20,6 +18,10 @@ class OrderReturn(OrderBase):
 
     class Config:
         orm_mode = True
+
+
+from src.schemas.item import ItemReturn
+from src.schemas.user import BuyerReturn
 
 
 class Order(OrderReturn):

@@ -1,10 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
 
-from db.schemas.user import BuyerReturn, SellerReturn
-from db.schemas.item import ItemReturn
-from db.schemas.order import OrderReturn
-
 
 class ItemBase(BaseModel):
     title: str
@@ -24,6 +20,11 @@ class ItemReturn(ItemBase):
 
     class Config:
         orm_mode = True
+
+
+from src.schemas.user import BuyerReturn, SellerReturn
+from src.schemas.order import OrderReturn
+
 
 class Item(ItemReturn):
     seller: SellerReturn

@@ -2,7 +2,8 @@ from sqlalchemy import Column, ForeignKey, Integer, Date
 from sqlalchemy.orm import relationship
 import datetime
 
-from db.database import Base
+from src.database import Base
+from .many_to_many import orders_to_items
 
 
 class Order(Base):
@@ -12,8 +13,7 @@ class Order(Base):
     date = Column(Date, default=datetime.datetime.now)
     quantity = Column(Integer, default=1)
     buyer_id = Column(Integer, ForeignKey("buyers.id"))
-    item_id = Column(Integer, ForeignKey("items.id"))
 
     buyer = relationship("Buyer", back_populates="orders")
-    item = relationship("Item", back_populates="orders")
+    items = relationship("Item", secondary=orders_to_items, back_populates="orders")
 

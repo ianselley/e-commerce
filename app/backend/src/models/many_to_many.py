@@ -1,6 +1,6 @@
 from sqlalchemy import Table, Column, ForeignKey, Integer
 
-from db.database import Base
+from src.database import Base
 
 
 buyers_to_items = Table('buyers_to_items', Base.metadata,
@@ -15,6 +15,7 @@ buyers_to_addresses = Table('buyers_to_addresses', Base.metadata,
 )
 
 
-
-
-
+orders_to_items = Table('orders_to_items', Base.metadata,
+    Column('orders_id', Integer, ForeignKey('orders.id')),
+    Column('items_id', Integer, ForeignKey('items.id')),
+)
