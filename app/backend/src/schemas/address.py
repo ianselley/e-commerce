@@ -1,8 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
 
-from db.schemas.user import BuyerReturn
-
 
 class AddressBase(BaseModel):
     street: str
@@ -25,6 +23,9 @@ class AddressReturn(AddressBase):
 
     class Config:
         orm_mode = True
+
+
+from src.schemas.user import BuyerReturn
 
 
 class Address(AddressReturn):

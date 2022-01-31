@@ -1,9 +1,5 @@
 from pydantic import BaseModel
 
-from db.schemas.address import AddressReturn
-from db.schemas.item import ItemReturn
-from db.schemas.order import OrderReturn
-
 
 class BuyerBase(BaseModel):
     name: str
@@ -13,7 +9,7 @@ class BuyerBase(BaseModel):
 
 
 class BuyerCreate(BuyerBase):
-    hashed_password: str
+    password: str
 
 
 class BuyerReturn(BuyerBase):
@@ -31,7 +27,7 @@ class SellerBase(BaseModel):
 
 
 class SellerCreate(SellerBase):
-    hashed_password: str
+    password: str
 
 
 class SellerReturn(SellerBase):
@@ -40,11 +36,18 @@ class SellerReturn(SellerBase):
     class Config:
         orm_mode = True
 
+
+from src.schemas.address import AddressReturn
+from src.schemas.item import ItemReturn
+from src.schemas.order import OrderReturn
+
+
 class Buyer(BuyerReturn):
     main_address: AddressReturn
     delivery_addresses: list[AddressReturn] = []
-    shopping_cart: list[ItemReturn] = []
+    shopping_cart: dict[ItemReturn, int] = {}
     orders: list[OrderReturn] = []
+
 
 class Seller(SellerReturn):
     items: list[ItemReturn] = []
