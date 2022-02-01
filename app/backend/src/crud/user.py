@@ -13,7 +13,7 @@ def create_seller(db: Session, seller: schemas.SellerCreate):
 
 def create_buyer(db: Session, buyer: schemas.BuyerCreate):
     buyer = models.Buyer(**buyer.dict(exclude={"password"}))
-    buyer.hashed_password = hash_password(buyer.password)
+    buyer.hashed_password = buyer.password + "fake hash"
     db.add(buyer)
     db.commit()
     db.refresh(buyer)
