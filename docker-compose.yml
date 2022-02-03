@@ -2,23 +2,29 @@ version: "3.8"
 
 services:
 
-  # frontend:
-  #   build: ./app/frontend
+  frontend:
+    build: ./app/frontend
+    volumes:
+      - './app/frontend:/app'
+      - '/app/node_modules'
+    ports:
+      - 8001:8080
 
   backend:
     build: ./app/backend
+    # Only needed in development, to reload fastapi
     volumes:
-      # only needed in development, to reload fastapi
       - ./app/backend:/app
     links:
       - db
     ports:
-      - "8080:8000"
+      - "3000:3030"
     env_file:
       - .env
     depends_on:
       db:
         condition: service_healthy
+    # Only needed in development, to reload fastapi
     command: /start-reload.sh
 
   db:

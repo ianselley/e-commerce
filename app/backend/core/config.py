@@ -10,13 +10,12 @@ BACKEND = {
 }
 
 DATABASE = {
-    "MYSQL_HOST": os.getenv("DB_HOST"),
-    "MYSQL_PORT": os.getenv("DB_PORT"),
-    "MYSQL_USER": os.getenv("DB_USER"),
-    "MYSQL_PASSWORD": os.getenv("DB_PASSWORD"),
-    "MYSQL_ROOT_PASSWORD": os.getenv("DB_ROOT_PASSWORD"),
-    "MYSQL_DATABASE": os.getenv("DB_DATABASE"),
-
+    "MYSQL_HOST": os.getenv("MYSQL_HOST"),
+    "MYSQL_PORT": os.getenv("MYSQL_PORT"),
+    "MYSQL_USER": os.getenv("MYSQL_USER"),
+    "MYSQL_PASSWORD": os.getenv("MYSQL_PASSWORD"),
+    "MYSQL_ROOT_PASSWORD": os.getenv("MYSQL_ROOT_PASSWORD"),
+    "MYSQL_DATABASE": os.getenv("MYSQL_DATABASE"),
 }
 
 AUTH0 = {
