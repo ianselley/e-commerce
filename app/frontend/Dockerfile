@@ -1,2 +1,14 @@
-FROM node-alpine
+FROM node:lts-alpine
 
+RUN mkdir app
+WORKDIR /app
+
+ENV PATH /app/node_modules/.bin:$PATH
+
+RUN npm install @vue/cli@4.5.15 -g
+
+COPY package.json .
+COPY package-lock.json .
+RUN npm install
+
+CMD ["npm", "run", "serve"]
