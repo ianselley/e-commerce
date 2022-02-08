@@ -7,7 +7,7 @@ from src.utils import utils
 router = APIRouter()
 
 
-@router.get("/buyers/", response_model=list[schemas.Buyer])
+@router.get("/buyer", response_model=schemas.Buyer)
 def read_buyer(buyer_id: int, db: Session = Depends(utils.get_db)):
     buyer = crud.user.get_buyer(db=db, buyer_id=buyer_id)
     return buyer

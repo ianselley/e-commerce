@@ -6,7 +6,7 @@ services:
     build: ./app/frontend
     volumes:
       - './app/frontend:/app'
-      - '/app/node_modules'
+      - '/app/frontend/node_modules'
     ports:
       - 8001:8080
 
@@ -28,7 +28,7 @@ services:
     command: /start-reload.sh
 
   db:
-    image: mysql
+    build: ./app/db
     volumes:
       - type: volume
         source: db_data
@@ -38,10 +38,10 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      test: [ "CMD", "/root/waitForMySQL.sh" ]
       interval: 5s
-      timeout: 30s
-      retries: 5
+      timeout: 60s
+      retries: 15
       start_period: 20s
 
 volumes:

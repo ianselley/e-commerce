@@ -33,6 +33,9 @@ def private_endpoint(response: Response, token: str = Depends(token_auth_scheme)
 
     return result
 
+@app.get("/")
+def root():
+    return {"message": "Hello World"}
 
 # @app.post("/buyers/", response_model=schema.Buyer)
 # def create_buyer(buyer: schema.BuyerCreate, db: Session = Depends(get_db)):
