@@ -1,7 +1,7 @@
 import jwt
 from src.database import SessionLocal
 
-from core.config import AUTH0
+import os
 
 
 def get_db():
@@ -12,43 +12,27 @@ def get_db():
         db.close()
 
 
-class MyError(Exception):
-    def __init__(self, message):
-        self.message = message
-
-
 class VerifyToken():
     def __init__(self, token):
         self.token = token
-        self.config = AUTH0
-        jwks_url = f'https://{self.config["DOMAIN"]}/.well-known/jwks.json'
+        jwks_url = f'https://{os.getenv("AUTH0_DOMAIN")}/.well-known/jwks.json'
         self.jwks_client = jwt.PyJWKClient(jwks_url)
 
 
     def get_signing_key(self):
-        try:
-            signing_key = self.jwks_client.get_signing_key_from_jwt(
-                self.token
-            ).key
-        except jwt.exceptions.PyJWKClientError as e:
-            raise MyError(e)
-        except jwt.exceptions.DecodeError as e:
-            raise MyError(e)
+        signing_key = self.jwks_client.get_signing_key_from_jwt(self.token).key
 
         return signing_key
 
 
     def get_payload(self):
-        try:
-            payload = jwt.decode(
-                self.token,
-                self.signing_key,
-                algorithms=self.config["ALGORITHMS"],
-                audience=self.config["API_AUDIENCE"],
-                issuer=self.config["ISSUER"],
-            )
-        except Exception as e:
-            raise MyError(e)
+        payload = jwt.decode(
+            self.token,
+            self.signing_key,
+            algorithms=os.getenv("AUTH0_ALGORITHMS"),
+            audience=os.getenv("AUTH0_AUDIENCE"),
+            issuer=os.getenv("AUTH0_ISSUER"),
+        )
 
         return payload
 

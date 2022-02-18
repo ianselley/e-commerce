@@ -2,7 +2,22 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Text, VARCHAR
 from sqlalchemy.orm import relationship
 
 from src.database import Base
-from .many_to_many import buyers_to_items, buyers_to_addresses
+from .many_to_many import buyers_to_items
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+    email = Column(VARCHAR(128), nullable=False, unique=True)
+    hashed_password = Column(Text, nullable=False)
+    telephone = Column(String(64), nullable=False)
+    role = Column(String(64), nullable=False)
+    buyer_id = Column(Integer, ForeignKey('buyers.id'))
+    seller_id = Column(Integer, ForeignKey('sellers.id'))
+
+    buyer = relationship("Buyer", back_populates="user")
+    seller = relationship("Seller", back_populates="user")
 
 
 class Buyer(Base):
@@ -10,15 +25,13 @@ class Buyer(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
-    email = Column(VARCHAR(128), unique=True, nullable=False)
-    hashed_password = Column(Text, nullable=False)
-    telefone = Column(String(64), nullable=False)
-    main_address_id = Column(Integer, ForeignKey("addresses.id"), nullable=False)
+    main_address_id = Column(Integer, ForeignKey("addresses.id"))
 
-    main_address = relationship("Address", back_populates="buyers_main")
-    delivery_addresses = relationship("Address", secondary=buyers_to_addresses, back_populates="buyers_deliveries")
-    shopping_cart = relationship("Item", secondary=buyers_to_items, back_populates="buyers")
+    user = relationship("User", back_populates="buyer")
     orders = relationship("Order", back_populates="buyer")
+    main_address = relationship("Address", backref="buyers")
+    # delivery_addresses = relationship("Address", secondary=buyers_to_addresses, back_populates="buyers_deliveries")
+    shopping_cart = relationship("Item", secondary=buyers_to_items, back_populates="buyers")
 
 
 class Seller(Base):
@@ -26,10 +39,8 @@ class Seller(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
-    email = Column(VARCHAR(128), unique=True, nullable=False)
-    hashed_password = Column(Text, nullable=False)
-    telefone = Column(String(64), nullable=False)
     brand = Column(String(64), nullable=False)
-    items_sold = Column(Integer, default=0)
+    number_of_items_sold = Column(Integer, default=0)
 
+    user = relationship("User", back_populates="seller")
     items = relationship("Item", back_populates="seller")

@@ -15,13 +15,14 @@ export default {
       extra: 'Default extra data',
     };
   },
+
   methods: {
     getMessage() {
       this.axios
         .get('/')
         .then((response) => {
           this.message = response.data;
-          this.extra = JSON.stringify(response.data);
+          this.extra = 'Theese are the environment variables: ' + JSON.stringify(process.env);
         })
         .catch((error) => {
           this.message = error;
@@ -29,6 +30,7 @@ export default {
         });
     },
   },
+
   created() {
     this.getMessage();
     this.message = 'Second message';

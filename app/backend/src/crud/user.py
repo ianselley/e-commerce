@@ -1,23 +1,31 @@
 from sqlalchemy.orm import Session
+import bcrypt
 
 from src import models, schemas
 
 
-def create_seller(db: Session, seller: schemas.SellerCreate):
-    seller = models.Seller(**seller.dict())
-    db.add(seller)
+def create_user(db: Session, user: schemas.UserCreate):
+    password_bytes = user.password.encode()
+    user = models.User(**user.dict(exclude={'password'}))
+    user.hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
+    db.add(user)
     db.commit()
-    db.refresh(seller)
-    return seller
+    db.refresh(user)
+    return user
 
 
 def create_buyer(db: Session, buyer: schemas.BuyerCreate):
-    buyer = models.Buyer(**buyer.dict(exclude={"password"}))
-    buyer.hashed_password = buyer.password + "fake hash"
+    hashed_password = buyer.password + "fake hash"
+    buyer = models.Buyer(**buyer.dict(exclude={'password'}, exclude_unset=True))
+    buyer.hashed_password = hashed_password
     db.add(buyer)
     db.commit()
     db.refresh(buyer)
     return buyer
+
+
+def get_user(db: Session, user_id: str):
+    return db.query(models.User).filter_by(id=user_id).first()
 
 
 def get_seller(db: Session, seller_id: int):
@@ -26,6 +34,14 @@ def get_seller(db: Session, seller_id: int):
 
 def get_buyer(db: Session, buyer_id: int):
     return db.query(models.Buyer).filter_by(id=buyer_id).first()
+
+
+def get_user_by_email(db: Session, user_email: str):
+    return db.query(models.User).filter_by(email=user_email).first()
+
+
+def get_buyer_by_email(db: Session, buyer_email: str):
+    return db.query(models.Buyer).filter_by(email=buyer_email).first()
 
 
 def get_seller_by_email(db: Session, seller_email: str):

@@ -5,10 +5,21 @@ services:
   frontend:
     build: ./app/frontend
     volumes:
-      - './app/frontend:/app'
-      - '/app/frontend/node_modules'
+      - ./app/frontend:/app
+      - node_modules:/app/node_modules
     ports:
       - 8001:8080
+    env_file:
+      - .env
+    environment:
+      - AUTH0_CLIENT_ORIGIN_URL=$AUTH0_CLIENT_ORIGIN_URL
+      - AUTH0_AUDIENCE=$AUTH0_AUDIENCE
+      - AUTH0_DOMAIN=$AUTH0_DOMAIN
+      - AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
+      - AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET
+      - AUTH0_CALLBACK_URL=$AUTH0_CALLBACK_URL
+      - AUTH0_ISSUER=$AUTH0_ISSUER
+      - AUTH0_ALGORITHMS=$AUTH0_ALGORITHMS
 
   backend:
     build: ./app/backend
@@ -18,9 +29,11 @@ services:
     links:
       - db
     ports:
-      - "3000:3030"
+      - "3001:3030"
     env_file:
       - .env
+    environment:
+      - PORT=3030
     depends_on:
       db:
         condition: service_healthy
@@ -33,12 +46,12 @@ services:
       - type: volume
         source: db_data
         target: /var/lib/mysql
-    expose:
-      - "3306"
     env_file:
       - .env
+    ports:
+      - "3306:3306"
     healthcheck:
-      test: [ "CMD", "/root/waitForMySQL.sh" ]
+      test: [ "CMD", "/usr/local/bin/waitForMySQL.sh" ]
       interval: 5s
       timeout: 60s
       retries: 15
@@ -46,3 +59,4 @@ services:
 
 volumes:
   db_data:
+  node_modules:

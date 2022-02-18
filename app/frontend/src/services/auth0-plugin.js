@@ -1,11 +1,13 @@
 import createAuth0Client from '@auth0/auth0-spa-js';
 import { inject, provide, ref } from 'vue';
-import router from '../router';
 
-const domain = process.env.VUE_APP_AUTH0_DOMAIN;
-const clientId = process.env.VUE_APP_AUTH0_CLIENT_ID;
-const audience = process.env.VUE_APP_AUTH0_AUDIENCE;
-const callbackUrl = process.env.VUE_APP_AUTH0_CALLBACK_URL;
+import router from '../router';
+import Config from '../config.json';
+
+const domain = Config.VUE_APP_AUTH0_DOMAIN;
+const clientId = Config.VUE_APP_AUTH0_CLIENT_ID;
+const audience = Config.VUE_APP_AUTH0_AUDIENCE;
+const callbackUrl = Config.VUE_APP_AUTH0_CALLBACK_URL;
 
 const auth0Client = ref(null);
 export const isAuthenticated = ref(false);
