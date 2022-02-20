@@ -2,7 +2,8 @@
   <div id="nav">
     <IanSelleyLogo />
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/about">About</router-link> |
+    <router-link to="/auth-test">Test Authentication</router-link>
   </div>
   <router-view />
 </template>

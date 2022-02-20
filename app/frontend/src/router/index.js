@@ -11,11 +11,6 @@ const routes = [
     name: 'About',
     component: () => import('../views/About.vue'),
   },
-  {
-    path: '/callback',
-    name: 'Callback',
-    component: () => import('../components/Callback.vue'),
-  },
 ];
 
 const router = createRouter({
