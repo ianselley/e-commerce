@@ -1,14 +1,10 @@
 FROM node:lts-alpine
 
-RUN mkdir app
 WORKDIR /app
 
-ENV PATH /app/node_modules/.bin:$PATH
-
-RUN npm install @vue/cli@4.5.15 -g
-
 COPY package.json .
-COPY package-lock.json .
 RUN npm install
+COPY . .
+RUN touch vite.config.js
 
-CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "dev"]

@@ -13,7 +13,7 @@
               v-model="values.role"
               checked
             />
-            <label for="buyer">Buyer</label>
+            <label for="buyer" class="text-3xl">Buyer</label>
 
             <input
               id="seller"
