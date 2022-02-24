@@ -29,8 +29,8 @@ class Buyer(Base):
 
     user = relationship("User", back_populates="buyer")
     orders = relationship("Order", back_populates="buyer")
-    main_address = relationship("Address", backref="buyers")
-    delivery_addresses = relationship("Address", backref="buyers_addresses")
+    main_address = relationship("Address", back_populates="buyer")
+    delivery_addresses = relationship("Address", overlaps="buyer,main_address", back_populates="buyer_addresses")
     shopping_cart = relationship("Item", secondary=buyers_and_items, back_populates="buyers")
 
 

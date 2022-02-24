@@ -5,7 +5,7 @@ import { BASE_URL } from '@/config.json';
 class AuthService {
   async login(user) {
     const response = await axios.post(BASE_URL + '/user/login', {
-      username: user.username,
+      email: user.email,
       password: user.password,
     });
     if (response.data.accessToken) {
@@ -19,11 +19,7 @@ class AuthService {
   }
 
   register(user) {
-    return axios.post(BASE_URL + '/user/signup/test', {
-      email: user.email,
-      password: user.password,
-      username: user.username,
-    });
+    return axios.post(BASE_URL + '/user/signup', user);
   }
 }
 

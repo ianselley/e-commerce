@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from src import schemas, crud
 from src.utils import utils
 
-router = APIRouter()
 
+router = APIRouter()
 
 @router.post("/signup")
 def signup(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
@@ -14,7 +14,7 @@ def signup(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered",
         )
-    return {"message": "Signup"}
+    return {"message": "Signed up successfully"}
 
 
 @router.post("/login")
@@ -24,7 +24,7 @@ def login(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email not registered",
         )
-    return {"message": "Login"}
+    return {"message": "Logged in successfully"}
 
 
 @router.post("", response_model=schemas.User)

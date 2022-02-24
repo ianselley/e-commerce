@@ -2,21 +2,40 @@
   <div>
     <div>
       <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
-      <Form @submit="handleRegister" :validation-schema="registerSchema">
+      <form @submit="handleRegister" :validation-schema="registerSchema" onsubmit="return false;">
         <div v-if="!successful">
           <div>
-            <label for="username">Username</label>
             <input
-              id="username"
-              name="username"
-              v-model="values.username"
+              id="buyer"
+              name="role"
+              type="radio"
+              value="buyer"
+              v-model="values.role"
+              checked
+            />
+            <label for="buyer">Buyer</label>
+
+            <input
+              id="seller"
+              name="role"
+              type="radio"
+              value="seller"
+              v-model="values.role"
+            />
+            <label for="seller">Seller</label>
+          </div>
+          <div>
+            <label for="telephone">Telephone</label>
+            <input
+              id="telephone"
+              name="telephone"
+              v-model="values.telephone"
               type="text"
-              @blur="validate('username')"
-              @keyup="validate('username')"
-              :onkeydown="disableEnterKey"
+              @blur="validate('telephone')"
+              @keyup="validate('telephone')"
               autofocus
             />
-            <span>{{ errors.username }}</span>
+            <span>{{ errors.telephone }}</span>
           </div>
           <div>
             <label for="email">Email</label>
@@ -27,7 +46,6 @@
               type="text"
               @blur="validate('email')"
               @keyup="validate('email')"
-              :onkeydown="disableEnterKey"
             />
             <span>{{ errors.email }}</span>
           </div>
@@ -41,7 +59,6 @@
               @blur="validate('password')"
               @keyup="validate('password')"
               autocomplete="on"
-              :onkeydown="disableEnterKey"
             />
             <span>{{ errors.password }}</span>
           </div>
@@ -65,51 +82,47 @@
             </button>
           </div>
         </div>
-      </Form>
-      <div
-        v-if="message"
-        :class="successful ? 'alert-success' : 'alert-danger'"
-      >
-        {{ message }}
-      </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
 import * as yup from 'yup';
-import { Form } from 'vee-validate';
 export default {
   name: 'Register',
   data() {
+    const telphoneRegExp =
+      /(\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$)|^$/;
     const registerSchema = yup.object({
-      username: yup
+      telephone: yup
         .string()
-        .required('Username is required!')
-        .max(32, 'Must be maximum 32 characters!'),
+        .optional()
+        .matches(telphoneRegExp, 'Thelphone number is invalid'),
       email: yup
         .string()
-        .required('Email is required!')
-        .email('Email is invalid!')
-        .max(64, 'Must be maximum 64 characters!'),
+        .required('Email is required')
+        .email('Email is invalid')
+        .max(64, 'Must be maximum 64 characters'),
       password: yup
         .string()
-        .required('Password is required!')
-        .min(8, 'Must be at least 8 characters!')
-        .max(64, 'Must be maximum 64 characters!'),
+        .required('Password is required')
+        .min(8, 'Must be at least 8 characters')
+        .max(64, 'Must be maximum 64 characters'),
       repeatPassword: yup
         .string()
-        .required('Repeat password is required!')
-        .oneOf([yup.ref('password'), null], 'Passwords must match!'),
+        .required('Repeat password is required')
+        .oneOf([yup.ref('password'), null], 'Passwords must match'),
     });
     const values = {
-      username: '',
+      telephone: '',
       email: '',
       password: '',
       repeatPassword: '',
+      role: '',
     };
     const errors = {
-      username: '',
+      telephone: '',
       email: '',
       password: '',
       repeatPassword: '',
@@ -134,11 +147,6 @@ export default {
     }
   },
   methods: {
-    disableEnterKey(event) {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-      }
-    },
     validate(field) {
       this.registerSchema
         .validateAt(field, this.values)
@@ -151,9 +159,10 @@ export default {
     },
     async handleRegister() {
       const user = {
-        username: this.values.username,
+        telephone: this.values.telephone,
         email: this.values.email,
         password: this.values.password,
+        role: this.values.role,
       };
       try {
         await this.registerSchema.validate(this.values, { abortEarly: false });
@@ -178,6 +187,7 @@ export default {
             this.loading = false;
           }
         );
+        this.$store.dispatch('auth/login', user)
       } catch (err) {
         err.inner.forEach((error) => {
           this.errors[error.path] = error.message;
@@ -188,4 +198,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
