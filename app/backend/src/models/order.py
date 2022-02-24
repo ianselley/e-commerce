@@ -1,9 +1,9 @@
-from sqlalchemy import Column, ForeignKey, Integer, Date
+from sqlalchemy import Column, ForeignKey, Integer, Date, Boolean
 from sqlalchemy.orm import relationship
 import datetime
 
 from src.database import Base
-from .many_to_many import orders_to_items
+from .many_to_many import orders_and_items
 
 
 '''
@@ -31,9 +31,10 @@ class Order(Base):
 
     id = Column(Integer, primary_key=True)
     date = Column(Date, default=datetime.datetime.now)
+    delivered = Column(Boolean, default=False)
     quantity = Column(Integer, default=1)
     buyer_id = Column(Integer, ForeignKey("buyers.id"))
 
     buyer = relationship("Buyer", back_populates="orders")
-    items = relationship("Item", secondary=orders_to_items, back_populates="orders")
+    items = relationship("Item", secondary=orders_and_items, back_populates="orders")
 

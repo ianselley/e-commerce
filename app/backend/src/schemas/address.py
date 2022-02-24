@@ -3,8 +3,8 @@ from pydantic import BaseModel
 
 
 class AddressBase(BaseModel):
+    name: Optional[str] = None # By default make the name the username
     street: str
-    name: Optional[str] = None
     number: Optional[str] = None
     city: str
     flat: Optional[str] = None

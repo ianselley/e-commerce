@@ -9,6 +9,7 @@
 
 <script>
 export default {
+  name: 'HelloWorld',
   data() {
     return {
       message: 'First message',
@@ -22,11 +23,9 @@ export default {
         .get('/')
         .then((response) => {
           this.message = response.data;
-          this.extra = 'Theese are the environment variables: ' + JSON.stringify(process.env);
         })
         .catch((error) => {
           this.message = error;
-          this.extra = 'environment variables: ' + JSON.stringify(process.env);
         });
     },
   },

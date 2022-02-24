@@ -2,7 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Text, VARCHAR
 from sqlalchemy.orm import relationship
 
 from src.database import Base
-from .many_to_many import buyers_to_items
+from .many_to_many import buyers_and_items
 
 
 class User(Base):
@@ -30,17 +30,17 @@ class Buyer(Base):
     user = relationship("User", back_populates="buyer")
     orders = relationship("Order", back_populates="buyer")
     main_address = relationship("Address", backref="buyers")
-    # delivery_addresses = relationship("Address", secondary=buyers_to_addresses, back_populates="buyers_deliveries")
-    shopping_cart = relationship("Item", secondary=buyers_to_items, back_populates="buyers")
+    delivery_addresses = relationship("Address", backref="buyers_addresses")
+    shopping_cart = relationship("Item", secondary=buyers_and_items, back_populates="buyers")
 
 
 class Seller(Base):
     __tablename__ = "sellers"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(64), nullable=False)
     brand = Column(String(64), nullable=False)
     number_of_items_sold = Column(Integer, default=0)
 
     user = relationship("User", back_populates="seller")
     items = relationship("Item", back_populates="seller")
+    # orders made to the seller?

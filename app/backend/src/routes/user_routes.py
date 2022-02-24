@@ -7,6 +7,26 @@ from src.utils import utils
 router = APIRouter()
 
 
+@router.post("/signup")
+def signup(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
+    if crud.user.get_user_by_email(db, user_email=user.email):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered",
+        )
+    return {"message": "Signup"}
+
+
+@router.post("/login")
+def login(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
+    if not crud.user.get_user_by_email(db, user_email=user.email):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email not registered",
+        )
+    return {"message": "Login"}
+
+
 @router.post("", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
     db_user = crud.user.get_user_by_email(db=db, user_email=user.email)

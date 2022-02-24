@@ -18,10 +18,10 @@ export default {
 <style>
 .backdrop {
   position: fixed;
-  top: 20%;
+  top: 10%;
   left: 0;
   width: 100%;
-  height: 80%;
+  height: 90%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 10;
 }
@@ -36,5 +36,9 @@ export default {
   height: 200px;
   border-radius: 5px;
   z-index: 11;
+}
+
+p {
+  padding: auto;
 }
 </style>
