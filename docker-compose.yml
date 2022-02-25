@@ -5,8 +5,8 @@ services:
   frontend:
     build: ./app/frontend
     # Only needed in development, to reload vue
-    # volumes:
-    #   - ./app/frontend:/app
+    volumes:
+      - ./app/frontend:/app
       # - ./app/frontend/node_modules:/app/node_modules
     ports:
       - 8001:8080
