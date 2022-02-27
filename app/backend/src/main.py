@@ -26,14 +26,10 @@ app.include_router(user_routes.router, prefix="/user")
 
 @app.get("/private")
 def private_endpoint(response: Response, token: str = Depends(token_auth_scheme)):
-    result = utils.VerifyToken(token.credentials).verify()
+    result = utils.decode(token)
 
     if result.get("status"):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return result
 
     return result
-
-@app.get("/")
-def root():
-    return {"message": "Hello World"}

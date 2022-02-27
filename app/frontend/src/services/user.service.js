@@ -13,8 +13,8 @@ class UserService {
   getSeller() {
     return axios.get(BASE_URL + '/seller', { headers: authHeader() });
   }
-  getAdmin() {
-    return axios.get(BASE_URL + '/admin', { headers: authHeader() });
+  getUser() {
+    return axios.get(BASE_URL + '/user', { headers: authHeader() });
   }
 }
 

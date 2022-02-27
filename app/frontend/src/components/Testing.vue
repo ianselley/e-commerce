@@ -32,12 +32,12 @@ export default {
   name: 'Testing',
   data() {
     return {
-      loggedIn: this.$store.state.auth.status.loggedIn,
+      loggedIn: this.$store.state.auth.loggedIn,
     };
   },
   computed: {
     loggedIn_computed() {
-      return this.$store.state.auth.status.loggedIn;
+      return this.$store.state.auth.loggedIn;
     },
   },
 };

@@ -2,7 +2,11 @@
   <div>
     <div>
       <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
-      <form @submit="handleRegister" :validation-schema="registerSchema" onsubmit="return false;">
+      <form
+        @submit="handleRegisterUser"
+        :validation-schema="registerSchema"
+        onsubmit="return false;"
+      >
         <div v-if="!successful">
           <div>
             <input
@@ -11,10 +15,8 @@
               type="radio"
               value="buyer"
               v-model="values.role"
-              checked
             />
             <label for="buyer">Buyer</label>
-
             <input
               id="seller"
               name="role"
@@ -30,9 +32,8 @@
               id="telephone"
               name="telephone"
               v-model="values.telephone"
+              @keyup="validateAll"
               type="text"
-              @blur="validate('telephone')"
-              @keyup="validate('telephone')"
               autofocus
             />
             <span>{{ errors.telephone }}</span>
@@ -43,9 +44,8 @@
               id="email"
               name="email"
               v-model="values.email"
+              @keyup="validateAll"
               type="text"
-              @blur="validate('email')"
-              @keyup="validate('email')"
             />
             <span>{{ errors.email }}</span>
           </div>
@@ -55,9 +55,8 @@
               id="password"
               name="password"
               v-model="values.password"
+              @keyup="validateAll"
               type="password"
-              @blur="validate('password')"
-              @keyup="validate('password')"
               autocomplete="on"
             />
             <span>{{ errors.password }}</span>
@@ -68,15 +67,14 @@
               id="repeatPassword"
               name="repeatPassword"
               v-model="values.repeatPassword"
+              @keyup="validateAll"
               type="password"
-              @blur="validate('repeatPassword')"
-              @keyup="validate('repeatPassword')"
               autocomplete="on"
             />
             <span>{{ errors.repeatPassword }}</span>
           </div>
           <div>
-            <button type="submit" :disabled="loading">
+            <button type="submit" :disabled="loading || !isValid">
               <span v-show="loading">Wait a second, it's loading</span>
               Sign Up
             </button>
@@ -90,60 +88,71 @@
 <script>
 import * as yup from 'yup';
 export default {
-  name: 'Register',
+  name: 'RegisterUser',
   data() {
     const telphoneRegExp =
       /(\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$)|^$/;
     const registerSchema = yup.object({
       telephone: yup
         .string()
-        .optional()
-        .matches(telphoneRegExp, 'Thelphone number is invalid'),
+        .matches(telphoneRegExp, 'Thelphone number is invalid')
+        .optional(),
       email: yup
         .string()
-        .required('Email is required')
+        .max(64, 'Must be maximum 64 characters')
         .email('Email is invalid')
-        .max(64, 'Must be maximum 64 characters'),
+        .required('Email is required'),
       password: yup
         .string()
-        .required('Password is required')
         .min(8, 'Must be at least 8 characters')
-        .max(64, 'Must be maximum 64 characters'),
+        .max(64, 'Must be maximum 64 characters')
+        .required('Password is required'),
       repeatPassword: yup
         .string()
-        .required('Repeat password is required')
-        .oneOf([yup.ref('password'), null], 'Passwords must match'),
+        .oneOf([yup.ref('password'), null], 'Passwords must match')
+        .required('Repeat password is required'),
     });
     const values = {
+      role: 'buyer',
       telephone: '',
       email: '',
       password: '',
       repeatPassword: '',
-      role: '',
     };
     const errors = {
       telephone: '',
-      email: '',
-      password: '',
-      repeatPassword: '',
+      email: 'Email is required',
+      password: 'Password is required',
+      repeatPassword: 'Repeat password is required',
     };
     return {
       successful: false,
       loading: false,
-      message: '',
       values,
       errors,
       registerSchema,
     };
   },
   computed: {
+    isValid() {
+      for (let [, value] of Object.entries(this.errors)) {
+        if (value !== '') {
+          return false;
+        }
+      }
+      return true;
+    },
     loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
+      return this.$store.state.auth.loggedIn;
     },
   },
   mounted() {
     if (this.loggedIn) {
       this.$router.push('/profile');
+      this.$store.commit(
+        'alert/setMessage',
+        'You are already logged in, you would have to log out to access this'
+      );
     }
   },
   methods: {
@@ -157,46 +166,48 @@ export default {
           this.errors[field] = error.message;
         });
     },
-    async handleRegister() {
-      const user = {
-        telephone: this.values.telephone,
-        email: this.values.email,
-        password: this.values.password,
-        role: this.values.role,
-      };
-      try {
-        await this.registerSchema.validate(this.values, { abortEarly: false });
-        this.errors = {};
-        this.message = '';
-        this.successful = false;
-        this.loading = true;
-        this.$store.dispatch('auth/register', user).then(
-          (data) => {
-            this.message = data.message;
-            this.successful = true;
-            this.loading = false;
-          },
-          (error) => {
-            this.message =
-              (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString();
-            this.successful = false;
-            this.loading = false;
-          }
-        );
-        this.$store.dispatch('auth/login', user)
-      } catch (err) {
-        err.inner.forEach((error) => {
-          this.errors[error.path] = error.message;
+    validateAll() {
+      this.registerSchema
+        .validate(this.values, { abortEarly: false })
+        .then(() => {
+          this.errors = {};
+        })
+        .catch((err) => {
+          this.errors = {};
+          err.inner.forEach((error) => {
+            this.errors[error.path] = error.message;
+          });
         });
-      }
+    },
+    async handleRegisterUser() {
+      const user = Object.assign({}, this.values);
+      delete user.repeatPassword;
+
+      const userLogin = Object.assign({}, user);
+      delete userLogin.telephone;
+      delete userLogin.role;
+
+      await this.validateAll();
+      this.successful = false;
+      this.loading = true;
+      if (!this.isValid) return;
+      await this.$store
+        .dispatch('auth/register', user)
+        .then(() => {
+          this.successful = true;
+          this.loading = false;
+        })
+        .catch((error) => {
+          this.$store.commit('alert/setMessage', error);
+          this.successful = false;
+          this.loading = false;
+        });
+      await this.$store.dispatch('auth/login', userLogin).then(() => {
+        // this.$router.push('/profile');
+      });
     },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

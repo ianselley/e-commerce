@@ -1,4 +1,4 @@
-from fastapi import  Depends, APIRouter, HTTPException, Response, status
+from fastapi import  Depends, APIRouter, HTTPException, status
 from sqlalchemy.orm import Session
 
 from src import schemas, crud
@@ -9,30 +9,33 @@ router = APIRouter()
 
 @router.post("/signup")
 def signup(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
-    if crud.user.get_user_by_email(db, user_email=user.email):
+    user_db = crud.user.get_user_by_email(db, user_email=user.email)
+    if user_db:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered",
         )
-    return {"message": "Signed up successfully"}
+    user_created = crud.user.create_user(db=db, user=user)
+    response = {
+        "user": user_created,
+        "accessToken": utils.encode(user_created),
+    }
+    return response 
 
 
 @router.post("/login")
-def login(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
-    if not crud.user.get_user_by_email(db, user_email=user.email):
+def login(user: schemas.UserLogin, db: Session = Depends(utils.get_db)):
+    user_db = crud.user.get_user_by_email(db, user_email=user.email)
+    if not user_db:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email not registered",
         )
-    return {"message": "Logged in successfully"}
-
-
-@router.post("", response_model=schemas.User)
-def create_user(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
-    db_user = crud.user.get_user_by_email(db=db, user_email=user.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.user.create_user(db=db, user=user)
+    response = {
+        "user": user_db,
+        "accessToken": utils.encode(user_db),
+    }
+    return response
 
 
 @router.get("", response_model=schemas.User)

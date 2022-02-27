@@ -12,14 +12,24 @@ const routes = [
     component: () => import('@/views/About.vue'),
   },
   {
-    path: '/auth',
-    name: 'Auth',
-    component: () => import('@/views/Auth.vue'),
+    path: '/signup',
+    name: 'Register',
+    component: () => import('@/views/Register.vue'),
+  },
+  {
+    path: '/login',
+    name: 'LoginView',
+    component: () => import('@/views/LoginView.vue'),
   },
   {
     path: '/profile',
     name: 'Profile',
     component: () => import('@/components/Profile.vue'),
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: () => import('@/components/Logout.vue'),
   },
   {
     path: '/test',

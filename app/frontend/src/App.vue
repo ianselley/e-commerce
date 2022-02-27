@@ -8,16 +8,19 @@
       >{{ route.name }} |</router-link
     >
   </div>
+  <Alert />
   <router-view />
 </template>
 
 <script>
 import IanSelleyLogo from '@/components/IanSelleyLogo.vue';
+import Alert from '@/components/Alert.vue';
 
 export default {
   name: 'App',
   components: {
     IanSelleyLogo,
+    Alert,
   },
 };
 </script>
