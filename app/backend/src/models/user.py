@@ -25,6 +25,7 @@ class Buyer(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
+    surname = Column(String(64))
     main_address_id = Column(Integer, ForeignKey("addresses.id"))
 
     user = relationship("User", back_populates="buyer")

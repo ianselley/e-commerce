@@ -1,8 +1,12 @@
 <template>
   <div v-if="currentUser">
+    <pre> {{ currentUser }} </pre>
     <header>
       <h3>
-        <strong>{{ currentUser.username }}</strong> Profile
+        <!-- <strong>{{
+          (currentUser.seller && currentUser.seller.brand) || currentUser.buyer && (currentUser.buyer.name + ' ' + currentUser.buyer.surname)
+        }}</strong> -->
+        Profile
       </h3>
     </header>
     <p>
@@ -11,25 +15,40 @@
     </p>
     <p>
       <strong>Id:</strong>
-      {{ currentUser.user.id }}
+      {{ currentUser.id }}
     </p>
     <p>
       <strong>Email:</strong>
-      {{ currentUser.user.email }}
+      {{ currentUser.email }}
     </p>
     <p>
       <strong>Role:</strong>
-      {{ currentUser.user.role }}
+      {{ currentUser.role }}
     </p>
+    <BuyerProfile v-if="userIsBuyer" />
+    <SellerProfile v-if="userIsSeller" />
   </div>
 </template>
 
 <script>
+import BuyerProfile from '@/components/BuyerProfile.vue';
+import SellerProfile from '@/components/SellerProfile.vue';
+
 export default {
   name: 'Profile',
+  components: {
+    BuyerProfile,
+    SellerProfile,
+  },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
+    },
+    userIsBuyer() {
+      return this.currentUser.role == 'buyer';
+    },
+    userIsSeller() {
+      return this.currentUser.role == 'seller';
     },
   },
   created() {

@@ -1,8 +1,11 @@
 import jwt
-from src.database import SessionLocal
-
+import re
 import os
 
+from src.database import SessionLocal
+
+
+email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
 def get_db():
     db = SessionLocal()
@@ -10,6 +13,12 @@ def get_db():
         yield db
     finally:
         db.close()
+ 
+ 
+def email_is_valid(email):
+    if(re.fullmatch(email_regex, email)):
+        return True
+    return False
 
 
 def encode(payload):

@@ -28,11 +28,11 @@ class UserReturn(UserBase):
 
 class BuyerBase(BaseModel):
     name: str
-    main_address_id: Optional[int] = None
+    surname: str
 
 
 class BuyerCreate(BuyerBase):
-    pass
+    user: UserCreate
 
 
 class BuyerReturn(BuyerBase):
@@ -68,6 +68,7 @@ class User(UserReturn):
 
 
 class Buyer(BuyerReturn):
+    user: UserReturn
     main_address: Optional[AddressReturn] = None
     delivery_addresses: list[AddressReturn] = []
     shopping_cart: dict[ItemReturn, int] = {}
@@ -75,4 +76,5 @@ class Buyer(BuyerReturn):
 
 
 class Seller(SellerReturn):
+    user: UserReturn
     items: list[ItemReturn] = []

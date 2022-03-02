@@ -11,18 +11,24 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.add(created_user)
     db.commit()
     db.refresh(created_user)
-    print(created_user)
     return created_user
 
 
 def create_buyer(db: Session, buyer: schemas.BuyerCreate):
-    hashed_password = buyer.password + "fake hash"
     buyer = models.Buyer(**buyer.dict(exclude={'password'}, exclude_unset=True))
-    buyer.hashed_password = hashed_password
     db.add(buyer)
     db.commit()
     db.refresh(buyer)
     return buyer
+
+
+def create_seller(db: Session, seller: schemas.SellerCreate, user: models.User):
+    seller = models.Seller(**seller.dict())
+    seller.user.append(user)
+    db.add(seller)
+    db.commit()
+    db.refresh(seller)
+    return seller
 
 
 def get_user(db: Session, user_id: str):
@@ -31,6 +37,12 @@ def get_user(db: Session, user_id: str):
 
 def get_user_by_email(db: Session, user_email: str):
     return db.query(models.User).filter_by(email=user_email).first()
+
+
+def verify_password(user: models.User, password: str):
+    password_bytes = password.encode()
+    user_hashed_password_bytes = user.hashed_password.encode()
+    return bcrypt.checkpw(password_bytes, user_hashed_password_bytes)
 
 
 # def get_seller(db: Session, seller_id: int):

@@ -1,6 +1,8 @@
 import AuthService from '@/services/auth.service';
+import { useCookies } from 'vue3-cookies';
 
-const user = JSON.parse(localStorage.getItem('user'));
+const { cookies } = useCookies();
+const user = cookies.get('user');
 
 const initialState = user
   ? { loggedIn: true, user }
@@ -15,6 +17,12 @@ export const auth = {
     },
     registerFailure(state) {
       state.loggedIn = false;
+    },
+    registerBuyer(state, buyer) {
+      state.user.buyer = buyer;
+    },
+    registerSeller(state, seller) {
+      state.user.seller = seller;
     },
     loginSuccess(state, user) {
       state.loggedIn = true;
@@ -52,10 +60,22 @@ export const auth = {
       return AuthService.register(user)
         .then((response) => {
           commit('registerSuccess');
-          return Promise.resolve(response.data);
+          return Promise.resolve(response);
         })
         .catch((error) => {
           commit('registerFailure');
+          return Promise.reject(error);
+        });
+    },
+
+    registerSeller({ commit }, info) {
+      return AuthService.registerSeller(info)
+        .then((response) => {
+          console.log(response);
+          commit('registerSeller', response);
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
           return Promise.reject(error);
         });
     },

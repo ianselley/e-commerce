@@ -1,22 +1,52 @@
-import axios from 'axios';
+import { useCookies } from 'vue3-cookies';
 
 import { BASE_URL } from '@/config.json';
+import authHeader from './auth-header';
+import axiosRequest from './axios.service';
+
+const { cookies } = useCookies();
 
 class AuthService {
-  async login(user) {
-    const response = await axios.post(BASE_URL + '/user/login', user);
-    if (response.data.accessToken) {
-      localStorage.setItem('user', JSON.stringify(response.data));
-    }
-    return response.data;
+  login(user) {
+    const options = {
+      url: BASE_URL + '/user/login',
+      method: 'post',
+      data: user,
+    };
+    return axiosRequest(options, (response) => {
+      if (response.data.accessToken) {
+        cookies.set('user', JSON.stringify(response.data));
+      }
+    });
   }
 
   logout() {
-    localStorage.removeItem('user');
+    cookies.remove('user');
   }
 
   register(user) {
-    return axios.post(BASE_URL + '/user/signup', user);
+    const options = {
+      url: BASE_URL + '/user/signup',
+      method: 'post',
+      data: user,
+    };
+    return axiosRequest(options);
+  }
+
+  registerSeller(info) {
+    const options = {
+      url: BASE_URL + '/user/signup-seller',
+      method: 'post',
+      headers: authHeader(),
+      data: info,
+    };
+    return axiosRequest(options, (response) => {
+      if (response.data) {
+        const user = cookies.get('user');
+        user.seller = response.data;
+        cookies.set('user', user);
+      }
+    });
   }
 }
 

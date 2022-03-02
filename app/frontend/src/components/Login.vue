@@ -2,7 +2,7 @@
   <div>
     <div>
       <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
-      <form @submit="handleLogin" :validation-schema="loginSchema">
+      <form @submit="handleLogin" onsubmit="return false;">
         <div>
           <div>
             <label for="email">Email</label>
@@ -11,10 +11,7 @@
               name="email"
               v-model="values.email"
               type="text"
-              @blur="validate('email')"
-              @keyup="validate('email')"
             />
-            <span>{{ errors.email }}</span>
           </div>
           <div>
             <label for="password">Password</label>
@@ -23,13 +20,10 @@
               name="password"
               v-model="values.password"
               type="password"
-              @blur="validate('password')"
-              @keyup="validate('password')"
               autocomplete="on"
             />
-            <span>{{ errors.password }}</span>
           </div>
-          <button :disabled="loading">
+          <button type="submit" :disabled="loading">
             <span v-show="loading"></span>
             <span>Login</span>
           </button>
@@ -40,28 +34,16 @@
 </template>
 
 <script>
-import * as yup from 'yup';
 export default {
   name: 'Login',
   data() {
-    const loginSchema = yup.object({
-      email: yup.string().email().required('Email is required'),
-      password: yup.string().required('Password is required'),
-    });
     const values = {
-      email: '',
-      password: '',
-    };
-    const errors = {
       email: '',
       password: '',
     };
     return {
       loading: false,
-      message: '',
-      loginSchema,
       values,
-      errors,
     };
   },
   computed: {
@@ -79,24 +61,16 @@ export default {
     }
   },
   methods: {
-    validate(field) {
-      this.registerSchema
-        .validateAt(field, this.values)
-        .then(() => {
-          this.errors[field] = '';
-        })
-        .catch((error) => {
-          this.errors[field] = error.message;
-        });
-    },
     handleLogin() {
       this.loading = true;
       this.$store
         .dispatch('auth/login', this.values)
         .then(() => {
+          this.loading = false;
           this.$router.push('/profile');
         })
-        .catch(() => {
+        .catch((error) => {
+          this.$store.commit('alert/setMessage', error)
           this.loading = false;
         });
     },

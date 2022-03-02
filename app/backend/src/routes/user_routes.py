@@ -1,4 +1,5 @@
-from fastapi import  Depends, APIRouter, HTTPException, status
+from fastapi import  Depends, APIRouter, HTTPException, status 
+from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 
 from src import schemas, crud
@@ -6,9 +7,15 @@ from src.utils import utils
 
 
 router = APIRouter()
+token_auth_scheme = HTTPBearer()
 
 @router.post("/signup")
 def signup(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
+    if not utils.email_is_valid(user.email):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email not valid",
+        )
     user_db = crud.user.get_user_by_email(db, user_email=user.email)
     if user_db:
         raise HTTPException(
@@ -16,11 +23,21 @@ def signup(user: schemas.UserCreate, db: Session = Depends(utils.get_db)):
             detail="Email already registered",
         )
     user_created = crud.user.create_user(db=db, user=user)
-    response = {
-        "user": user_created,
-        "accessToken": utils.encode(user_created),
-    }
-    return response 
+    return user_created 
+
+
+@router.post("/signup-seller")
+def signup(seller: schemas.SellerCreate, db: Session = Depends(utils.get_db), token: str = Depends(token_auth_scheme)):
+    token_data = utils.decode(token)
+    user_id = token_data.get("sub")
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid token",
+        )
+    user_db = crud.user.get_user(db, user_id=user_id)
+    seller_created = crud.user.create_seller(db=db, seller=seller, user=user_db)
+    return seller_created 
 
 
 @router.post("/login")
@@ -31,10 +48,17 @@ def login(user: schemas.UserLogin, db: Session = Depends(utils.get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email not registered",
         )
-    response = {
-        "user": user_db,
-        "accessToken": utils.encode(user_db),
-    }
+    if not crud.user.verify_password(user_db, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect password",
+        )
+    response = user_db.__dict__
+    response["accessToken"] = utils.encode(user_db)
+    if user_db.role == "seller" and user_db.seller is not None:
+        response["seller"] = user_db.seller.__dict__
+    elif user_db.role == "buyer" and user_db.buyer is not None:
+        response["buyer"] = user_db.buyer.__dict__
     return response
 
 

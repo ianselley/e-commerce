@@ -1,8 +1,12 @@
 <template>
   <div>
-    <RegisterUser />
-    <RegisterBuyer v-if="userIsBuyer" />
-    <RegisterSeller v-else />
+    <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+    <!-- <RegisterUser v-if="!user" />
+    <RegisterBuyer v-else-if="userIsBuyer" />
+    <RegisterSeller v-else /> -->
+    <RegisterUser v-if="false" />
+    <RegisterBuyer v-if="true" />
+    <RegisterSeller v-if="false" />
   </div>
 </template>
 
@@ -18,12 +22,24 @@ export default {
     RegisterSeller,
   },
   computed: {
-    userIsBuyer() {
-      return (
-        this.$store.state.auth.user &&
-        this.$store.state.auth.user.role == 'buyer'
-      );
+    user() {
+      return this.$store.state.auth.user;
     },
+    userIsBuyer() {
+      return this.user && this.$store.state.auth.user.role == 'buyer';
+    },
+    loggedIn() {
+      return this.$store.state.auth.loggedIn;
+    },
+  },
+  mounted() {
+    if (this.user && (this.user.seller || this.user.buyer)) {
+      this.$router.push('/profile');
+      this.$store.commit(
+        'alert/setMessage',
+        'You are already logged in, you would have to log out to access this'
+      );
+    }
   },
 };
 </script>
