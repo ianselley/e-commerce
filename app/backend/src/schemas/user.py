@@ -1,15 +1,38 @@
 from pydantic import BaseModel
+from typing import Optional
+
+
+class UserBase(BaseModel):
+    email: str
+    telephone: Optional[str] = None
+    role: str
+    buyer_id: Optional[int] = None
+    seller_id: Optional[int] = None
+
+
+class UserCreate(UserBase):
+    password: str
+
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+
+class UserReturn(UserBase):
+    id: int
+
+    class Config:
+        orm_mode = True
 
 
 class BuyerBase(BaseModel):
     name: str
-    email: str
-    telefone: str
-    main_address_id: int 
+    surname: str
 
 
 class BuyerCreate(BuyerBase):
-    password: str
+    user: UserCreate
 
 
 class BuyerReturn(BuyerBase):
@@ -20,14 +43,11 @@ class BuyerReturn(BuyerBase):
 
     
 class SellerBase(BaseModel):
-    name: str
-    email: str
     brand: str
-    telefone: str
 
 
 class SellerCreate(SellerBase):
-    password: str
+    pass
 
 
 class SellerReturn(SellerBase):
@@ -42,12 +62,19 @@ from src.schemas.item import ItemReturn
 from src.schemas.order import OrderReturn
 
 
+class User(UserReturn):
+    buyer: Optional[BuyerReturn] = None
+    seller: Optional[SellerReturn] = None
+
+
 class Buyer(BuyerReturn):
-    main_address: AddressReturn
+    user: UserReturn
+    main_address: Optional[AddressReturn] = None
     delivery_addresses: list[AddressReturn] = []
     shopping_cart: dict[ItemReturn, int] = {}
     orders: list[OrderReturn] = []
 
 
 class Seller(SellerReturn):
+    user: UserReturn
     items: list[ItemReturn] = []

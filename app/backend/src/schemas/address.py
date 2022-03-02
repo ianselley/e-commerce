@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 
 class AddressBase(BaseModel):
+    name: Optional[str] = None # By default make the name the username
     street: str
     number: Optional[str] = None
     city: str
@@ -25,9 +26,5 @@ class AddressReturn(AddressBase):
         orm_mode = True
 
 
-from src.schemas.user import BuyerReturn
-
-
 class Address(AddressReturn):
-    buyers_main: list[BuyerReturn] = []
-    buyers_deliveries: list[BuyerReturn] = []
+    pass

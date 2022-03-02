@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 import datetime
 
 from src.database import Base
-from .many_to_many import buyers_to_items, orders_to_items
+from .many_to_many import buyers_and_items, orders_and_items
 
 
 class Item(Base):
@@ -20,5 +20,5 @@ class Item(Base):
     seller_id = Column(Integer, ForeignKey("sellers.id"), nullable=False)
 
     seller = relationship("Seller", back_populates="items")
-    buyers = relationship("Buyer", secondary=buyers_to_items, back_populates="shopping_cart")
-    orders = relationship("Order", secondary=orders_to_items, back_populates="items")
+    buyers = relationship("Buyer", secondary=buyers_and_items, back_populates="shopping_cart")
+    orders = relationship("Order", secondary=orders_and_items, back_populates="items")

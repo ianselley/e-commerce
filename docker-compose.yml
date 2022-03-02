@@ -2,37 +2,49 @@ version: "3.8"
 
 services:
 
-  # frontend:
-  #   build: ./app/frontend
+  frontend:
+    build: ./app/frontend
+    # Only needed in development, to reload vue
+    volumes:
+      - ./app/frontend:/app
+      # - ./app/frontend/node_modules:/app/node_modules
+    ports:
+      - 8001:8080
 
   backend:
     build: ./app/backend
+    # Only needed in development, to reload fastapi
+    volumes:
+      - ./app/backend:/app
     links:
       - db
     ports:
-      - "8080:8000"
+      - "3001:3030"
     env_file:
       - .env
+    environment:
+      - PORT=3030
     depends_on:
       db:
         condition: service_healthy
+    # Only needed in development, to reload fastapi
     command: /start-reload.sh
 
   db:
-    image: mysql
+    build: ./app/db
     volumes:
       - type: volume
         source: db_data
         target: /var/lib/mysql
-    expose:
-      - "3306"
     env_file:
       - .env
+    ports:
+      - "3306:3306"
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      test: [ "CMD", "/usr/local/bin/waitForMySQL.sh" ]
       interval: 5s
-      timeout: 30s
-      retries: 5
+      timeout: 60s
+      retries: 15
       start_period: 20s
 
 volumes:
