@@ -3,7 +3,7 @@ from fastapi.security import HTTPBearer
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-from src.utils import utils
+from src import utils
 from src.routes import user_routes
 from src.database import engine, Base
 
@@ -26,7 +26,7 @@ app.include_router(user_routes.router, prefix="/user")
 
 @app.get("/private")
 def private_endpoint(response: Response, token: str = Depends(token_auth_scheme)):
-    result = utils.decode(token)
+    result = utils.user.decode(token)
 
     if result.get("status"):
         response.status_code = status.HTTP_400_BAD_REQUEST
