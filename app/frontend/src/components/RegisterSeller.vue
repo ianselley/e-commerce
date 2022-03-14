@@ -73,7 +73,7 @@ export default {
         })
         .catch((error) => {
           this.loading = false;
-          this.$store.commit('alert/setMessage', error);
+          this.$store.dispatch('alert/setMessage', error);
         });
     },
   },

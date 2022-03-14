@@ -120,7 +120,7 @@
             <span v-show="loading">LOADING</span>
             Register address
           </button>
-          <button @click="goToProfile">Do it later</button>
+          <button type="button" @click="goToProfile">Do it later</button>
         </div>
       </div>
     </form>
@@ -172,12 +172,6 @@ export default {
       registerAddressSchema,
     };
   },
-  mounted() {
-    if (this.user && this.user.buyer && this.user.buyer.address) {
-      this.$router.push('/profile');
-      this.$store.commit('alert/setMessage', 'You have been successfuly registered')
-    }
-  },
   computed: {
     user() {
       return this.$store.state.auth.user;
@@ -220,7 +214,7 @@ export default {
         })
         .catch((error) => {
           this.loading = false;
-          this.$store.commit('alert/setMessage', error);
+          this.$store.dispatch('alert/setMessage', error);
         });
     },
   },

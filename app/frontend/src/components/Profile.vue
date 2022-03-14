@@ -55,7 +55,7 @@ export default {
   created() {
     if (!this.currentUser) {
       this.$router.push('/login');
-      this.$store.commit('alert/setMessage', 'You are not logged in!');
+      this.$store.dispatch('alert/setMessage', 'You are not logged in!');
     }
   },
 };

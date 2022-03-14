@@ -39,7 +39,13 @@ export const auth = {
     },
     registerAddress(state, address) {
       state.user.buyer.addresses.push(address);
-      state.user.buyer.mainAddressId = address.buyer.mainAddressId;
+      if (!state.user.buyer.mainAddressId) {
+        state.user.buyer.mainAddressId = address.buyer.mainAddressId;
+      }
+      state.addedAddress = true;
+    },
+    resetAddedAddress(state) {
+      state.addedAddress = false;
     },
     loginSuccess(state, user) {
       if (user.seller) {
@@ -61,7 +67,6 @@ export const auth = {
       state.loggedInAs = null;
       state.loggedIn = false;
       state.user = null;
-      state.user.buyer.addresses = [];
     },
   },
 

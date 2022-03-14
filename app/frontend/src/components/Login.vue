@@ -19,7 +19,7 @@
             />
           </div>
           <button type="submit" :disabled="loading">
-            <span v-show="loading"></span>
+            <span v-show="loading">LOADING</span>
             <span>Login</span>
           </button>
         </div>
@@ -65,7 +65,7 @@ export default {
           this.$router.push('/profile');
         })
         .catch((error) => {
-          this.$store.commit('alert/setMessage', error);
+          this.$store.dispatch('alert/setMessage', error);
           this.loading = false;
         });
     },
