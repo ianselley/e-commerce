@@ -1,4 +1,4 @@
 from .user import User, Seller, Buyer
-from .item import Item
+from .product import Product
 from .order import Order
 from .address import Address

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasAttributes" style="border: 1px solid black; border-radius: 5px; max-width: 50%; margin: 5rem auto;">
+  <div v-if="hasAttributes" class="base" :class="[addressIsMainId ? 'main-address' : 'not-main-address']">
     <p> {{ address.name }} </p>
     <p> {{ address.street }} {{ address.number }} {{ address.flat }} </p>
     <p> {{ address.zipCode }} {{ address.city }} {{ address.state }} </p>
@@ -17,7 +17,28 @@ export default {
   computed: {
     hasAttributes() {
       return this.address.city && this.address.street && this.address.state && this.address.zipCode && this.address.country;
+    },
+    addressIsMainId() {
+      return this.address.id === this.$store.state.auth.user.buyer.mainAddressId
     }
   }
 }
 </script>
+
+<style scoped>
+.base {
+  border-radius: 1rem;
+  max-width: 50%; 
+  margin: 3.5rem auto; 
+}
+
+.main-address {
+  border: 2px solid hsl(44, 81%, 49%);
+  background-color: bisque;
+}
+
+.not-main-address {
+  border: 1px solid black;
+  background-color: #eee;
+}
+</style>

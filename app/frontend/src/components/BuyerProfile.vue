@@ -1,18 +1,18 @@
 <template>
   <div>
     <p>THIS SECTION IS TO DISPLAY BUYER INFORMATION</p>
-    <div v-if="this.currentBuyer">
-      <p>Name: {{ this.currentBuyer.name }}</p>
-      <p>Surname: {{ this.currentBuyer.surname }}</p>
-      <p>Buyer: {{ this.currentBuyer }}</p>
-      <DisplayAddress v-for="address in this.currentBuyer.addresses" v-bind:key="address" :address="address" />
-      <button @click="addAddressFunction()">Add Address</button>
-      <RegisterAddress v-if="addAddress && !this.$store.state.auth.addedAddress"/>
-    </div>
-    <div v-else>
+    <div v-if="!currentBuyer">
       <button @click="this.$router.push('/signup')">
         FINISH REGISTERING AS BUYER
       </button>
+    </div>
+    <div v-else>
+      <p>Name: {{ currentBuyer.name }}</p>
+      <p>Surname: {{ currentBuyer.surname }}</p>
+      <p>Buyer: {{ currentBuyer }}</p>
+      <DisplayAddress v-for="address in currentBuyer.addresses" :key="address" :address="address" />
+      <button @click="addAddressFunction()">Add Address</button>
+      <RegisterAddress v-if="addAddress && !$store.state.auth.addedAddress"/>
     </div>
   </div>
 </template>

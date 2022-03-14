@@ -59,7 +59,7 @@ class SellerReturn(SellerBase):
 
 
 from src.schemas.address import AddressReturn
-from src.schemas.item import ItemReturn
+from src.schemas.product import ProductReturn
 from src.schemas.order import OrderReturn
 
 
@@ -67,13 +67,13 @@ class Buyer(BuyerReturn):
     user: UserReturn
     # mainAddress: Optional[AddressReturn]
     addresses: Optional[list[AddressReturn]]
-    shoppingCart: Optional[dict[ItemReturn, int]]
+    shoppingCart: Optional[dict[ProductReturn, int]]
     orders: Optional[list[OrderReturn]]
 
 
 class Seller(SellerReturn):
     user: UserReturn
-    items: Optional[list[ItemReturn]]
+    products: Optional[list[ProductReturn]]
 
 
 class User(UserReturn):

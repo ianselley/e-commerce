@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
-class ItemBase(BaseModel):
+class ProductBase(BaseModel):
     title: str
     description: Optional[str] = None
     price: float
@@ -11,11 +11,11 @@ class ItemBase(BaseModel):
     specifications: Optional[dict[str, str]] = None
 
 
-class ItemCreate(ItemBase):
+class ProductCreate(ProductBase):
     pass
 
 
-class ItemReturn(ItemBase):
+class ProductReturn(ProductBase):
     id: int
     totalSold: int
     dayAdded: datetime
@@ -29,7 +29,7 @@ from src.schemas.user import BuyerReturn, SellerReturn
 from src.schemas.order import OrderReturn
 
 
-class Item(ItemReturn):
+class Product(ProductReturn):
     seller: list[SellerReturn]
     buyers: list[BuyerReturn]
     orders: list[OrderReturn]

@@ -3,11 +3,11 @@ from sqlalchemy.orm import relationship
 import datetime
 
 from src.database import Base
-from .many_to_many import buyers_and_items, orders_and_items
+from .many_to_many import buyers_and_products, orders_and_products
 
 
-class Item(Base):
-    __tablename__ = "items"
+class Product(Base):
+    __tablename__ = "products"
 
     id = Column(Integer, primary_key=True)
     title = Column(Text, nullable=False)
@@ -19,6 +19,6 @@ class Item(Base):
     dayAdded = Column(DateTime, default=datetime.datetime.now)
     sellerId = Column(Integer, ForeignKey("sellers.id"), nullable=False)
 
-    seller = relationship("Seller", back_populates="items")
-    buyers = relationship("Buyer", secondary=buyers_and_items, back_populates="shoppingCart")
-    orders = relationship("Order", secondary=orders_and_items, back_populates="items")
+    seller = relationship("Seller", back_populates="products")
+    buyers = relationship("Buyer", secondary=buyers_and_products, back_populates="shoppingCart")
+    orders = relationship("Order", secondary=orders_and_products, back_populates="products")
