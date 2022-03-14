@@ -9,7 +9,7 @@ class AddressBase(BaseModel):
     city: str
     flat: Optional[str] = None
     state: str
-    zip_code: str
+    zipCode: str
     country: str
     details: Optional[str] = None
 
@@ -20,11 +20,16 @@ class AddressCreate(AddressBase):
 
 class AddressReturn(AddressBase):
     id: int
-    buyer_id: int
+    buyerId: int
+    # buyerAddressesId: int
 
     class Config:
         orm_mode = True
 
 
+from src.schemas.user import BuyerReturn
+
+
 class Address(AddressReturn):
-    pass
+    # buyerMain: Optional[BuyerReturn]
+    buyer: BuyerReturn

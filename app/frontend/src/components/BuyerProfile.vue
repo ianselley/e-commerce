@@ -4,9 +4,13 @@
     <div v-if="this.currentBuyer">
       <p>Name: {{ this.currentBuyer.name }}</p>
       <p>Surname: {{ this.currentBuyer.surname }}</p>
+      <p>Addresses: {{ this.currentBuyer.addresses }}</p>
+      <p>Buyer: {{ this.currentBuyer }}</p>
     </div>
     <div v-else>
-      <button @click="this.$router.push('/signup')">FINISH REGISTERING AS BUYER</button>
+      <button @click="this.$router.push('/signup')">
+        FINISH REGISTERING AS BUYER
+      </button>
     </div>
   </div>
 </template>
@@ -19,5 +23,5 @@ export default {
       return this.$store.state.auth.user.buyer;
     },
   },
-}
+};
 </script>

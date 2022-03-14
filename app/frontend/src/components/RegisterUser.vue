@@ -168,7 +168,6 @@ export default {
 
       await this.validateAll();
       this.loading = true;
-      if (!this.isValid) return;
       await this.$store
         .dispatch('auth/register', user)
         .then(() => {
@@ -176,8 +175,8 @@ export default {
           this.$store.dispatch('auth/login', userLogin);
         })
         .catch((error) => {
-          this.$store.commit('alert/setMessage', error);
           this.loading = false;
+          this.$store.commit('alert/setMessage', error);
         });
     },
   },

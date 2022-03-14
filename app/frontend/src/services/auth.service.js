@@ -33,6 +33,22 @@ class AuthService {
     return axiosRequest(options);
   }
 
+  registerBuyer(buyer) {
+    const options = {
+      url: BASE_URL + '/user/signup-buyer',
+      method: 'post',
+      headers: authHeader(),
+      data: buyer,
+    };
+    return axiosRequest(options, (response) => {
+      if (response.data) {
+        const user = cookies.get('user');
+        user.buyer = response.data;
+        cookies.set('user', user);
+      }
+    });
+  }
+
   registerSeller(info) {
     const options = {
       url: BASE_URL + '/user/signup-seller',
@@ -44,6 +60,22 @@ class AuthService {
       if (response.data) {
         const user = cookies.get('user');
         user.seller = response.data;
+        cookies.set('user', user);
+      }
+    });
+  }
+
+  registerAddress(address) {
+    const options = {
+      url: BASE_URL + '/address/register',
+      method: 'post',
+      headers: authHeader(),
+      data: address,
+    };
+    return axiosRequest(options, (response) => {
+      if (response.data) {
+        const user = cookies.get('user');
+        user.buyer.addresses.push(response.data);
         cookies.set('user', user);
       }
     });

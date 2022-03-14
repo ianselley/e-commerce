@@ -6,8 +6,6 @@ class UserBase(BaseModel):
     email: str
     telephone: Optional[str] = None
     role: str
-    buyer_id: Optional[int] = None
-    seller_id: Optional[int] = None
 
 
 class UserCreate(UserBase):
@@ -32,11 +30,13 @@ class BuyerBase(BaseModel):
 
 
 class BuyerCreate(BuyerBase):
-    user: UserCreate
+    pass
 
 
 class BuyerReturn(BuyerBase):
     id: int
+    userId: int
+    mainAddressId: Optional[int]
 
     class Config:
         orm_mode = True
@@ -52,6 +52,7 @@ class SellerCreate(SellerBase):
 
 class SellerReturn(SellerBase):
     id: int
+    userId: int
 
     class Config:
         orm_mode = True
@@ -62,19 +63,20 @@ from src.schemas.item import ItemReturn
 from src.schemas.order import OrderReturn
 
 
-class User(UserReturn):
-    buyer: Optional[BuyerReturn] = None
-    seller: Optional[SellerReturn] = None
-
-
 class Buyer(BuyerReturn):
     user: UserReturn
-    main_address: Optional[AddressReturn] = None
-    delivery_addresses: list[AddressReturn] = []
-    shopping_cart: dict[ItemReturn, int] = {}
-    orders: list[OrderReturn] = []
+    # mainAddress: Optional[AddressReturn]
+    addresses: Optional[list[AddressReturn]]
+    shoppingCart: Optional[dict[ItemReturn, int]]
+    orders: Optional[list[OrderReturn]]
 
 
 class Seller(SellerReturn):
     user: UserReturn
-    items: list[ItemReturn] = []
+    items: Optional[list[ItemReturn]]
+
+
+class User(UserReturn):
+    accessToken: Optional[str]
+    buyer: Optional[Buyer]
+    seller: Optional[Seller]

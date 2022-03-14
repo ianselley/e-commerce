@@ -1,12 +1,12 @@
 from pydantic import BaseModel
-import datetime
+from datetime import datetime
 
 
 class OrderBase(BaseModel):
-    buyer_id: int
-    item_id: int
+    buyerId: int
+    itemId: int
     quantity: int
-    date: datetime.datetime
+    date: datetime
 
 
 class OrderCreate(OrderBase):
@@ -25,5 +25,5 @@ from src.schemas.user import BuyerReturn
 
 
 class Order(OrderReturn):
-    buyer: BuyerReturn
-    item: ItemReturn
+    buyer: list[BuyerReturn]
+    item: list[ItemReturn]

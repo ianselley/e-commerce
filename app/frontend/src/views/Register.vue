@@ -1,12 +1,9 @@
 <template>
   <div>
     <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
-    <!-- <RegisterUser v-if="!user" />
+    <RegisterUser v-if="!user" />
     <RegisterBuyer v-else-if="userIsBuyer" />
-    <RegisterSeller v-else /> -->
-    <RegisterUser v-if="false" />
-    <RegisterBuyer v-if="true" />
-    <RegisterSeller v-if="false" />
+    <RegisterSeller v-else />
   </div>
 </template>
 
@@ -26,14 +23,17 @@ export default {
       return this.$store.state.auth.user;
     },
     userIsBuyer() {
-      return this.user && this.$store.state.auth.user.role == 'buyer';
+      return this.user && this.user.role == 'buyer';
     },
     loggedIn() {
       return this.$store.state.auth.loggedIn;
     },
   },
   mounted() {
-    if (this.user && (this.user.seller || this.user.buyer)) {
+    if (
+      this.user &&
+      (this.user.seller || (this.user.buyer && this.user.buyer.mainAddressId))
+    ) {
       this.$router.push('/profile');
       this.$store.commit(
         'alert/setMessage',

@@ -2,7 +2,6 @@ import { createApp } from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import VueCookies from 'vue3-cookies';
-import { globalCookiesConfig } from 'vue3-cookies';
 
 import App from './App.vue';
 import router from './router';
@@ -20,8 +19,6 @@ const cookiesConfig = {
   sameSite: 'strict',
   httpOnly: true,
 };
-
-globalCookiesConfig(cookiesConfig);
 
 createApp(App)
   .use(store)

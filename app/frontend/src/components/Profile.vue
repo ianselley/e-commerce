@@ -1,11 +1,12 @@
 <template>
   <div v-if="currentUser">
-    <pre> {{ currentUser }} </pre>
     <header>
       <h3>
-        <!-- <strong>{{
-          (currentUser.seller && currentUser.seller.brand) || currentUser.buyer && (currentUser.buyer.name + ' ' + currentUser.buyer.surname)
-        }}</strong> -->
+        <strong>{{
+          (currentUser.seller && currentUser.seller.brand) ||
+          (currentUser.buyer &&
+            currentUser.buyer.name + ' ' + currentUser.buyer.surname)
+        }}</strong>
         Profile
       </h3>
     </header>

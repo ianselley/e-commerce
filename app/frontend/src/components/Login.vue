@@ -6,12 +6,7 @@
         <div>
           <div>
             <label for="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              v-model="values.email"
-              type="text"
-            />
+            <input id="email" name="email" v-model="values.email" type="text" />
           </div>
           <div>
             <label for="password">Password</label>
@@ -70,7 +65,7 @@ export default {
           this.$router.push('/profile');
         })
         .catch((error) => {
-          this.$store.commit('alert/setMessage', error)
+          this.$store.commit('alert/setMessage', error);
           this.loading = false;
         });
     },

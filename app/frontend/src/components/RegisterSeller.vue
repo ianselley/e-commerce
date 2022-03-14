@@ -64,9 +64,16 @@ export default {
     },
     handleRegisterSeller() {
       const brand = Object.assign({}, this.value);
-      this.$store.dispatch('auth/registerSeller', brand)
+      this.loading = true;
+      this.$store
+        .dispatch('auth/registerSeller', brand)
         .then(() => {
+          this.loading = false;
           this.$router.push('/profile');
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.$store.commit('alert/setMessage', error);
         });
     },
   },

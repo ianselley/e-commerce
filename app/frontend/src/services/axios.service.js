@@ -7,6 +7,7 @@ export default async function axiosRequest(options, callback) {
       return Promise.resolve(response.data);
     })
     .catch((error) => {
+      if (!error.response) return Promise.reject(error);
       return Promise.reject(error.response.data.detail);
     });
 }
