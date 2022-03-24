@@ -4,6 +4,9 @@ const { cookies } = useCookies();
 
 export default function authHeader() {
   let user = cookies.get('user');
-  if (!user || !user.accessToken) return {};
-  return { Authorization: 'Bearer ' + user.accessToken };
+  if (!user || !user.access_token) return {};
+  return {
+    Accept: 'application/json',
+    Authorization: 'Bearer ' + user.access_token,
+  };
 }

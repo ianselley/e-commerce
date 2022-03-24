@@ -35,8 +35,8 @@ class BuyerCreate(BuyerBase):
 
 class BuyerReturn(BuyerBase):
     id: int
-    userId: int
-    mainAddressId: Optional[int]
+    user_id: int
+    main_address_id: Optional[int]
 
     class Config:
         orm_mode = True
@@ -52,7 +52,8 @@ class SellerCreate(SellerBase):
 
 class SellerReturn(SellerBase):
     id: int
-    userId: int
+    user_id: int
+    number_of_products_sold: int
 
     class Config:
         orm_mode = True
@@ -65,9 +66,8 @@ from src.schemas.order import OrderReturn
 
 class Buyer(BuyerReturn):
     user: UserReturn
-    # mainAddress: Optional[AddressReturn]
     addresses: Optional[list[AddressReturn]]
-    shoppingCart: Optional[dict[ProductReturn, int]]
+    shopping_cart: Optional[dict[ProductReturn, int]]
     orders: Optional[list[OrderReturn]]
 
 
@@ -77,6 +77,6 @@ class Seller(SellerReturn):
 
 
 class User(UserReturn):
-    accessToken: Optional[str]
+    access_token: Optional[str]
     buyer: Optional[Buyer]
     seller: Optional[Seller]

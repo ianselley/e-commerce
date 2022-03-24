@@ -12,10 +12,10 @@
     </header>
     <p>
       <strong>Token:</strong>
-      {{ currentUser.accessToken }}
+      {{ currentUser.access_token }}
     </p>
     <p>
-      <strong>Id:</strong>
+      <strong>User id:</strong>
       {{ currentUser.id }}
     </p>
     <p>

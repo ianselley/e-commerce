@@ -9,12 +9,12 @@ router = APIRouter()
 token_auth_schema = HTTPBearer()
 
 @router.post("/register", response_model=schemas.Address)
-def register_address(address: schemas.AddressCreate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+def registerAddress(address: schemas.AddressCreate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
-    userId = token_data.get("sub")
-    if not userId:
+    user_id = token_data.get("sub")
+    if not user_id:
         raise HTTPException(status_code=400, detail="Invalid token")
-    address_created = crud.address.create_address(db=db, address=address, userId=userId)
+    address_created = crud.address.create_address(db=db, address=address, user_id=user_id)
     return address_created
 
 

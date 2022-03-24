@@ -1,3 +1,3 @@
 # e-commerce
 
-An Amazon inspired web, but not a clone
+An Amazon inspired web

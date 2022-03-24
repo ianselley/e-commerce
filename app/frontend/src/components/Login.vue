@@ -1,7 +1,10 @@
 <template>
   <div>
     <div>
-      <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+      <img
+        id="profile-img"
+        src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png"
+      />
       <form @submit="handleLogin" onsubmit="return false;">
         <div>
           <div>
@@ -20,7 +23,7 @@
           </div>
           <button type="submit" :disabled="loading">
             <span v-show="loading">LOADING</span>
-            <span>Login</span>
+            <span v-show="!loading">Login</span>
           </button>
         </div>
       </form>

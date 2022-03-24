@@ -3,13 +3,13 @@ from pydantic import BaseModel
 
 
 class AddressBase(BaseModel):
-    name: Optional[str] = None # By default make the name the username
+    name: Optional[str] = None
     street: str
     number: Optional[str] = None
     city: str
     flat: Optional[str] = None
     state: str
-    zipCode: str
+    zip_code: str
     country: str
     details: Optional[str] = None
 
@@ -20,8 +20,7 @@ class AddressCreate(AddressBase):
 
 class AddressReturn(AddressBase):
     id: int
-    buyerId: int
-    # buyerAddressesId: int
+    buyer_id: int
 
     class Config:
         orm_mode = True
@@ -31,5 +30,4 @@ from src.schemas.user import BuyerReturn
 
 
 class Address(AddressReturn):
-    # buyerMain: Optional[BuyerReturn]
     buyer: BuyerReturn

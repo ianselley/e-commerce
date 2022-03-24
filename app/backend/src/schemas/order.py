@@ -3,8 +3,8 @@ from datetime import datetime
 
 
 class OrderBase(BaseModel):
-    buyerId: int
-    productId: int
+    buyer_id: int
+    product_id: int
     quantity: int
     date: datetime
 

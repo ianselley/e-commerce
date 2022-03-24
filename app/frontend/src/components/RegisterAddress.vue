@@ -118,9 +118,15 @@
         <div>
           <button type="submit" :disabled="loading || !isValid">
             <span v-show="loading">LOADING</span>
-            Register address
+            <span v-show="!loading">Register address</span>
           </button>
-          <button type="button" @click="goToProfile">Do it later</button>
+          <button
+            type="button"
+            title="CAREFUL! It won't save the current values"
+            @click="goToProfile"
+          >
+            Do it later
+          </button>
         </div>
       </div>
     </form>

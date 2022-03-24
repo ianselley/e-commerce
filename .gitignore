@@ -4,7 +4,7 @@ venv
 .env
 .prettierrc.js
 config.json
-**/certs
+product_images
 
 
 

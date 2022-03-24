@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 
 from src.database import Base
 from src.models.many_to_many import buyers_and_products
-from src.models.address import Address
 
 
 class User(Base):
@@ -11,7 +10,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     email = Column(VARCHAR(128), nullable=False, unique=True)
-    hashedPassword = Column(Text, nullable=False)
+    hashed_password = Column(Text, nullable=False)
     telephone = Column(String(64), nullable=False)
     role = Column(String(64), nullable=False)
 
@@ -25,15 +24,13 @@ class Buyer(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
     surname = Column(String(64))
-    mainAddressId = Column(Integer)
-    userId = Column(Integer, ForeignKey('users.id'))
-    # addressId = Column(Integer, ForeignKey('addresses.id'))
+    main_address_id = Column(Integer)
+    user_id = Column(Integer, ForeignKey('users.id'))
 
     user = relationship("User", back_populates="buyer")
     orders = relationship("Order", back_populates="buyer")
-    # mainAddress = relationship("Address", back_populates="buyerMain", uselist=False)
     addresses = relationship("Address", back_populates="buyer")
-    shoppingCart = relationship("Product", secondary=buyers_and_products, back_populates="buyers")
+    shopping_cart = relationship("Product", secondary=buyers_and_products, back_populates="buyers")
 
 
 class Seller(Base):
@@ -41,8 +38,8 @@ class Seller(Base):
 
     id = Column(Integer, primary_key=True)
     brand = Column(String(64), nullable=False)
-    numberOfProductsSold = Column(Integer, default=0)
-    userId = Column(Integer, ForeignKey('users.id'))
+    number_of_products_sold = Column(Integer, default=0)
+    user_id = Column(Integer, ForeignKey('users.id'))
 
     user = relationship("User", back_populates="seller")
     products = relationship("Product", back_populates="seller")

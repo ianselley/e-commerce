@@ -14,10 +14,9 @@ class Address(Base):
     city = Column(String(64), nullable=False)
     flat = Column(String(64))
     state = Column(Text, nullable=False)
-    zipCode = Column(String(64), nullable=False)
+    zip_code = Column(String(64), nullable=False)
     country = Column(String(64), nullable=False)
     details = Column(Text)
-    buyerId = Column(Integer, ForeignKey("buyers.id"))
+    buyer_id = Column(Integer, ForeignKey("buyers.id"))
 
     buyer = relationship("Buyer", back_populates="addresses")
-    # buyerMain = relationship("Buyer", back_populates="mainAddress", foreign_keys=[buyerId])

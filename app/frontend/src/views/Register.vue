@@ -1,6 +1,9 @@
 <template>
   <div>
-    <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+    <img
+      id="profile-img"
+      src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png"
+    />
     <RegisterUser v-if="!user" />
     <RegisterBuyer v-else-if="userIsBuyer" />
     <RegisterSeller v-else />
@@ -32,7 +35,7 @@ export default {
   mounted() {
     if (
       this.user &&
-      (this.user.seller || (this.user.buyer && this.user.buyer.mainAddressId))
+      (this.user.seller || (this.user.buyer && this.user.buyer.main_address_id))
     ) {
       this.$router.push('/profile');
       this.$store.commit(

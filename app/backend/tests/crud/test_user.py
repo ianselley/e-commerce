@@ -18,6 +18,6 @@ def test_create_seller(db: Session):
     assert seller.email == email
     assert seller.brand == brand
     assert seller.telephone == telephone
-    assert hasattr(seller, "hashedPassword")
-    assert seller.hashedPassword != password
-    assert seller.hashedPassword != ""
+    assert hasattr(seller, "hashed_password")
+    assert seller.hashed_password != password
+    assert seller.hashed_password != ""

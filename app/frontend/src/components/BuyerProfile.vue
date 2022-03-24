@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>THIS SECTION IS TO DISPLAY BUYER INFORMATION</p>
+    <p><strong>THIS SECTION DISPLAYS THE BUYER INFORMATION</strong></p>
     <div v-if="!currentBuyer">
       <button @click="this.$router.push('/signup')">
         FINISH REGISTERING AS BUYER
@@ -9,10 +9,15 @@
     <div v-else>
       <p>Name: {{ currentBuyer.name }}</p>
       <p>Surname: {{ currentBuyer.surname }}</p>
+      <p>Buyer id: {{ currentBuyer.id }}</p>
       <p>Buyer: {{ currentBuyer }}</p>
-      <DisplayAddress v-for="address in currentBuyer.addresses" :key="address" :address="address" />
+      <DisplayAddress
+        v-for="address in currentBuyer.addresses"
+        :key="address"
+        :address="address"
+      />
       <button @click="addAddressFunction()">Add Address</button>
-      <RegisterAddress v-if="addAddress && !$store.state.auth.addedAddress"/>
+      <RegisterAddress v-if="addAddress && !$store.state.auth.addedAddress" />
     </div>
   </div>
 </template>
@@ -26,8 +31,7 @@ export default {
   data() {
     return {
       addAddress: false,
-      addressesLength: this.$store.state.auth.user.buyer.addresses.length,
-    }
+    };
   },
   computed: {
     currentBuyer() {
@@ -36,9 +40,9 @@ export default {
   },
   methods: {
     addAddressFunction() {
-      this.addAddress = true;
+      this.addAddress = !this.addAddress;
       this.$store.commit('auth/resetAddedAddress');
-    }
+    },
   },
 };
 </script>

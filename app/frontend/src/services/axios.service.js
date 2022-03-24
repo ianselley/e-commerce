@@ -1,6 +1,11 @@
 import axios from 'axios';
 
+import { BASE_URL } from '@/config.json';
+
 export default async function axiosRequest(options, callback) {
+  if (options.endpoint) {
+    options.url = BASE_URL + options.endpoint;
+  }
   return await axios(options)
     .then((response) => {
       typeof callback === 'function' && callback(response);

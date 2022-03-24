@@ -7,15 +7,15 @@ services:
     # Only needed in development, to reload vue
     volumes:
       - ./app/frontend:/app
-      # - ./app/frontend/node_modules:/app/node_modules
     ports:
       - 8001:8080
     restart: always
 
   backend:
     build: ./app/backend
-    # Only needed in development, to reload fastapi
     volumes:
+      - ./app/backend/product_images:/app/product_images
+      # Only needed in development, to reload fastapi
       - ./app/backend:/app
     links:
       - db

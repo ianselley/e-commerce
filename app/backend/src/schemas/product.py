@@ -1,6 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime
+from fastapi import UploadFile
 
 
 class ProductBase(BaseModel):
@@ -17,9 +18,10 @@ class ProductCreate(ProductBase):
 
 class ProductReturn(ProductBase):
     id: int
-    totalSold: int
-    dayAdded: datetime
-    sellerId: Optional[int] = None
+    total_sold: int
+    has_images: bool
+    day_added: datetime
+    seller_id: Optional[int] = None
 
     class Config:
         orm_mode = True
@@ -30,6 +32,6 @@ from src.schemas.order import OrderReturn
 
 
 class Product(ProductReturn):
-    seller: list[SellerReturn]
+    seller: SellerReturn
     buyers: list[BuyerReturn]
     orders: list[OrderReturn]

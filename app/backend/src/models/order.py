@@ -33,7 +33,7 @@ class Order(Base):
     date = Column(Date, default=datetime.datetime.now)
     delivered = Column(Boolean, default=False)
     quantity = Column(Integer, default=1)
-    buyerId = Column(Integer, ForeignKey("buyers.id"))
+    buyer_id = Column(Integer, ForeignKey("buyers.id"))
 
     buyer = relationship("Buyer", back_populates="orders")
     products = relationship("Product", secondary=orders_and_products, back_populates="orders")

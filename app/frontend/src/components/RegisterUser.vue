@@ -78,7 +78,7 @@
         <div>
           <button type="submit" :disabled="loading || !isValid">
             <span v-show="loading">LOADING</span>
-            Next
+            <span v-show="!loading">Next</span>
           </button>
         </div>
       </div>

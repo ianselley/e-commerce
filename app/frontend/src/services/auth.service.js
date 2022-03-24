@@ -1,20 +1,19 @@
 import { useCookies } from 'vue3-cookies';
 
-import { BASE_URL } from '@/config.json';
-import authHeader from './auth-header';
-import axiosRequest from './axios.service';
+import authHeader from './auth-header.js';
+import axiosRequest from './axios.service.js';
 
 const { cookies } = useCookies();
 
 class AuthService {
   login(user) {
     const options = {
-      url: BASE_URL + '/user/login',
+      endpoint: '/user/login',
       method: 'post',
       data: user,
     };
     return axiosRequest(options, (response) => {
-      if (response.data.accessToken) {
+      if (response.data.access_token) {
         cookies.set('user', JSON.stringify(response.data));
       }
     });
@@ -26,7 +25,7 @@ class AuthService {
 
   register(user) {
     const options = {
-      url: BASE_URL + '/user/signup',
+      endpoint: '/user/signup',
       method: 'post',
       data: user,
     };
@@ -35,7 +34,7 @@ class AuthService {
 
   registerBuyer(buyer) {
     const options = {
-      url: BASE_URL + '/user/signup-buyer',
+      endpoint: '/user/signup-buyer',
       method: 'post',
       headers: authHeader(),
       data: buyer,
@@ -51,7 +50,7 @@ class AuthService {
 
   registerSeller(info) {
     const options = {
-      url: BASE_URL + '/user/signup-seller',
+      endpoint: '/user/signup-seller',
       method: 'post',
       headers: authHeader(),
       data: info,
@@ -60,22 +59,6 @@ class AuthService {
       if (response.data) {
         const user = cookies.get('user');
         user.seller = response.data;
-        cookies.set('user', user);
-      }
-    });
-  }
-
-  registerAddress(address) {
-    const options = {
-      url: BASE_URL + '/address/register',
-      method: 'post',
-      headers: authHeader(),
-      data: address,
-    };
-    return axiosRequest(options, (response) => {
-      if (response.data) {
-        const user = cookies.get('user');
-        user.buyer.addresses.push(response.data);
         cookies.set('user', user);
       }
     });

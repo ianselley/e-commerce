@@ -1,10 +1,14 @@
 <template>
-  <div v-if="hasAttributes" class="base" :class="[addressIsMainId ? 'main-address' : 'not-main-address']">
-    <p> {{ address.name }} </p>
-    <p> {{ address.street }} {{ address.number }} {{ address.flat }} </p>
-    <p> {{ address.zipCode }} {{ address.city }} {{ address.state }} </p>
-    <p> {{ address.country }} </p>
-    <p> {{ address.details }} </p>
+  <div
+    v-if="hasAttributes"
+    class="base"
+    :class="[addressIsMainId ? 'main-address' : 'not-main-address']"
+  >
+    <p>{{ address.name }}</p>
+    <p>{{ address.street }} {{ address.number }} {{ address.flat }}</p>
+    <p>{{ address.zip_code }} {{ address.city }} {{ address.state }}</p>
+    <p>{{ address.country }}</p>
+    <p>{{ address.details }}</p>
   </div>
 </template>
 
@@ -16,20 +20,28 @@ export default {
   },
   computed: {
     hasAttributes() {
-      return this.address.city && this.address.street && this.address.state && this.address.zipCode && this.address.country;
+      return (
+        this.address.city &&
+        this.address.street &&
+        this.address.state &&
+        this.address.zip_code &&
+        this.address.country
+      );
     },
     addressIsMainId() {
-      return this.address.id === this.$store.state.auth.user.buyer.mainAddressId
-    }
-  }
-}
+      return (
+        this.address.id === this.$store.state.auth.user.buyer.main_address_id
+      );
+    },
+  },
+};
 </script>
 
 <style scoped>
 .base {
   border-radius: 1rem;
-  max-width: 50%; 
-  margin: 3.5rem auto; 
+  max-width: 50%;
+  margin: 3.5rem auto;
 }
 
 .main-address {

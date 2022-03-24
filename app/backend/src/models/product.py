@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, Float, Text, JSON, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, Float, Text, JSON, DateTime, Boolean
 from sqlalchemy.orm import relationship
 import datetime
 
@@ -12,13 +12,14 @@ class Product(Base):
     id = Column(Integer, primary_key=True)
     title = Column(Text, nullable=False)
     description = Column(Text)
+    has_images = Column(Boolean, default=False)
     price = Column(Float, nullable=False)
     stock = Column(Integer, nullable=False)
     specifications = Column(JSON)
-    totalSold = Column(Integer, default=0)
-    dayAdded = Column(DateTime, default=datetime.datetime.now)
-    sellerId = Column(Integer, ForeignKey("sellers.id"), nullable=False)
+    total_sold = Column(Integer, default=0)
+    day_added = Column(DateTime, default=datetime.datetime.now)
+    seller_id = Column(Integer, ForeignKey("sellers.id"), nullable=False)
 
     seller = relationship("Seller", back_populates="products")
-    buyers = relationship("Buyer", secondary=buyers_and_products, back_populates="shoppingCart")
+    buyers = relationship("Buyer", secondary=buyers_and_products, back_populates="shopping_cart")
     orders = relationship("Order", secondary=orders_and_products, back_populates="products")

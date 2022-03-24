@@ -1,10 +1,9 @@
-from fastapi import Depends, FastAPI, Response, status
+from fastapi import FastAPI
 from fastapi.security import HTTPBearer
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-from src import utils
-from src.routes import user_routes, address_routes
+from src.routes import user_routes, address_routes, product_routes
 from src.database import engine, Base
 
 
@@ -23,14 +22,4 @@ app.add_middleware(
 
 app.include_router(user_routes.router, prefix="/user")
 app.include_router(address_routes.router, prefix="/address")
-
-
-@app.get("/private")
-def private_endpoint(response: Response, token: str = Depends(token_auth_schema)):
-    result = utils.user.decode(token)
-
-    if result.get("status"):
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        return result
-
-    return result
+app.include_router(product_routes.router, prefix="/product")

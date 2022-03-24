@@ -25,11 +25,11 @@ def signup(user: schemas.UserCreate, db: Session = Depends(utils.db.get_db)):
 @router.post("/signup-buyer", response_model=schemas.Buyer)
 def signup_buyer(buyer: schemas.BuyerCreate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
-    userId = token_data.get("sub")
-    if not userId:
+    user_id = token_data.get("sub")
+    if not user_id:
         raise HTTPException(status_code=400, detail="Invalid token")
 
-    user_db = crud.user.get_user(db, userId=userId)
+    user_db = crud.user.get_user(db, user_id=user_id)
     if not user_db:
         raise HTTPException(status_code=400, detail="User does not exist")
     if user_db.buyer is not None:
@@ -42,11 +42,11 @@ def signup_buyer(buyer: schemas.BuyerCreate, db: Session = Depends(utils.db.get_
 @router.post("/signup-seller", response_model=schemas.Seller)
 def signup_seller(seller: schemas.SellerCreate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
-    userId = token_data.get("sub")
-    if not userId:
+    user_id = token_data.get("sub")
+    if not user_id:
         raise HTTPException(status_code=400, detail="Invalid token")
 
-    user_db = crud.user.get_user(db, userId=userId)
+    user_db = crud.user.get_user(db, user_id=user_id)
     if not user_db:
         raise HTTPException(status_code=400, detail="User does not exist")
     if user_db.seller is not None:
@@ -63,23 +63,23 @@ def login(user: schemas.UserLogin, db: Session = Depends(utils.db.get_db)):
         raise HTTPException(status_code=400, detail="Email not registered")
     if not crud.user.verify_password(user_db, user.password):
         raise HTTPException(status_code=400, detail="Incorrect password")
-    user_db.accessToken = utils.user.encode(user_db)
+    user_db.access_token = utils.user.encode(user_db)
     return user_db
 
 
 @router.get("", response_model=schemas.User)
-def read_user(userId: int, db: Session = Depends(utils.db.get_db)):
-    user = crud.user.get_user(db=db, userId=userId)
+def read_user(user_id: int, db: Session = Depends(utils.db.get_db)):
+    user = crud.user.get_user(db=db, user_id=user_id)
     return user
 
 
 @router.get("/buyer", response_model=schemas.Buyer)
-def read_buyer(buyerId: int, db: Session = Depends(utils.db.get_db)):
-    buyer = crud.user.get_buyer(db=db, buyerId=buyerId)
+def read_buyer(buyer_id: int, db: Session = Depends(utils.db.get_db)):
+    buyer = crud.user.get_buyer(db=db, buyer_id=buyer_id)
     return buyer
 
 
 @router.get("/seller", response_model=schemas.Seller)
-def read_seller(sellerId: int, db: Session = Depends(utils.db.get_db)):
-    seller = crud.user.get_seller(db=db, sellerId=sellerId)
+def read_seller(seller_id: int, db: Session = Depends(utils.db.get_db)):
+    seller = crud.user.get_seller(db=db, seller_id=seller_id)
     return seller
