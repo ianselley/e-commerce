@@ -3,15 +3,15 @@ from pydantic import BaseModel
 
 
 class AddressBase(BaseModel):
-    name: Optional[str] = None
+    name: Optional[str]
     street: str
-    number: Optional[str] = None
+    number: Optional[str] 
     city: str
-    flat: Optional[str] = None
+    flat: Optional[str]
     state: str
     zip_code: str
     country: str
-    details: Optional[str] = None
+    details: Optional[str]
 
 
 class AddressCreate(AddressBase):

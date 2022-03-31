@@ -14,13 +14,24 @@ class AuthService {
     };
     return axiosRequest(options, (response) => {
       if (response.data.access_token) {
-        cookies.set('user', JSON.stringify(response.data));
+        const user = Object.assign({}, response.data);
+        if (user.seller) {
+          const { seller } = user;
+          localStorage.setItem('seller', JSON.stringify(seller));
+        } else if (user.buyer) {
+          const { buyer } = user;
+          localStorage.setItem('buyer', JSON.stringify(buyer));
+        }
+        delete user.seller;
+        delete user.buyer;
+        cookies.set('user', JSON.stringify(user));
       }
     });
   }
 
   logout() {
     cookies.remove('user');
+    localStorage.clear();
   }
 
   register(user) {
@@ -41,9 +52,7 @@ class AuthService {
     };
     return axiosRequest(options, (response) => {
       if (response.data) {
-        const user = cookies.get('user');
-        user.buyer = response.data;
-        cookies.set('user', user);
+        localStorage.setItem('buyer', JSON.stringify(response.data));
       }
     });
   }
@@ -57,9 +66,7 @@ class AuthService {
     };
     return axiosRequest(options, (response) => {
       if (response.data) {
-        const user = cookies.get('user');
-        user.seller = response.data;
-        cookies.set('user', user);
+        localStorage.setItem('seller', JSON.stringify(response.data));
       }
     });
   }

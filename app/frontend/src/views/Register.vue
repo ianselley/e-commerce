@@ -35,7 +35,9 @@ export default {
   mounted() {
     if (
       this.user &&
-      (this.user.seller || (this.user.buyer && this.user.buyer.main_address_id))
+      (this.$store.state.auth.seller ||
+        (this.$store.state.auth.buyer &&
+          this.$storelstate.auth.buyer.main_address_id))
     ) {
       this.$router.push('/profile');
       this.$store.commit(

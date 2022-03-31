@@ -1,17 +1,16 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="@/assets/logo.png" />
-    <HelloWorld />
+  <div>
+    <DisplayAllProducts />
   </div>
 </template>
 
 <script>
-import HelloWorld from '@/components/HelloWorld.vue';
+import DisplayAllProducts from '@/components/DisplayAllProducts.vue';
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld,
+    DisplayAllProducts,
   },
 };
 </script>

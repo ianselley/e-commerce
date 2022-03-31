@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from fastapi import UploadFile
 from pathlib import Path
 import shutil
@@ -20,8 +21,8 @@ def create_product(db: Session, product: schemas.ProductCreate, user_id: int):
     return product_created
 
 
-def upload_image(image: UploadFile, destination: Path, list_of_image_paths: list):
-    file = destination / image.filename
+def upload_image(image: UploadFile, name: int):
+    file = Path("/app/product_images") / str(name)
     if file.exists():
         return
     file.touch()
@@ -30,20 +31,53 @@ def upload_image(image: UploadFile, destination: Path, list_of_image_paths: list
             shutil.copyfileobj(image.file, buffer)
     finally:
         image.file.close()
-    list_of_image_paths.append(file)
 
 
 def upload_images(db: Session, images: list[UploadFile], product_id: int):
     product = get_product(db=db, product_id=product_id)
-    seller = crud.user.get_seller(db=db, seller_id=product.seller_id)
-    cwd = Path.cwd()
-    destination = cwd / "product_images" / f"{seller.id}_{seller.brand}" / f"{product.id}_{product.title}"
-    if not destination.exists():
-        destination.mkdir(parents=True)
-    list_of_image_paths = []
     for image in images:
-        upload_image(image=image, destination=destination, list_of_image_paths=list_of_image_paths)
-    product.has_images = True
+        for product_image in product.images:
+            if product_image.filename == image.filename:
+                break
+        else:
+            models.Image(filename=image.filename, product=product)
+            db.commit()
+            db.refresh(product)
+            upload_image(image=image, name=product.images[-1].id)
+    return product.images
+
+
+def get_products(db: Session, substring: str = "", skip: int = 0, limit: int = 20):
+    query = db.query(models.Product).order_by(models.Product.id.desc())
+    criterion = or_(
+        models.Product.title.contains(substring),
+        models.Product.description.contains(substring),
+        models.Seller.brand.contains(substring),
+    )
+        
+    return query.join(models.Seller).filter(criterion).offset(skip).limit(limit).all()
+
+
+def get_image(db: Session, image_id: int):
+    return db.query(models.Image).filter_by(id=image_id).first()
+
+
+def delete_image_file(image_id: int):
+    Path(f"/app/product_images/{image_id}").unlink()
+
+
+def delete_product(db: Session, product_id: int):
+    product = get_product(db=db, product_id=product_id)
+    for image in product.images:
+        delete_image_file(image_id=image.id)
+    db.delete(product)
     db.commit()
-    db.refresh(product)
-    return list_of_image_paths
+    return product
+
+
+def delete_image(db: Session, image_id: int):
+    delete_image_file(image_id=image_id)
+    image = get_image(db=db, image_id=image_id)
+    db.delete(image)
+    db.commit()
+    return image

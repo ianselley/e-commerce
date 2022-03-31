@@ -29,9 +29,7 @@ export default {
       );
     },
     addressIsMainId() {
-      return (
-        this.address.id === this.$store.state.auth.user.buyer.main_address_id
-      );
+      return this.address.id === this.$store.state.auth.buyer.main_address_id;
     },
   },
 };

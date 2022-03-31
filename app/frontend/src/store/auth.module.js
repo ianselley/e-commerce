@@ -6,19 +6,27 @@ import ProductService from '@/services/product.service';
 
 const { cookies } = useCookies();
 const user = cookies.get('user');
+let buyer, seller;
+try {
+  buyer = JSON.parse(localStorage.getItem('buyer'));
+  seller = JSON.parse(localStorage.getItem('seller'));
+} catch {
+  buyer = undefined;
+  seller = undefined;
+}
 let userRole;
 
-if (user && user.buyer) {
+if (user && user.role == 'buyer') {
   userRole = 'buyer';
-} else if (user && user.seller) {
+} else if (user && user.role == 'seller') {
   userRole = 'seller';
 } else {
   userRole = 'user';
 }
 
 const initialState = user
-  ? { loggedIn: true, loggedInAs: userRole, user }
-  : { loggedIn: false, loggedInAs: null, user: null };
+  ? { loggedIn: true, loggedInAs: userRole, user, buyer, seller }
+  : { loggedIn: false, loggedInAs: null, user: null, buyer, seller };
 
 export const auth = {
   namespaced: true,
@@ -34,37 +42,38 @@ export const auth = {
     },
     registerBuyer(state, buyer) {
       state.loggedInAs = 'buyer';
-      state.user.buyer = buyer;
+      state.buyer = buyer;
     },
     registerSeller(state, seller) {
       state.loggedInAs = 'seller';
-      state.user.seller = seller;
+      state.seller = seller;
     },
     registerAddress(state, address) {
-      state.user.buyer.addresses.push(address);
-      if (!state.user.buyer.main_address_id) {
-        state.user.buyer.main_address_id = address.buyer.main_address_id;
-      }
+      state.buyer.main_address_id = address.buyer.main_address_id;
+      delete address.buyer;
+      state.buyer.addresses.push(address);
       state.addedAddress = true;
     },
     resetAddedAddress(state) {
       state.addedAddress = false;
     },
     registerProduct(state, product) {
-      state.user.seller.products.push(product);
+      state.seller.products.push(product);
     },
     uploadImages(state, productId) {
-      state.user.seller.products.forEach((product) => {
+      state.seller.products.forEach((product) => {
         if (product.id === productId) {
           product.hasImages = true;
         }
       });
     },
     loginSuccess(state, user) {
-      if (user.seller) {
+      if (user.role == 'seller') {
         state.loggedInAs = 'seller';
-      } else if (user.buyer) {
+        state.seller = user.seller;
+      } else if (user.role == 'buyer') {
         state.loggedInAs = 'buyer';
+        state.buyer = user.buyer;
       } else {
         state.loggedInAs = 'user';
       }
@@ -75,20 +84,24 @@ export const auth = {
       state.loggedInAs = null;
       state.loggedIn = false;
       state.user = null;
+      state.buyer = null;
+      state.seller = null;
     },
     logout(state) {
       state.loggedInAs = null;
       state.loggedIn = false;
       state.user = null;
+      state.buyer = null;
+      state.seller = null;
     },
   },
 
   actions: {
     login({ commit }, user) {
       return AuthService.login(user)
-        .then((user) => {
-          commit('loginSuccess', user);
-          return Promise.resolve(user);
+        .then((response) => {
+          commit('loginSuccess', response);
+          return Promise.resolve(response);
         })
         .catch((error) => {
           commit('loginFailure');

@@ -77,10 +77,10 @@ export default {
       return true;
     },
     loggedInAsBuyer() {
-      return this.$store.state.auth.loggedInAs === 'buyer';
+      return this.$store.state.auth.loggedInAs === 'buyer' && this.buyer;
     },
     buyer() {
-      return this.$store.state.auth.user.buyer;
+      return this.$store.state.auth.buyer;
     },
   },
   methods: {

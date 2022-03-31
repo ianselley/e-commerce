@@ -6,10 +6,10 @@ import VueCookies from 'vue3-cookies';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import { BASE_URL } from './config.json';
+import { API_URL } from './config.json';
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = BASE_URL;
+axios.defaults.baseURL = API_URL;
 
 const cookiesConfig = {
   expireTimes: '30d',

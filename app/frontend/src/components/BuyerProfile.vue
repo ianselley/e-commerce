@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     currentBuyer() {
-      return this.$store.state.auth.user.buyer;
+      return this.$store.state.auth.buyer;
     },
   },
   methods: {

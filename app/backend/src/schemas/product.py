@@ -1,15 +1,16 @@
 from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime
-from fastapi import UploadFile
+
+from src.schemas.image import Image
 
 
 class ProductBase(BaseModel):
     title: str
-    description: Optional[str] = None
+    description: Optional[str]
     price: float
     stock: int
-    specifications: Optional[dict[str, str]] = None
+    specifications: dict[str, str]
 
 
 class ProductCreate(ProductBase):
@@ -19,19 +20,18 @@ class ProductCreate(ProductBase):
 class ProductReturn(ProductBase):
     id: int
     total_sold: int
-    has_images: bool
+    images: list[Image]
     day_added: datetime
-    seller_id: Optional[int] = None
+    seller_id: Optional[int]
 
     class Config:
         orm_mode = True
 
 
-from src.schemas.user import BuyerReturn, SellerReturn
+from src.schemas.user import SellerReturn
 from src.schemas.order import OrderReturn
 
 
 class Product(ProductReturn):
     seller: SellerReturn
-    buyers: list[BuyerReturn]
     orders: list[OrderReturn]

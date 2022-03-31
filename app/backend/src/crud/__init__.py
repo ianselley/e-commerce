@@ -1,1 +1,1 @@
-from . import user, product, order, address
+from . import user, product, order, address, image

@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <p>ID: {{ productId }}</p>
+  <div style="margin-bottom: 1.25rem">
     <form onsubmit="return false;">
       <div class="imgContent">
         <input
@@ -12,7 +11,9 @@
           accept="image/*"
           multiple
         />
-        <button @click="onUploadImage" :disabled="zeroImages">Upload Images</button>
+        <button @click="onUploadImage" :disabled="zeroImages || loading">
+          Upload Images
+        </button>
       </div>
     </form>
   </div>
@@ -28,12 +29,13 @@ export default {
   data() {
     return {
       images: [],
+      loading: false,
     };
   },
   computed: {
     zeroImages() {
       return this.images.length === 0;
-    }
+    },
   },
   methods: {
     onFileChange(e) {
@@ -41,13 +43,20 @@ export default {
       this.images.push(...files);
     },
     onUploadImage() {
+      this.loading = true;
       const images = Object.assign([], this.images);
       ProductService.uploadImages(this.$props.productId, images)
         .then(() => {
+          this.loading = false;
           this.$refs.images.value = null;
-          this.$store.dispatch('alert/setMessage', 'Image/s uploaded successfully');
+          this.images = [];
+          this.$store.dispatch(
+            'alert/setMessage',
+            'Image/s uploaded successfully'
+          );
         })
         .catch((error) => {
+          this.loading = false;
           this.$store.dispatch('alert/setMessage', error);
         });
     },

@@ -1,6 +1,7 @@
 <template>
   <div>
     <form
+      v-if="!submitted"
       @submit="handleUploadProduct"
       :validation-schema="uploadProductSchema"
       onsubmit="return false;"
@@ -68,28 +69,24 @@
           <span>{{ errors.specifications }}</span>
         </div>
         <div>
-          <input
-            id="file-input"
-            type="file"
-            accept="image/*"
-            multiple
-            @change="selectImages"
-          />
-        </div>
-        <div>
           <button type="submit" :disabled="loading || !isValid">
             <span v-show="loading">LOADING</span>
-            <span v-show="!loading">Submit product</span>
+            <span v-show="!loading">Submit product and add images</span>
           </button>
         </div>
       </div>
     </form>
+    <UploadImages v-if="productId" :productId="productId" />
   </div>
 </template>
 
 <script>
 import * as yup from 'yup';
+import UploadImages from './UploadImages.vue';
 export default {
+  components: {
+    UploadImages,
+  },
   name: 'UploadProduct',
   data() {
     const uploadProductSchema = yup.object({
@@ -118,7 +115,8 @@ export default {
       values,
       errors,
       uploadProductSchema,
-      images: undefined,
+      productId: undefined,
+      submitted: false,
     };
   },
   computed: {
@@ -135,10 +133,6 @@ export default {
     },
   },
   methods: {
-    selectImages() {
-      this.images = Array.from(event.target.files);
-      console.log(this.images);
-    },
     validateAll() {
       this.uploadProductSchema
         .validate(this.values, { abortEarly: false })
@@ -159,15 +153,9 @@ export default {
       this.$store
         .dispatch('auth/registerProduct', product)
         .then((response) => {
-          if (!this.images) return;
-          return this.$store.dispatch(
-            'auth/uploadImages',
-            response.id,
-            this.images
-          );
-        })
-        .then(() => {
           this.loading = false;
+          this.productId = response.id;
+          this.submitted = true;
         })
         .catch((error) => {
           this.loading = false;

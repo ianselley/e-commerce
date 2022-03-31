@@ -56,17 +56,6 @@ def get_seller_by_user_id(db: Session, user_id: int):
     return db.query(models.Seller).filter_by(user_id=user_id).first()
 
 
-# def update_seller(db: Session, seller: schemas.SellerCreate, seller_id: int):
-#     seller_to_update = db.query(models.Seller).filter_by(id=seller_id).first()
-#     previous_brand = seller_to_update.brand
-#     seller_to_update.brand = seller.brand
-#     if os.path.exists(f"{seller_to_update.id}_{previous_brand}"):
-#         os.rename(f"{seller_to_update.id}_{previous_brand}", f"{seller_to_update.id}_{seller.brand}")
-#     db.commit()
-#     db.refresh(seller_to_update)
-#     return seller_to_update
-
-
 def verify_password(user: models.User, password: str):
     password_bytes = password.encode()
     user_hashed_password_bytes = user.hashed_password.encode()

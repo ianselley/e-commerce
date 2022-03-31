@@ -1,9 +1,5 @@
-import { useCookies } from 'vue3-cookies';
-
 import authHeader from './auth-header.js';
 import axiosRequest from './axios.service.js';
-
-const { cookies } = useCookies();
 
 class ProductService {
   registerProduct(product) {
@@ -15,9 +11,10 @@ class ProductService {
     };
     return axiosRequest(options, (response) => {
       if (response.data) {
-        const user = cookies.get('user');
-        user.seller.products.push(response.data);
-        cookies.set('user', user);
+        let products = JSON.parse(localStorage.getItem('products'));
+        if (!products) products = [];
+        products.push(response.data);
+        localStorage.setItem('products', JSON.stringify(products));
       }
     });
   }
@@ -35,6 +32,13 @@ class ProductService {
         'Content-Type': 'multipart/form-data',
       },
       data: bodyFormData,
+    };
+    return axiosRequest(options);
+  }
+  getProducts() {
+    const options = {
+      endpoint: '/product/all',
+      method: 'get',
     };
     return axiosRequest(options);
   }

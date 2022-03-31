@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     currentSeller() {
-      return this.$store.state.auth.user.seller;
+      return this.$store.state.auth.seller;
     },
   },
   methods: {
