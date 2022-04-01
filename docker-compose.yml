@@ -4,7 +4,6 @@ services:
 
   frontend:
     build: ./app/frontend
-    # Only needed in development, to reload vue
     volumes:
       - ./app/frontend:/app
     ports:
@@ -17,7 +16,6 @@ services:
       - type: volume
         source: product_images
         target: /app/product_images
-      # Only needed in development, to reload fastapi
       - ./app/backend:/app
     links:
       - db
@@ -31,8 +29,7 @@ services:
       db:
         condition: service_healthy
     restart: always
-    # Only needed in development, to reload fastapi
-    command: /start-reload.sh
+    command: /start.sh
 
   db:
     build: ./app/db
