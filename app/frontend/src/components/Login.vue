@@ -63,6 +63,13 @@ export default {
       this.loading = true;
       this.$store
         .dispatch('auth/login', this.values)
+        .then((response) => {
+          if (response.seller) {
+            const sellerId = response.seller.id;
+            console.log('im going to caall getSelelr...')
+            return this.$store.dispatch('product/getSellerProducts', sellerId)
+          }
+        })
         .then(() => {
           this.loading = false;
           this.$router.push('/profile');

@@ -10,7 +10,6 @@
       <p>Name: {{ currentBuyer.name }}</p>
       <p>Surname: {{ currentBuyer.surname }}</p>
       <p>Buyer id: {{ currentBuyer.id }}</p>
-      <p>Buyer: {{ currentBuyer }}</p>
       <DisplayAddress
         v-for="address in currentBuyer.addresses"
         :key="address"

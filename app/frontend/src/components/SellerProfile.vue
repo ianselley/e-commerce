@@ -10,9 +10,8 @@
       <p>Brand: {{ currentSeller.brand }}</p>
       <p>Products sold: {{ currentSeller.number_of_products_sold }}</p>
       <p>Seller id: {{ currentSeller.id }}</p>
-      <p>Products: {{ currentSeller.products }}</p>
       <DisplayProduct
-        v-for="product in currentSeller.products"
+        v-for="product in sellerProducts"
         :key="product"
         :product="product"
       />
@@ -39,6 +38,9 @@ export default {
   computed: {
     currentSeller() {
       return this.$store.state.auth.seller;
+    },
+    sellerProducts() {
+      return this.$store.state.product.sellerProducts;
     },
   },
   methods: {

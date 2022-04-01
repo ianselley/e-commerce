@@ -151,7 +151,7 @@ export default {
       this.loading = true;
       const product = Object.assign({}, this.values);
       this.$store
-        .dispatch('auth/registerProduct', product)
+        .dispatch('product/registerProduct', product)
         .then((response) => {
           this.loading = false;
           this.productId = response.id;

@@ -2,7 +2,7 @@
   <div>
     <p>HERE ARE ALL THE PRODUCTS DISPLAYED</p>
     <DisplayProduct
-      v-for="product in products"
+      v-for="product in allProducts"
       :key="product"
       :product="product"
     />
@@ -18,15 +18,15 @@ export default {
   },
   data() {
     return {
-      products: [],
+      allProducts: [],
     };
   },
   methods: {
-    getProducts() {
+    getAllProducts() {
       this.$store
-        .dispatch('product/getProducts')
+        .dispatch('product/getAllProducts')
         .then((response) => {
-          this.products = response;
+          this.allProducts = response;
         })
         .catch((error) => {
           this.$store.commit('alert/setMessage', error);
@@ -35,7 +35,7 @@ export default {
   },
 
   created() {
-    this.getProducts();
+    this.getAllProducts();
   },
 };
 </script>

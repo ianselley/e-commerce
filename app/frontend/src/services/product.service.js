@@ -11,13 +11,14 @@ class ProductService {
     };
     return axiosRequest(options, (response) => {
       if (response.data) {
-        let products = JSON.parse(localStorage.getItem('products'));
-        if (!products) products = [];
-        products.push(response.data);
-        localStorage.setItem('products', JSON.stringify(products));
+        let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
+        if (!sellerProducts) sellerProducts = [];
+        sellerProducts.push(response.data);
+        localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
       }
     });
   }
+
   uploadImages(productId, images) {
     const bodyFormData = new FormData();
     bodyFormData.append('product_id', productId);
@@ -33,11 +34,39 @@ class ProductService {
       },
       data: bodyFormData,
     };
-    return axiosRequest(options);
+    return axiosRequest(options, (response) => {
+      let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
+      const productListId = sellerProducts.findIndex(
+        (product) => product.id == productId
+      );
+      sellerProducts[productListId].images = response.data;
+      localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
+    });
   }
-  getProducts() {
+
+  getAllProducts() {
     const options = {
       endpoint: '/product/all',
+      method: 'get',
+    };
+    return axiosRequest(options);
+  }
+
+  getSellerProducts(sellerId) {
+    const options = {
+      endpoint: '/user/seller',
+      method: 'get',
+      params: { seller_id: sellerId },
+    };
+    return axiosRequest(options, (response) => {
+      const { products } = response.data;
+      response.data = products;
+    });
+  }
+
+  getProduct(productId) {
+    const options = {
+      endpoint: `/product/${productId}`,
       method: 'get',
     };
     return axiosRequest(options);
