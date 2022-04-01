@@ -32,9 +32,9 @@ const routes = [
     component: () => import('@/components/Logout.vue'),
   },
   {
-    path: '/test',
-    name: 'Test',
-    component: () => import('@/views/Test.vue'),
+    path: '/product/:id',
+    // name: 'Product',
+    component: () => import('@/views/Product.vue'),
   },
 ];
 

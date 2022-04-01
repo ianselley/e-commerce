@@ -17,7 +17,12 @@ class AuthService {
         const user = Object.assign({}, response.data);
         if (user.seller) {
           const { seller } = user;
+          const sellerProducts = seller.products;
           localStorage.setItem('seller', JSON.stringify(seller));
+          localStorage.setItem(
+            'sellerProducts',
+            JSON.stringify(sellerProducts)
+          );
         } else if (user.buyer) {
           const { buyer } = user;
           localStorage.setItem('buyer', JSON.stringify(buyer));

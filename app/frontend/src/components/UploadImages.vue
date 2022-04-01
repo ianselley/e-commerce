@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import ProductService from '@/services/product.service.js';
 export default {
   name: 'UploadImages',
   props: {
@@ -45,7 +44,8 @@ export default {
     onUploadImage() {
       this.loading = true;
       const images = Object.assign([], this.images);
-      ProductService.uploadImages(this.$props.productId, images)
+      const productId = this.$props.productId;
+      this.$store.dispatch('product/uploadImages', { productId, images })
         .then(() => {
           this.loading = false;
           this.$refs.images.value = null;

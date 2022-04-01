@@ -63,6 +63,12 @@ def get_all_products(substring: str = "", skip: int = 0, limit: int = 20, db: Se
     return products
 
 
+@router.get("/{product_id}", response_model=schemas.Product)
+def get_all_products(product_id: int, db: Session = Depends(utils.db.get_db)):
+    product = crud.product.get_product(db=db, product_id=product_id)
+    return product
+
+
 @router.get("/images/{image_id}", response_class=FileResponse)
 async def get_image(image_id: int):
     image_path = f"/app/product_images/{image_id}"

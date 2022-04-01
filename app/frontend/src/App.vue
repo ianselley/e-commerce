@@ -1,16 +1,19 @@
 <template>
-  <div id="nav">
-    <IanSelleyLogo />
-    <router-link
-      v-for="route in this.$router.options.routes"
-      :key="route.name"
-      :to="route.path"
-      >{{ route.name }} |</router-link
-    >
+  <div>
+    <div id="nav">
+      <IanSelleyLogo />
+      <router-link
+        v-for="route in this.$router.options.routes"
+        
+        :key="route.name"
+        :to="route.path"
+        > <span v-if="route.name" >{{ route.name }} |</span></router-link
+      >
+    </div>
+    <Alert />
+    <router-view />
+    <footer />
   </div>
-  <Alert />
-  <router-view />
-  <footer />
 </template>
 
 <script>

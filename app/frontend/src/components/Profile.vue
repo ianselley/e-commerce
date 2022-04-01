@@ -3,9 +3,9 @@
     <header>
       <h3>
         <strong>{{
-          (currentUser.seller && currentUser.seller.brand) ||
-          (currentUser.buyer &&
-            currentUser.buyer.name + ' ' + currentUser.buyer.surname)
+          (currentSeller && currentSeller.brand) ||
+          (currentBuyer &&
+            currentBuyer.name + ' ' + currentBuyer.surname)
         }}</strong>
         Profile
       </h3>
@@ -46,10 +46,16 @@ export default {
       return this.$store.state.auth.user;
     },
     userIsBuyer() {
-      return this.currentUser.role == 'buyer';
+      return this.$store.state.auth.loggedInAs == 'buyer';
+    },
+    currentBuyer() {
+      return this.$store.state.auth.buyer;
     },
     userIsSeller() {
-      return this.currentUser.role == 'seller';
+      return this.$store.state.auth.loggedInAs == 'seller';
+    },
+    currentSeller() {
+      return this.$store.state.auth.seller;
     },
   },
   created() {
