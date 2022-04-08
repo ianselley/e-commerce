@@ -66,8 +66,7 @@ export default {
         .then((response) => {
           if (response.seller) {
             const sellerId = response.seller.id;
-            console.log('im going to caall getSelelr...')
-            return this.$store.dispatch('product/getSellerProducts', sellerId)
+            return this.$store.dispatch('product/getSellerProducts', sellerId);
           }
         })
         .then(() => {

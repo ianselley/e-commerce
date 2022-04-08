@@ -10,6 +10,14 @@
       <p>Name: {{ currentBuyer.name }}</p>
       <p>Surname: {{ currentBuyer.surname }}</p>
       <p>Buyer id: {{ currentBuyer.id }}</p>
+      <p>CART:</p>
+      <div class="cart">
+        <DisplayCartProduct
+          v-for="cartProduct in currentBuyer.shopping_cart"
+          :key="cartProduct"
+          :cartProduct="cartProduct"
+        />
+      </div>
       <DisplayAddress
         v-for="address in currentBuyer.addresses"
         :key="address"
@@ -24,9 +32,14 @@
 <script>
 import DisplayAddress from '@/components/DisplayAddress.vue';
 import RegisterAddress from '@/components/RegisterAddress.vue';
+import DisplayCartProduct from '@/components/DisplayCartProduct.vue';
 export default {
   name: 'BuyerProfile',
-  components: { RegisterAddress, DisplayAddress },
+  components: {
+    RegisterAddress,
+    DisplayAddress,
+    DisplayCartProduct,
+  },
   data() {
     return {
       addAddress: false,
@@ -45,3 +58,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.cart {
+  border: 1px solid rgb(106, 90, 205);
+  border-radius: 0.4rem;
+  background: rgba(192, 192, 192, 0.6);
+  display: inline-block;
+}
+</style>

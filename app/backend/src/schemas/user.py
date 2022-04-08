@@ -62,13 +62,14 @@ class SellerReturn(SellerBase):
 from src.schemas.address import AddressReturn
 from src.schemas.product import ProductReturn
 from src.schemas.order import OrderReturn
+from src.schemas.cart_product import CartProduct
 
 
 class Buyer(BuyerReturn):
     user: UserReturn
-    addresses: Optional[list[AddressReturn]]
-    shopping_cart: Optional[dict[ProductReturn, int]]
     orders: Optional[list[OrderReturn]]
+    addresses: Optional[list[AddressReturn]]
+    shopping_cart: Optional[list[CartProduct]]
 
 
 class Seller(SellerReturn):

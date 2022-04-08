@@ -1,9 +1,9 @@
-from sqlalchemy import Column, ForeignKey, Integer, Float, Text, JSON, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, Float, Text, JSON, DateTime, Boolean
 from sqlalchemy.orm import relationship
 import datetime
 
 from src.database import Base
-from .many_to_many import buyers_and_products, orders_and_products
+from .many_to_many import orders_and_products
 
 
 class Product(Base):
@@ -17,9 +17,10 @@ class Product(Base):
     specifications = Column(JSON)
     total_sold = Column(Integer, default=0)
     day_added = Column(DateTime, default=datetime.datetime.now)
+    available = Column(Boolean, default=True)
     seller_id = Column(Integer, ForeignKey("sellers.id"), nullable=False)
 
     seller = relationship("Seller", back_populates="products")
-    images = relationship("Image", back_populates="product", cascade="all, delete")
-    buyers = relationship("Buyer", secondary=buyers_and_products, back_populates="shopping_cart")
+    images = relationship("Image", back_populates="product")
+    cart_products = relationship("CartProduct", back_populates="product")
     orders = relationship("Order", secondary=orders_and_products, back_populates="products")

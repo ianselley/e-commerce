@@ -4,11 +4,11 @@
       <IanSelleyLogo />
       <router-link
         v-for="route in this.$router.options.routes"
-        
         :key="route.name"
         :to="route.path"
-        > <span v-if="route.name" >{{ route.name }} |</span></router-link
       >
+        <span v-if="route.name">{{ route.name }} |</span>
+      </router-link>
     </div>
     <Alert />
     <router-view />

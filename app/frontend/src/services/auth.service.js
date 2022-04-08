@@ -14,21 +14,18 @@ class AuthService {
     };
     return axiosRequest(options, (response) => {
       if (response.data.access_token) {
-        const user = Object.assign({}, response.data);
-        if (user.seller) {
-          const { seller } = user;
+        const { seller, buyer, ...user } = response.data;
+        if (seller) {
           const sellerProducts = seller.products;
           localStorage.setItem('seller', JSON.stringify(seller));
           localStorage.setItem(
             'sellerProducts',
             JSON.stringify(sellerProducts)
           );
-        } else if (user.buyer) {
-          const { buyer } = user;
+        }
+        if (buyer) {
           localStorage.setItem('buyer', JSON.stringify(buyer));
         }
-        delete user.seller;
-        delete user.buyer;
         cookies.set('user', JSON.stringify(user));
       }
     });

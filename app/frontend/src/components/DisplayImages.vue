@@ -33,17 +33,19 @@ export default {
   data() {
     return {
       imageId: undefined,
-    }
+    };
   },
   computed: {
     selectedImage() {
-      return this.images.find(image => image.id == this.imageId) || this.images[0];
-    }
+      return (
+        this.images.find((image) => image.id == this.imageId) || this.images[0]
+      );
+    },
   },
   methods: {
     changeSelectedImage(imageId) {
       this.imageId = imageId;
-    }
+    },
   },
 };
 </script>

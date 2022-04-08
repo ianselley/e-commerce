@@ -59,7 +59,9 @@ export const auth = {
     loginSuccess(state, user) {
       if (user.role == 'seller') {
         state.loggedInAs = 'seller';
-        delete user.seller.products;
+        if (user.seller) {
+          delete user.seller.products;
+        }
         state.seller = user.seller;
       } else if (user.role == 'buyer') {
         state.loggedInAs = 'buyer';
@@ -83,6 +85,14 @@ export const auth = {
       state.user = null;
       state.buyer = null;
       state.seller = null;
+    },
+    addToCart(state, cartProduct) {
+      state.buyer.shopping_cart.push(cartProduct);
+    },
+    removeFromCart(state, cartProductId) {
+      state.buyer.shopping_cart = state.buyer.shopping_cart.filter(
+        (cartProduct) => cartProduct.id != cartProductId
+      );
     },
   },
 

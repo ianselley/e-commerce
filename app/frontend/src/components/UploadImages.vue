@@ -45,7 +45,8 @@ export default {
       this.loading = true;
       const images = Object.assign([], this.images);
       const productId = this.$props.productId;
-      this.$store.dispatch('product/uploadImages', { productId, images })
+      this.$store
+        .dispatch('product/uploadImages', { productId, images })
         .then(() => {
           this.loading = false;
           this.$refs.images.value = null;

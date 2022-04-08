@@ -4,8 +4,7 @@
       <h3>
         <strong>{{
           (currentSeller && currentSeller.brand) ||
-          (currentBuyer &&
-            currentBuyer.name + ' ' + currentBuyer.surname)
+          (currentBuyer && currentBuyer.name + ' ' + currentBuyer.surname)
         }}</strong>
         Profile
       </h3>

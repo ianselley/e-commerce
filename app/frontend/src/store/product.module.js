@@ -1,7 +1,7 @@
 import ProductService from '@/services/product.service';
 
 const allProducts = JSON.parse(localStorage.getItem('allProducts'));
-const sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
+const sellerProducts = JSON.parse(localStorage.getItem('sellerProducts')) || [];
 
 export const product = {
   namespaced: true,
@@ -17,6 +17,7 @@ export const product = {
       state.product = value;
     },
     registerProduct(state, product) {
+      if (!state.sellerProducts) state.sellerProducts = [];
       state.sellerProducts.push(product);
     },
     uploadImages(state, { productId, images }) {

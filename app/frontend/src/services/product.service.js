@@ -11,8 +11,8 @@ class ProductService {
     };
     return axiosRequest(options, (response) => {
       if (response.data) {
-        let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
-        if (!sellerProducts) sellerProducts = [];
+        let sellerProducts =
+          JSON.parse(localStorage.getItem('sellerProducts')) || [];
         sellerProducts.push(response.data);
         localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
       }

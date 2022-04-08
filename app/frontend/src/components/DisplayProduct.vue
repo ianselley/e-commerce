@@ -10,21 +10,25 @@
         <strong>{{ product.title }}</strong> - {{ shortDescription }}
       </p>
       <p>
-        <span class="price">{{ product.price.toFixed(2) }}</span
-        >€
+        <Price :price="product.price" />
       </p>
     </div>
     <UploadImages v-if="userIsOwner" :productId="product.id" />
+    <RemoveImages v-if="userIsOwner" :product="product" />
   </div>
 </template>
 
 <script>
 import UploadImages from '@/components/UploadImages.vue';
+import RemoveImages from '@/components/UploadImages.vue';
+import Price from '@/components/Price.vue';
 import { API_URL } from '@/config.json';
 export default {
   name: 'DisplayProduct',
   components: {
     UploadImages,
+    RemoveImages,
+    Price,
   },
   props: {
     product: Object,
@@ -53,7 +57,7 @@ export default {
     },
     productHasImages() {
       return this.$props.product.images.length > 0;
-    }
+    },
   },
   methods: {
     productPage() {
@@ -69,17 +73,12 @@ export default {
   border-radius: 1rem;
   background-color: #eee;
   max-width: 50%;
+  min-width: fit-content;
   margin: 3.5rem auto;
 }
 
 .base > img {
-  margin-top: 2rem;
-}
-
-.price {
-  font-size: 30px;
-  font-weight: 600;
-  font-style: italic;
+  margin: 2rem 2rem 0;
 }
 
 .link:hover {
