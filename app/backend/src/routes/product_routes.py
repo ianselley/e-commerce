@@ -57,6 +57,31 @@ def upload_images(product_id: int = Form(...), images: list[UploadFile] = File(.
     return list_of_images
 
 
+@router.delete("/delete-images")
+def delete_images(product_id: int, image_ids: str, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+    product = crud.product.get_product(db, product_id=product_id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    image_ids = image_ids.split(",")
+    valid_image_ids = [str(db_image.id) for db_image in product.images]
+    for image_id in image_ids:
+        if image_id not in valid_image_ids:
+            raise HTTPException(status_code=400, detail="Invalid image")
+
+    token_data = utils.user.decode(token)
+    user_id = token_data.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Invalid token")
+
+    user = crud.user.get_user(db=db, user_id=user_id)
+    if not user.seller.id == product.seller_id:
+        raise HTTPException(status_code=400, detail="You are not the owner of this product")
+        
+    list_of_deleted_image_ids = crud.product.delete_images(db=db, image_ids=image_ids)
+    return list_of_deleted_image_ids
+
+
 @router.get("/all", response_model=list[schemas.Product])
 def get_all_products(substring: str = "", skip: int = 0, limit: int = 20, db: Session = Depends(utils.db.get_db)):
     products = crud.product.get_products(db=db, substring=substring, skip=skip, limit=limit)

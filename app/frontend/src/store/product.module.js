@@ -26,6 +26,14 @@ export const product = {
       );
       state.sellerProducts[productListId].images = images;
     },
+    deleteImages(state, { productId, imageIds }) {
+      const productListId = state.sellerProducts.findIndex(
+        (product) => product.id == productId
+      );
+      state.sellerProducts[productListId].images = state.sellerProducts[
+        productListId
+      ].images.filter((image) => !imageIds.includes(image.id));
+    },
     removeSellerProducts(state) {
       state.sellerProducts = null;
     },
@@ -61,6 +69,17 @@ export const product = {
         .then((images) => {
           commit('uploadImages', { productId, images });
           return Promise.resolve(images);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
+    deleteImages({ commit }, { productId, imageIds }) {
+      return ProductService.deleteImages(productId, imageIds)
+        .then(() => {
+          commit('deleteImages', { productId, imageIds });
+          return Promise.resolve();
         })
         .catch((error) => {
           return Promise.reject(error);

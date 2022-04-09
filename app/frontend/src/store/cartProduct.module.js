@@ -6,16 +6,24 @@ export const cartProduct = {
   mutations: {},
   actions: {
     addToCart({ commit }, { quantity, productId }) {
-      return CartProductService.addToCart(productId, quantity).then(
-        (response) => {
+      return CartProductService.addToCart(productId, quantity)
+        .then((response) => {
           commit('auth/addToCart', response, { root: true });
-        }
-      );
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
     },
     removeFromCart({ commit }, cartProductId) {
-      return CartProductService.removeFromCart(cartProductId).then(() => {
-        commit('auth/removeFromCart', cartProductId, { root: true });
-      });
+      return CartProductService.removeFromCart(cartProductId)
+        .then(() => {
+          commit('auth/removeFromCart', cartProductId, { root: true });
+          return Promise.resolve();
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
     },
   },
 };

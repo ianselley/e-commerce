@@ -14,20 +14,24 @@
       </p>
     </div>
     <UploadImages v-if="userIsOwner" :productId="product.id" />
-    <RemoveImages v-if="userIsOwner" :product="product" />
+    <DeleteImages
+      v-if="userIsOwner"
+      :productId="product.id"
+      :images="product.images"
+    />
   </div>
 </template>
 
 <script>
 import UploadImages from '@/components/UploadImages.vue';
-import RemoveImages from '@/components/UploadImages.vue';
+import DeleteImages from '@/components/DeleteImages.vue';
 import Price from '@/components/Price.vue';
 import { API_URL } from '@/config.json';
 export default {
   name: 'DisplayProduct',
   components: {
     UploadImages,
-    RemoveImages,
+    DeleteImages,
     Price,
   },
   props: {

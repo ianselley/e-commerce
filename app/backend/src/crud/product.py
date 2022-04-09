@@ -81,3 +81,9 @@ def delete_image(db: Session, image_id: int):
     db.delete(image)
     db.commit()
     return image
+
+
+def delete_images(db: Session, image_ids: list[int]):
+    for image_id in image_ids:
+        delete_image(db=db, image_id=image_id)
+    return image_ids

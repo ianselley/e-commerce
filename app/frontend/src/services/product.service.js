@@ -44,6 +44,25 @@ class ProductService {
     });
   }
 
+  deleteImages(productId, imageIds) {
+    const options = {
+      endpoint: '/product/delete-images',
+      method: 'delete',
+      headers: authHeader(),
+      params: { product_id: productId, image_ids: imageIds },
+    };
+    return axiosRequest(options, () => {
+      let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
+      const productListId = sellerProducts.findIndex(
+        (product) => product.id == productId
+      );
+      sellerProducts[productListId].images = sellerProducts[
+        productListId
+      ].images.filter((image) => !imageIds.includes(image.id));
+      localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
+    });
+  }
+
   getAllProducts() {
     const options = {
       endpoint: '/product/all',
