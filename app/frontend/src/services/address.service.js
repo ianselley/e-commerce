@@ -22,6 +22,39 @@ class AddressService {
       }
     });
   }
+
+  makeItMainAddress(addressId) {
+    const options = {
+      endpoint: '/address/change-main_address_id',
+      method: 'put',
+      headers: authHeader(),
+      params: { address_id: addressId },
+    };
+    return axiosRequest(options, () => {
+      const buyer = JSON.parse(localStorage.getItem('buyer'));
+      buyer.main_address_id = addressId;
+      localStorage.setItem('buyer', JSON.stringify(buyer));
+    });
+  }
+
+  deleteAddress(addressId) {
+    const options = {
+      endpoint: '/address/delete',
+      method: 'delete',
+      headers: authHeader(),
+      params: { address_id: addressId },
+    };
+    return axiosRequest(options, () => {
+      const buyer = JSON.parse(localStorage.getItem('buyer'));
+      if (buyer.main_address_id == addressId) {
+        buyer.main_address_id = null;
+      }
+      buyer.addresses = buyer.addresses.filter(
+        (address) => address.id != addressId
+      );
+      localStorage.setItem('buyer', JSON.stringify(buyer));
+    });
+  }
 }
 
 export default new AddressService();

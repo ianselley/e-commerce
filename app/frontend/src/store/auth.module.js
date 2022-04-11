@@ -1,7 +1,6 @@
 import { useCookies } from 'vue3-cookies';
 
 import AuthService from '@/services/auth.service.js';
-import AddressService from '@/services/address.service.js';
 
 const { cookies } = useCookies();
 const user = cookies.get('user');
@@ -52,6 +51,17 @@ export const auth = {
       delete address.buyer;
       state.buyer.addresses.push(address);
       state.addedAddress = true;
+    },
+    makeItMainAddress(state, addressId) {
+      state.buyer.main_address_id = addressId;
+    },
+    deleteAddress(state, addressId) {
+      if (state.buyer.main_address_id == addressId) {
+        this.commit('makeItMainAddress', null);
+      }
+      state.buyer.addresses = state.buyer.addresses.filter(
+        (address) => address.id != addressId
+      );
     },
     resetAddedAddress(state) {
       state.addedAddress = false;
@@ -141,17 +151,6 @@ export const auth = {
       return AuthService.registerSeller(info)
         .then((response) => {
           commit('registerSeller', response);
-          return Promise.resolve(response);
-        })
-        .catch((error) => {
-          return Promise.reject(error);
-        });
-    },
-
-    registerAddress({ commit }, address) {
-      return AddressService.registerAddress(address)
-        .then((response) => {
-          commit('registerAddress', response);
           return Promise.resolve(response);
         })
         .catch((error) => {

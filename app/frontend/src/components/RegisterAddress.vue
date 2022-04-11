@@ -208,12 +208,12 @@ export default {
           });
         });
     },
-    async handleRegisterAddress() {
-      await this.validateAll();
+    handleRegisterAddress() {
+      this.validateAll();
       const address = Object.assign({}, this.values);
       this.loading = true;
-      await this.$store
-        .dispatch('auth/registerAddress', address)
+      this.$store
+        .dispatch('address/registerAddress', address)
         .then(() => {
           this.loading = false;
           this.$router.push('/profile');

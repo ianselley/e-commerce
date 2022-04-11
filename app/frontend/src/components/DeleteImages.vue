@@ -3,7 +3,11 @@
     <button @click="toggleImages">Select Images To Delete</button>
     <div v-show="showImages" class="images">
       <div v-for="image in images" :key="image" class="thumbnail">
-        <input type="checkbox" :value="image.id" @change="check($event, image.id)" />
+        <input
+          type="checkbox"
+          :value="image.id"
+          @change="check($event, image.id)"
+        />
         <Image :src="image.id" :alt="image.filename" class="thumbnail" />
       </div>
       <button :disabled="loading" @click="deleteImages">Delete Images</button>
@@ -34,9 +38,10 @@ export default {
   },
   methods: {
     initializeCheckedIds() {
-    for (let image of this.$props.images) {
-      this.checkedIds[image.id] = false;
-    }},
+      for (let image of this.$props.images) {
+        this.checkedIds[image.id] = false;
+      }
+    },
     toggleImages() {
       this.showImages = !this.showImages;
     },
@@ -51,9 +56,12 @@ export default {
           imageIds.push(id);
         }
       }
-      imageIds = imageIds.join(',')
+      imageIds = imageIds.join(',');
       this.$store
-        .dispatch('product/deleteImages', { productId: this.$props.productId, imageIds })
+        .dispatch('product/deleteImages', {
+          productId: this.$props.productId,
+          imageIds,
+        })
         .then(() => {
           this.loading = false;
           this.initializeCheckedIds();
