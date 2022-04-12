@@ -4,7 +4,7 @@ import axiosRequest from './axios.service.js';
 class ProductService {
   registerProduct(product) {
     const options = {
-      endpoint: '/product/create-product',
+      endpoint: '/product',
       method: 'post',
       headers: authHeader(),
       data: product,
@@ -26,7 +26,7 @@ class ProductService {
       bodyFormData.append('images', image);
     }
     const options = {
-      endpoint: '/product/upload-images',
+      endpoint: '/product/images',
       method: 'post',
       headers: {
         ...authHeader(),
@@ -46,7 +46,7 @@ class ProductService {
 
   changeProductAvailability(productId) {
     const options = {
-      endpoint: '/product/change-product-availability',
+      endpoint: '/product/availability',
       method: 'put',
       headers: authHeader(),
       params: { product_id: productId },
@@ -64,7 +64,7 @@ class ProductService {
 
   deleteImages(productId, imageIds) {
     const options = {
-      endpoint: '/product/delete-images',
+      endpoint: '/product/images',
       method: 'delete',
       headers: authHeader(),
       params: { product_id: productId, image_ids: imageIds },
@@ -103,8 +103,9 @@ class ProductService {
 
   getProduct(productId) {
     const options = {
-      endpoint: `/product/${productId}`,
+      endpoint: '/product',
       method: 'get',
+      params: { product_id: productId },
     };
     return axiosRequest(options);
   }

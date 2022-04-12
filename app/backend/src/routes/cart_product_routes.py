@@ -9,7 +9,7 @@ router = APIRouter()
 token_auth_schema = HTTPBearer()
 
 
-@router.post("/add-to-cart", response_model=schemas.CartProduct)
+@router.post("", response_model=schemas.CartProduct)
 def add_to_cart(product_id: int, quantity: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")
@@ -26,7 +26,7 @@ def add_to_cart(product_id: int, quantity: int, db: Session = Depends(utils.db.g
     return cart_product
 
 
-@router.post("/remove-from-cart", response_model=schemas.CartProduct)
+@router.delete("", response_model=schemas.CartProduct)
 def remove_from_cart(cart_product_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")

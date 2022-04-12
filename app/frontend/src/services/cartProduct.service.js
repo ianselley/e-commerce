@@ -4,7 +4,7 @@ import authHeader from '@/services/auth-header.js';
 class CartProductService {
   addToCart(productId, quantity) {
     const options = {
-      endpoint: '/cart-product/add-to-cart',
+      endpoint: '/cart-product',
       method: 'post',
       headers: authHeader(),
       params: { product_id: productId, quantity },
@@ -17,8 +17,8 @@ class CartProductService {
   }
   removeFromCart(cartProductId) {
     const options = {
-      endpoint: '/cart-product/remove-from-cart',
-      method: 'post',
+      endpoint: '/cart-product',
+      method: 'delete',
       headers: authHeader(),
       params: { cart_product_id: cartProductId },
     };

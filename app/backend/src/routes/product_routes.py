@@ -18,7 +18,7 @@ def get_product(product_id: int, db: Session = Depends(utils.db.get_db)):
     return product
 
 
-@router.post("/create-product", response_model=schemas.Product)
+@router.post("", response_model=schemas.Product)
 def create_product(product: schemas.ProductCreate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")
@@ -28,7 +28,7 @@ def create_product(product: schemas.ProductCreate, db: Session = Depends(utils.d
     return product_created
 
 
-@router.post("/upload-images")
+@router.post("/images")
 def upload_images(product_id: int = Form(...), images: list[UploadFile] = File(...), db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     product = crud.product.get_product(db, product_id=product_id)
     if not product:
@@ -57,7 +57,7 @@ def upload_images(product_id: int = Form(...), images: list[UploadFile] = File(.
     return list_of_images
 
 
-@router.put("/change-product-availability", response_model=schemas.Product)
+@router.put("/availability", response_model=schemas.Product)
 def change_product_availability(product_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")
@@ -73,7 +73,7 @@ def change_product_availability(product_id: int, db: Session = Depends(utils.db.
     return product_updated
 
 
-@router.delete("/delete-images")
+@router.delete("/images")
 def delete_images(product_id: int, image_ids: str, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     product = crud.product.get_product(db, product_id=product_id)
     if not product:
@@ -104,12 +104,6 @@ def get_all_products(substring: str = "", skip: int = 0, limit: int = 20, db: Se
     return products
 
 
-@router.get("/{product_id}", response_model=schemas.Product)
-def get_all_products(product_id: int, db: Session = Depends(utils.db.get_db)):
-    product = crud.product.get_product(db=db, product_id=product_id)
-    return product
-
-
 @router.get("/images/{image_id}", response_class=FileResponse)
 async def get_image(image_id: int):
     image_path = f"/app/product_images/{image_id}"
@@ -118,7 +112,7 @@ async def get_image(image_id: int):
     return FileResponse(image_path, media_type="image/*")
 
 
-@router.put("/update", response_model=schemas.Product)
+@router.put("", response_model=schemas.Product)
 def update_product(product_id: int, product: schemas.ProductCreate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")
@@ -128,7 +122,7 @@ def update_product(product_id: int, product: schemas.ProductCreate, db: Session 
     return product_updated
     
 
-@router.delete("/delete", response_model=schemas.Product)
+@router.delete("", response_model=schemas.Product)
 def delete_product(product_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")

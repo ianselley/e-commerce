@@ -48,7 +48,7 @@ def edit_address(address: schemas.AddressUpdate, db: Session = Depends(utils.db.
     return address_updated
 
 
-@router.put("/change-main_address_id", response_model=schemas.Buyer)
+@router.put("/main_address_id", response_model=schemas.Buyer)
 def change_main_address_id(address_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")
@@ -64,7 +64,7 @@ def change_main_address_id(address_id: int, db: Session = Depends(utils.db.get_d
     return updated_buyer
     
 
-@router.delete("/delete", response_model=schemas.Address)
+@router.delete("", response_model=schemas.Address)
 def delete_address(address_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")

@@ -6,7 +6,7 @@ class AddressService {
     address.zip_code = address.zipCode;
     delete address.zipCode;
     const options = {
-      endpoint: '/address/register',
+      endpoint: '/address',
       method: 'post',
       headers: authHeader(),
       data: address,
@@ -49,7 +49,7 @@ class AddressService {
 
   makeItMainAddress(addressId) {
     const options = {
-      endpoint: '/address/change-main_address_id',
+      endpoint: '/address/main_address_id',
       method: 'put',
       headers: authHeader(),
       params: { address_id: addressId },
@@ -63,7 +63,7 @@ class AddressService {
 
   deleteAddress(addressId) {
     const options = {
-      endpoint: '/address/delete',
+      endpoint: '/address',
       method: 'delete',
       headers: authHeader(),
       params: { address_id: addressId },
