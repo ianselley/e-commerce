@@ -98,7 +98,7 @@ def delete_images(product_id: int, image_ids: str, db: Session = Depends(utils.d
     return list_of_deleted_image_ids
 
 
-@router.get("/all", response_model=list[schemas.Product])
+@router.get("/all", response_model=list[schemas.ProductReturn])
 def get_all_products(substring: str = "", skip: int = 0, limit: int = 20, db: Session = Depends(utils.db.get_db)):
     products = crud.product.get_products(db=db, substring=substring, skip=skip, limit=limit)
     return products
@@ -113,12 +113,17 @@ async def get_image(image_id: int):
 
 
 @router.put("", response_model=schemas.Product)
-def update_product(product_id: int, product: schemas.ProductCreate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+def update_product(product: schemas.ProductUpdate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")
     if not user_id:
         raise HTTPException(status_code=400, detail="Invalid token")
-    product_updated = crud.product.update_product(db=db, product_id=product_id, product=product, user_id=user_id)
+    product_db = crud.product.get_product(db=db, product_id=product.id)
+    if not product_db:
+        raise HTTPException(status_code=404, detail="Product not found")
+    if not product_db.seller.user_id == user_id:
+        raise HTTPException(status_code=400, detail="You are not the owner of this product")
+    product_updated = crud.product.update_product(db=db, product=product)
     return product_updated
     
 

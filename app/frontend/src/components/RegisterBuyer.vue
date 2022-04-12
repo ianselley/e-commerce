@@ -42,6 +42,10 @@
 <script>
 import RegisterAddress from './RegisterAddress.vue';
 import * as yup from 'yup';
+const emptyValues = {
+  name: '',
+  surname: '',
+};
 export default {
   name: 'RegisterBuyer',
   components: {
@@ -52,14 +56,8 @@ export default {
       name: yup.string().required('Name is required'),
       surname: yup.string().required('Surname is required'),
     });
-    const values = {
-      name: '',
-      surname: '',
-    };
-    const errors = {
-      name: 'Name is required',
-      surname: 'Surname is required',
-    };
+    const values = { ...emptyValues };
+    const errors = { ...emptyValues };
     return {
       loading: false,
       values,
@@ -82,6 +80,9 @@ export default {
     buyer() {
       return this.$store.state.auth.buyer;
     },
+  },
+  mounted() {
+    this.validateAll();
   },
   methods: {
     validateAll() {

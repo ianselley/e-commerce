@@ -19,6 +19,7 @@
         :productId="product.id"
         :available="product.available"
       />
+      <EditProduct :product="product" />
       <UploadImages :productId="product.id" />
       <DeleteImages :productId="product.id" :images="product.images" />
     </div>
@@ -29,6 +30,7 @@
 import ChangeProductAvailability from '@/components/ChangeProductAvailability.vue';
 import UploadImages from '@/components/UploadImages.vue';
 import DeleteImages from '@/components/DeleteImages.vue';
+import EditProduct from '@/components/EditProduct.vue';
 import Price from '@/components/Price.vue';
 import { API_URL } from '@/config.json';
 export default {
@@ -37,6 +39,7 @@ export default {
     ChangeProductAvailability,
     UploadImages,
     DeleteImages,
+    EditProduct,
     Price,
   },
   props: {

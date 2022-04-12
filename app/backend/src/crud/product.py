@@ -21,6 +21,15 @@ def create_product(db: Session, product: schemas.ProductCreate, user_id: int):
     return product_created
 
 
+def update_product(db: Session, product: schemas.ProductUpdate):
+    product_db = get_product(db=db, product_id=product.id)
+    for attribute, value in vars(product).items():
+        setattr(product_db, attribute, value)
+    db.commit()
+    db.refresh(product_db)
+    return product_db
+
+
 def upload_image(image: UploadFile, name: int):
     file = Path("/app/product_images") / str(name)
     if file.exists():

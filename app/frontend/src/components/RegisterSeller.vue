@@ -11,8 +11,8 @@
           id="brand"
           name="brand"
           v-model="value.brand"
-          @keyup="validate('brand')"
-          @blur="validate('brand')"
+          @keyup="validate()"
+          @blur="validate()"
           type="text"
           autofocus
         />
@@ -38,7 +38,7 @@ export default {
     };
     return {
       loading: false,
-      brandError: 'Brand is required',
+      brandError: '',
       value,
       registerSellerSchema,
     };
@@ -51,10 +51,13 @@ export default {
       return false;
     },
   },
+  mounted() {
+    this.validate();
+  },
   methods: {
-    validate(field) {
+    validate() {
       this.registerSellerSchema
-        .validateAt(field, this.value)
+        .validateAt('brand', this.value)
         .then(() => {
           this.brandError = '';
         })

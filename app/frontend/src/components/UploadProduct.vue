@@ -83,11 +83,23 @@
 <script>
 import * as yup from 'yup';
 import UploadImages from './UploadImages.vue';
+const emptyValues = {
+  title: '',
+  description: '',
+  price: '',
+  stock: '',
+  specifications: '',
+};
 export default {
+  name: 'UploadProduct',
   components: {
     UploadImages,
   },
-  name: 'UploadProduct',
+  props: {
+    product: {
+      default: { ...emptyValues },
+    },
+  },
   data() {
     const uploadProductSchema = yup.object({
       title: yup.string().required('Title is required'),
@@ -97,19 +109,13 @@ export default {
       specifications: yup.string().optional(),
     });
     const values = {
-      title: '',
-      description: '',
-      price: '',
-      stock: '',
-      specifications: '',
+      title: this.product.title,
+      description: this.product.description,
+      price: this.product.price,
+      stock: this.product.stock,
+      specifications: this.product.specifications,
     };
-    const errors = {
-      title: 'Title is required',
-      description: '',
-      price: 'Price is required',
-      stock: 'Stock is required',
-      specifications: '',
-    };
+    const errors = { ...emptyValues };
     return {
       loading: false,
       values,
@@ -118,6 +124,9 @@ export default {
       productId: undefined,
       submitted: false,
     };
+  },
+  mounted() {
+    this.validateAll();
   },
   computed: {
     user() {
@@ -150,17 +159,32 @@ export default {
       this.validateAll();
       this.loading = true;
       const product = Object.assign({}, this.values);
-      this.$store
-        .dispatch('product/registerProduct', product)
-        .then((response) => {
-          this.loading = false;
-          this.productId = response.id;
-          this.submitted = true;
-        })
-        .catch((error) => {
-          this.loading = false;
-          this.$store.dispatch('alert/setMessage', error);
-        });
+      if (!this.$props.product.id) {
+        this.$store
+          .dispatch('product/registerProduct', product)
+          .then((response) => {
+            this.loading = false;
+            this.productId = response.id;
+            this.submitted = true;
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.dispatch('alert/setMessage', error);
+          });
+      } else {
+        const productId = this.$props.product.id;
+        this.$store
+          .dispatch('product/editProduct', { product, productId })
+          .then(() => {
+            this.loading = false;
+            // this.productId = response.id;
+            // this.submitted = true;
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.dispatch('alert/setMessage', error);
+          });
+      }
     },
   },
 };

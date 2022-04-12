@@ -88,6 +88,12 @@
 
 <script>
 import * as yup from 'yup';
+const emptyValues = {
+  telephone: '',
+  email: '',
+  password: '',
+  repeatPassword: '',
+};
 export default {
   name: 'RegisterUser',
   data() {
@@ -114,19 +120,8 @@ export default {
         .oneOf([yup.ref('password'), null], 'Passwords must match')
         .required('Repeat password is required'),
     });
-    const values = {
-      role: 'buyer',
-      telephone: '',
-      email: '',
-      password: '',
-      repeatPassword: '',
-    };
-    const errors = {
-      telephone: '',
-      email: 'Email is required',
-      password: 'Password is required',
-      repeatPassword: 'Repeat password is required',
-    };
+    const values = { role: 'buyer', ...emptyValues };
+    const errors = { ...emptyValues };
     return {
       loading: false,
       values,
@@ -144,6 +139,9 @@ export default {
       return true;
     },
   },
+  mounted() {
+    this.validateAll();
+  },
   methods: {
     validateAll() {
       this.registerUserSchema
@@ -158,7 +156,7 @@ export default {
           });
         });
     },
-    async handleRegisterUser() {
+    handleRegisterUser() {
       const user = Object.assign({}, this.values);
       delete user.repeatPassword;
 
@@ -166,9 +164,9 @@ export default {
       delete userLogin.telephone;
       delete userLogin.role;
 
-      await this.validateAll();
+      this.validateAll();
       this.loading = true;
-      await this.$store
+      this.$store
         .dispatch('auth/register', user)
         .then(() => {
           this.loading = false;

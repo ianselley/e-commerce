@@ -32,6 +32,10 @@ class ProductReturn(ProductBase):
         orm_mode = True
 
 
+class ProductUpdate(ProductBase):
+    id: int
+
+
 from src.schemas.user import SellerReturn
 from src.schemas.order import OrderReturn
 from src.schemas.cart_product import CartProductReturn

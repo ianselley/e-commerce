@@ -237,14 +237,15 @@ export default {
           });
       } else {
         const addressId = this.$props.address.id;
-        this.$store.dispatch('address/editAddress', { address, addressId })
+        this.$store
+          .dispatch('address/editAddress', { address, addressId })
           .then(() => {
             this.loading = false;
           })
           .catch((error) => {
             this.$store.dispatch('alert/setMessage', error);
             this.loading = false;
-          })
+          });
       }
     },
   },

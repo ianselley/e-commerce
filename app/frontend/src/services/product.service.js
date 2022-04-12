@@ -1,6 +1,10 @@
 import authHeader from './auth-header.js';
 import axiosRequest from './axios.service.js';
 
+function findProductIndex(list, productId) {
+  return list.findIndex((product) => product.id == productId);
+}
+
 class ProductService {
   registerProduct(product) {
     const options = {
@@ -14,6 +18,23 @@ class ProductService {
         let sellerProducts =
           JSON.parse(localStorage.getItem('sellerProducts')) || [];
         sellerProducts.push(response.data);
+        localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
+      }
+    });
+  }
+
+  editProduct(product, productId) {
+    const options = {
+      endpoint: '/product',
+      method: 'put',
+      headers: authHeader(),
+      data: { ...product, id: productId },
+    };
+    return axiosRequest(options, (response) => {
+      if (response.data) {
+        let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
+        const productIndex = findProductIndex(sellerProducts, productId);
+        sellerProducts[productIndex] = response.data;
         localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
       }
     });
@@ -36,9 +57,7 @@ class ProductService {
     };
     return axiosRequest(options, (response) => {
       let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
-      const productIndex = sellerProducts.findIndex(
-        (product) => product.id == productId
-      );
+      const productIndex = findProductIndex(sellerProducts, productId);
       sellerProducts[productIndex].images = response.data;
       localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
     });
@@ -53,9 +72,7 @@ class ProductService {
     };
     return axiosRequest(options, () => {
       let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
-      const productIndex = sellerProducts.findIndex(
-        (product) => product.id == productId
-      );
+      const productIndex = findProductIndex(sellerProducts, productId);
       sellerProducts[productIndex].available =
         !sellerProducts[productIndex].available;
       localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
@@ -71,9 +88,7 @@ class ProductService {
     };
     return axiosRequest(options, () => {
       let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
-      const productIndex = sellerProducts.findIndex(
-        (product) => product.id == productId
-      );
+      const productIndex = findProductIndex(sellerProducts, productId);
       sellerProducts[productIndex].images = sellerProducts[
         productIndex
       ].images.filter((image) => !imageIds.includes(image.id));
