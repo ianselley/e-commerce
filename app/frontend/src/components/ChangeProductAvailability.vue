@@ -1,16 +1,15 @@
 <template>
   <div>
-    <button :disabled="loading" @click="makeItMainAddress">
-      Make this address the main one
-    </button>
+    <button @click="changeProductAvailability">Make product <span v-if="available">not</span> available</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'MakeItMainAddress',
+  name: 'ChangeProductAvailablility',
   props: {
-    addressId: Number,
+    productId: Number,
+    available: Boolean,
   },
   data() {
     return {
@@ -18,10 +17,10 @@ export default {
     };
   },
   methods: {
-    makeItMainAddress() {
+    changeProductAvailability() {
       this.loading = true;
       this.$store
-        .dispatch('address/makeItMainAddress', this.$props.addressId)
+        .dispatch('product/changeProductAvailability', this.$props.productId)
         .then(() => {
           this.loading = false;
         })

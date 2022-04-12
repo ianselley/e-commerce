@@ -119,6 +119,18 @@ export const auth = {
         });
     },
 
+    getUser({ commit }, userId) {
+      return AuthService.getUser(userId)
+        .then((response) => {
+          commit('loginSuccess', response);
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          commit('loginFailure');
+          return Promise.reject(error);
+        });
+    },
+
     logout({ commit }) {
       AuthService.logout();
       commit('logout');

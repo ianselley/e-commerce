@@ -11,13 +11,14 @@
       <p>Surname: {{ currentBuyer.surname }}</p>
       <p>Buyer id: {{ currentBuyer.id }}</p>
       <p>CART:</p>
-      <div class="cart">
+      <div class="cart" v-if="currentBuyer.shopping_cart.length > 0">
         <DisplayCartProduct
           v-for="cartProduct in currentBuyer.shopping_cart"
           :key="cartProduct"
           :cartProduct="cartProduct"
         />
       </div>
+      <div v-else>Your cart is empty</div>
       <DisplayAddress
         v-for="address in currentBuyer.addresses"
         :key="address"

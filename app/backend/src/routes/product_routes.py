@@ -57,6 +57,22 @@ def upload_images(product_id: int = Form(...), images: list[UploadFile] = File(.
     return list_of_images
 
 
+@router.put("/change-product-availability", response_model=schemas.Product)
+def change_product_availability(product_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+    token_data = utils.user.decode(token)
+    user_id = token_data.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    product = crud.product.get_product(db, product_id=product_id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    seller_db = crud.user.get_seller_by_user_id(db=db, user_id=user_id)
+    if not product.seller_id == seller_db.id:
+        raise HTTPException(status_code=400, detail="You are not the owner of this product")
+    product_updated = crud.product.change_product_availability(db=db, product_id=product_id)
+    return product_updated
+
+
 @router.delete("/delete-images")
 def delete_images(product_id: int, image_ids: str, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     product = crud.product.get_product(db, product_id=product_id)

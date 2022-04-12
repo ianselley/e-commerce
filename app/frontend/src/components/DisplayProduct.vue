@@ -13,16 +13,20 @@
         <Price :price="product.price" />
       </p>
     </div>
-    <UploadImages v-if="userIsOwner" :productId="product.id" />
-    <DeleteImages
-      v-if="userIsOwner"
-      :productId="product.id"
-      :images="product.images"
-    />
+    <div v-if="userIsOwner">
+      <p><span v-if="!product.available">Not</span> Available</p>
+      <ChangeProductAvailability
+        :productId="product.id"
+        :available="product.available"
+      />
+      <UploadImages :productId="product.id" />
+      <DeleteImages :productId="product.id" :images="product.images" />
+    </div>
   </div>
 </template>
 
 <script>
+import ChangeProductAvailability from '@/components/ChangeProductAvailability.vue';
 import UploadImages from '@/components/UploadImages.vue';
 import DeleteImages from '@/components/DeleteImages.vue';
 import Price from '@/components/Price.vue';
@@ -30,6 +34,7 @@ import { API_URL } from '@/config.json';
 export default {
   name: 'DisplayProduct',
   components: {
+    ChangeProductAvailability,
     UploadImages,
     DeleteImages,
     Price,

@@ -47,6 +47,14 @@ def upload_images(db: Session, images: list[UploadFile], product_id: int):
     return product.images
 
 
+def change_product_availability(db: Session, product_id: int):
+    product = get_product(db=db, product_id=product_id)
+    product.available = not product.available
+    db.commit()
+    db.refresh(product)
+    return product
+
+
 def get_products(db: Session, substring: str = "", skip: int = 0, limit: int = 20):
     query = db.query(models.Product).order_by(models.Product.id.desc())
     criterion = or_(

@@ -2,10 +2,12 @@
   <div v-if="product" class="image-info-cart">
     <DisplayImages :images="product.images" />
     <div class="cart">
-      <p><Price :price="product.price" /></p>
-      <p v-if="productHasStock" class="has-stock">In stock</p>
-      <p v-else class="no-stock">Currently not available</p>
-      <AddToCart v-if="buyer" :productId="parseInt(productId)" />
+      <div v-if="product.available && productHasStock">
+        <p><Price :price="product.price" /></p>
+        <p v-if="productHasStock" class="available">In stock</p>
+        <AddToCart v-if="buyer" :productId="parseInt(productId)" />
+      </div>
+      <p v-else class="not-available">Currently not available</p>
     </div>
   </div>
 </template>
@@ -66,16 +68,16 @@ export default {
   border-radius: 1.5rem;
 }
 
-.has-stock,
-.no-stock {
+.available,
+.not-available {
   font-weight: 700;
 }
 
-.has-stock {
+.available {
   color: rgb(120, 171, 61);
 }
 
-.no-stock {
+.not-available {
   color: red;
 }
 </style>

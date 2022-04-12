@@ -10,7 +10,7 @@
     <p>{{ address.country }}</p>
     <p>{{ address.details }}</p>
     <DeleteAddress :addressId="address.id" />
-    <MakeItMainAddress :addressId="address.id" />
+    <MakeItMainAddress v-if="!addressIsMainId" :addressId="address.id" />
   </div>
 </template>
 

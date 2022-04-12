@@ -5,6 +5,19 @@ import axiosRequest from './axios.service.js';
 
 const { cookies } = useCookies();
 
+function setUser(response) {
+  const { seller, buyer, ...user } = response.data;
+  if (seller) {
+    const sellerProducts = seller.products;
+    localStorage.setItem('seller', JSON.stringify(seller));
+    localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
+  }
+  if (buyer) {
+    localStorage.setItem('buyer', JSON.stringify(buyer));
+  }
+  cookies.set('user', JSON.stringify(user));
+}
+
 class AuthService {
   login(user) {
     const options = {
@@ -14,19 +27,21 @@ class AuthService {
     };
     return axiosRequest(options, (response) => {
       if (response.data.access_token) {
-        const { seller, buyer, ...user } = response.data;
-        if (seller) {
-          const sellerProducts = seller.products;
-          localStorage.setItem('seller', JSON.stringify(seller));
-          localStorage.setItem(
-            'sellerProducts',
-            JSON.stringify(sellerProducts)
-          );
-        }
-        if (buyer) {
-          localStorage.setItem('buyer', JSON.stringify(buyer));
-        }
-        cookies.set('user', JSON.stringify(user));
+        setUser(response);
+      }
+    });
+  }
+
+  getUser(userId) {
+    const options = {
+      endpoint: '/user',
+      method: 'get',
+      headers: authHeader(),
+      params: { user_id: userId },
+    };
+    return axiosRequest(options, (response) => {
+      if (response.data.access_token) {
+        setUser(response);
       }
     });
   }

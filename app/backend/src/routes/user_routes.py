@@ -68,8 +68,15 @@ def login(user: schemas.UserLogin, db: Session = Depends(utils.db.get_db)):
 
 
 @router.get("", response_model=schemas.User)
-def read_user(user_id: int, db: Session = Depends(utils.db.get_db)):
+def read_user(user_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+    token_data = utils.user.decode(token)
+    token_user_id = token_data.get("sub")
+    if not token_user_id:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    if token_user_id != user_id:
+        raise HTTPException(status_code=400, detail="Invalid token")
     user = crud.user.get_user(db=db, user_id=user_id)
+    user.access_token = utils.user.encode(user)
     return user
 
 

@@ -44,6 +44,24 @@ class ProductService {
     });
   }
 
+  changeProductAvailability(productId) {
+    const options = {
+      endpoint: '/product/change-product-availability',
+      method: 'put',
+      headers: authHeader(),
+      params: { product_id: productId },
+    };
+    return axiosRequest(options, () => {
+      let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
+      const productListId = sellerProducts.findIndex(
+        (product) => product.id == productId
+      );
+      sellerProducts[productListId].available =
+        !sellerProducts[productListId].available;
+      localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
+    });
+  }
+
   deleteImages(productId, imageIds) {
     const options = {
       endpoint: '/product/delete-images',
