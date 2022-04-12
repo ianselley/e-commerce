@@ -36,10 +36,10 @@ class ProductService {
     };
     return axiosRequest(options, (response) => {
       let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
-      const productListId = sellerProducts.findIndex(
+      const productIndex = sellerProducts.findIndex(
         (product) => product.id == productId
       );
-      sellerProducts[productListId].images = response.data;
+      sellerProducts[productIndex].images = response.data;
       localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
     });
   }
@@ -53,11 +53,11 @@ class ProductService {
     };
     return axiosRequest(options, () => {
       let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
-      const productListId = sellerProducts.findIndex(
+      const productIndex = sellerProducts.findIndex(
         (product) => product.id == productId
       );
-      sellerProducts[productListId].available =
-        !sellerProducts[productListId].available;
+      sellerProducts[productIndex].available =
+        !sellerProducts[productIndex].available;
       localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
     });
   }
@@ -71,11 +71,11 @@ class ProductService {
     };
     return axiosRequest(options, () => {
       let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
-      const productListId = sellerProducts.findIndex(
+      const productIndex = sellerProducts.findIndex(
         (product) => product.id == productId
       );
-      sellerProducts[productListId].images = sellerProducts[
-        productListId
+      sellerProducts[productIndex].images = sellerProducts[
+        productIndex
       ].images.filter((image) => !imageIds.includes(image.id));
       localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
     });

@@ -11,7 +11,7 @@
       <p>Surname: {{ currentBuyer.surname }}</p>
       <p>Buyer id: {{ currentBuyer.id }}</p>
       <p>CART:</p>
-      <div class="cart" v-if="currentBuyer.shopping_cart.length > 0">
+      <div class="cart" v-if="!cartIsEmpty">
         <DisplayCartProduct
           v-for="cartProduct in currentBuyer.shopping_cart"
           :key="cartProduct"
@@ -49,6 +49,9 @@ export default {
   computed: {
     currentBuyer() {
       return this.$store.state.auth.buyer;
+    },
+    cartIsEmpty() {
+      return this.currentBuyer.shopping_cart.length == 0;
     },
   },
   methods: {

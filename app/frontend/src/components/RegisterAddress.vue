@@ -118,7 +118,10 @@
         <div>
           <button type="submit" :disabled="loading || !isValid">
             <span v-show="loading">LOADING</span>
-            <span v-show="!loading">Register address</span>
+            <span v-show="!loading">
+              <span v-if="!address.id">Register</span>
+              <span v-else>Submit new</span> address
+            </span>
           </button>
           <button
             type="button"
@@ -135,8 +138,24 @@
 
 <script>
 import * as yup from 'yup';
+const emptyValues = {
+  name: '',
+  street: '',
+  number: '',
+  city: '',
+  flat: '',
+  state: '',
+  zipCode: '',
+  country: '',
+  details: '',
+};
 export default {
   name: 'RegisterAddress',
+  props: {
+    address: {
+      default: { ...emptyValues },
+    },
+  },
   data() {
     const registerAddressSchema = yup.object({
       name: yup.string().optional(),
@@ -150,33 +169,26 @@ export default {
       details: yup.string().optional(),
     });
     const values = {
-      name: '',
-      street: '',
-      number: '',
-      city: '',
-      flat: '',
-      state: '',
-      zipCode: '',
-      country: '',
-      details: '',
+      name: this.address.name,
+      street: this.address.street,
+      number: this.address.number,
+      city: this.address.city,
+      flat: this.address.flat,
+      state: this.address.state,
+      zipCode: this.address.zip_code,
+      country: this.address.country,
+      details: this.address.details,
     };
-    const errors = {
-      name: '',
-      street: 'Street is required',
-      number: '',
-      city: 'City is required',
-      flat: '',
-      state: 'State is required',
-      zipCode: 'Zip Code is required',
-      country: 'Country is required',
-      details: '',
-    };
+    const errors = { ...emptyValues };
     return {
       loading: false,
       values,
       errors,
       registerAddressSchema,
     };
+  },
+  mounted() {
+    this.validateAll();
   },
   computed: {
     user() {
@@ -212,16 +224,28 @@ export default {
       this.validateAll();
       const address = Object.assign({}, this.values);
       this.loading = true;
-      this.$store
-        .dispatch('address/registerAddress', address)
-        .then(() => {
-          this.loading = false;
-          this.$router.push('/profile');
-        })
-        .catch((error) => {
-          this.loading = false;
-          this.$store.dispatch('alert/setMessage', error);
-        });
+      if (!this.$props.address.id) {
+        this.$store
+          .dispatch('address/registerAddress', address)
+          .then(() => {
+            this.loading = false;
+            this.$router.push('/profile');
+          })
+          .catch((error) => {
+            this.loading = false;
+            this.$store.dispatch('alert/setMessage', error);
+          });
+      } else {
+        const addressId = this.$props.address.id;
+        this.$store.dispatch('address/editAddress', { address, addressId })
+          .then(() => {
+            this.loading = false;
+          })
+          .catch((error) => {
+            this.$store.dispatch('alert/setMessage', error);
+            this.loading = false;
+          })
+      }
     },
   },
 };

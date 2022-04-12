@@ -16,6 +16,21 @@ export const address = {
         });
     },
 
+    editAddress({ commit }, { address, addressId }) {
+      return AddressService.editAddress(address, addressId)
+        .then((response) => {
+          commit(
+            'auth/editAddress',
+            { address: response, addressId },
+            { root: true }
+          );
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
     deleteAddress({ commit }, addressId) {
       return AddressService.deleteAddress(addressId)
         .then((response) => {

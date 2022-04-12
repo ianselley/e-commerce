@@ -21,24 +21,24 @@ export const product = {
       state.sellerProducts.push(product);
     },
     uploadImages(state, { productId, images }) {
-      const productListId = state.sellerProducts.findIndex(
+      const productIndex = state.sellerProducts.findIndex(
         (product) => product.id == productId
       );
-      state.sellerProducts[productListId].images = images;
+      state.sellerProducts[productIndex].images = images;
     },
     changeProductAvailability(state, productId) {
-      const productListId = state.sellerProducts.findIndex(
+      const productIndex = state.sellerProducts.findIndex(
         (product) => product.id == productId
       );
-      state.sellerProducts[productListId].available =
-        !state.sellerProducts[productListId].available;
+      state.sellerProducts[productIndex].available =
+        !state.sellerProducts[productIndex].available;
     },
     deleteImages(state, { productId, imageIds }) {
-      const productListId = state.sellerProducts.findIndex(
+      const productIndex = state.sellerProducts.findIndex(
         (product) => product.id == productId
       );
-      state.sellerProducts[productListId].images = state.sellerProducts[
-        productListId
+      state.sellerProducts[productIndex].images = state.sellerProducts[
+        productIndex
       ].images.filter((image) => !imageIds.includes(image.id));
     },
     removeSellerProducts(state) {

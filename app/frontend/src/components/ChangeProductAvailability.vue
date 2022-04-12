@@ -1,6 +1,8 @@
 <template>
   <div>
-    <button @click="changeProductAvailability">Make product <span v-if="available">not</span> available</button>
+    <button @click="changeProductAvailability">
+      Make product <span v-if="available">not</span> available
+    </button>
   </div>
 </template>
 

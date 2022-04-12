@@ -61,9 +61,9 @@ export default {
     if (!this.currentUser) {
       this.$router.push('/login');
       this.$store.dispatch('alert/setMessage', 'You are not logged in!');
-    } 
-    else {
-      this.$store.dispatch('auth/getUser', this.currentUser.id)
+    } else {
+      this.$store
+        .dispatch('auth/getUser', this.currentUser.id)
         .then((response) => {
           if (response.seller) {
             const sellerId = response.seller.id;

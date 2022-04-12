@@ -14,10 +14,34 @@ class AddressService {
     return axiosRequest(options, (response) => {
       if (response.data) {
         const address = Object.assign({}, response.data);
-        let buyer = JSON.parse(localStorage.getItem('buyer'));
+        const buyer = JSON.parse(localStorage.getItem('buyer'));
         buyer.main_address_id = address.buyer.main_address_id;
         delete address.buyer;
         buyer.addresses.push(address);
+        localStorage.setItem('buyer', JSON.stringify(buyer));
+      }
+    });
+  }
+
+  editAddress(address, addressId) {
+    address.zip_code = address.zipCode;
+    delete address.zipCode;
+    const options = {
+      endpoint: '/address',
+      method: 'put',
+      headers: authHeader(),
+      data: { ...address, id: addressId },
+    };
+    return axiosRequest(options, (response) => {
+      if (response.data) {
+        const address = Object.assign({}, response.data);
+        const buyer = JSON.parse(localStorage.getItem('buyer'));
+        buyer.main_address_id = address.buyer.main_address_id;
+        delete address.buyer;
+        const addressIndex = buyer.addresses.findIndex(
+          (address) => address.id == addressId
+        );
+        buyer.addresses[addressIndex] = address;
         localStorage.setItem('buyer', JSON.stringify(buyer));
       }
     });

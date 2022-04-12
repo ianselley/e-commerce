@@ -9,17 +9,20 @@
     <p>{{ address.zip_code }} {{ address.city }} {{ address.state }}</p>
     <p>{{ address.country }}</p>
     <p>{{ address.details }}</p>
-    <DeleteAddress :addressId="address.id" />
+    <EditAddress :address="address" />
     <MakeItMainAddress v-if="!addressIsMainId" :addressId="address.id" />
+    <DeleteAddress :addressId="address.id" />
   </div>
 </template>
 
 <script>
+import EditAddress from '@/components/EditAddress.vue';
 import DeleteAddress from '@/components/DeleteAddress.vue';
 import MakeItMainAddress from '@/components/MakeItMainAddress.vue';
 export default {
   name: 'DisplayAddress',
   components: {
+    EditAddress,
     DeleteAddress,
     MakeItMainAddress,
   },

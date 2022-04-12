@@ -8,8 +8,8 @@ from src import schemas, crud, utils
 router = APIRouter()
 token_auth_schema = HTTPBearer()
 
-@router.post("/register", response_model=schemas.Address)
-def registerAddress(address: schemas.AddressCreate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+@router.post("", response_model=schemas.Address)
+def create_address(address: schemas.AddressCreate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")
     if not user_id:
@@ -31,6 +31,21 @@ def get_address(address_id: int, db: Session = Depends(utils.db.get_db), token: 
     if not buyer_db.id == address_db.buyer_id:
         raise HTTPException(status_code=400, detail="You are not the owner of this address")
     return address_db
+
+
+@router.put("", response_model=schemas.Address)
+def edit_address(address: schemas.AddressUpdate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+    token_data = utils.user.decode(token)
+    user_id = token_data.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    address_db = crud.address.get_address(db=db, address_id=address.id)
+    if not address_db:
+        raise HTTPException(status_code=404, detail="Address not found")
+    if not address_db.buyer.user_id == user_id:
+        raise HTTPException(status_code=400, detail="You are not the owner of this address")
+    address_updated = crud.address.update_address(db=db, address=address)
+    return address_updated
 
 
 @router.put("/change-main_address_id", response_model=schemas.Buyer)

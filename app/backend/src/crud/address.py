@@ -19,6 +19,15 @@ def get_address(db: Session, address_id: int):
     return db.query(models.Address).filter_by(id=address_id).first()
 
 
+def update_address(db: Session, address: schemas.AddressUpdate):
+    address_db = get_address(db, address_id=address.id)
+    for attribute, value in vars(address).items():
+        setattr(address_db, attribute, value)
+    db.commit()
+    db.refresh(address_db)
+    return address_db
+
+
 def update_main_address_id(db: Session, user_id: int, main_address_id: int):
     buyer_db = crud.user.get_buyer_by_user_id(db, user_id=user_id)
     buyer_db.main_address_id = main_address_id

@@ -52,6 +52,13 @@ export const auth = {
       state.buyer.addresses.push(address);
       state.addedAddress = true;
     },
+    editAddress(state, { address, addressId }) {
+      delete address.buyer;
+      const addressIndex = state.buyer.addresses.findIndex(
+        (address) => address.id == addressId
+      );
+      state.buyer.addresses[addressIndex] = address;
+    },
     makeItMainAddress(state, addressId) {
       state.buyer.main_address_id = addressId;
     },
