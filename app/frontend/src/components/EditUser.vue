@@ -1,17 +1,17 @@
 <template>
   <div>
-    <button @click="toggleEdit">Edit Product</button>
-    <UploadProduct v-if="edit" :product="product" />
+    <button ref="toggleEditUser" @click="toggleEdit">Edit User</button>
+    <RegisterUser v-if="edit" :user="user" />
   </div>
 </template>
 
 <script>
-import UploadProduct from '@/components/UploadProduct.vue';
+import RegisterUser from '@/components/RegisterUser.vue';
 export default {
-  name: 'EditProduct',
-  components: { UploadProduct },
+  name: 'EditUser',
+  components: { RegisterUser },
   props: {
-    product: Object,
+    user: Object,
   },
   data() {
     return {

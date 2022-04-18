@@ -80,6 +80,20 @@ def read_user(user_id: int, db: Session = Depends(utils.db.get_db), token: str =
     return user
 
 
+@router.put("", response_model=schemas.User)
+def login(user: schemas.UserUpdate, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+    token_data = utils.user.decode(token)
+    user_id = token_data.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    user_db = crud.user.get_user(db, user_id=user_id)
+    if not user_db:
+        raise HTTPException(status_code=400, detail="User not found")
+    updated_user = crud.user.update_user(db=db, user_id=user_id, user=user)
+    updated_user.access_token = utils.user.encode(updated_user)
+    return updated_user
+
+
 @router.get("/buyer", response_model=schemas.Buyer)
 def read_buyer(buyer_id: int, db: Session = Depends(utils.db.get_db)):
     buyer = crud.user.get_buyer(db=db, buyer_id=buyer_id)

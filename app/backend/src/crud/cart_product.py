@@ -15,10 +15,18 @@ def add_to_cart(db: Session, cart_product: schemas.CartProductCreate):
     return cart_product_created
 
 
+def change_quantity(db: Session, cart_product_id: int, quantity: int):
+    cart_product = get_cart_product(db=db, cart_product_id=cart_product_id)
+    cart_product.quantity = quantity
+    db.commit()
+    db.refresh(cart_product)
+    return cart_product
+
+
 def remove_from_cart(db: Session, cart_product_id: int):
     cart_product = get_cart_product(db=db, cart_product_id=cart_product_id)
     product_id = cart_product.product_id
-    crud.product.get_product(db=db, product_id=product_id)
+    product = crud.product.get_product(db=db, product_id=product_id)
     db.delete(cart_product)
     db.commit()
     return cart_product

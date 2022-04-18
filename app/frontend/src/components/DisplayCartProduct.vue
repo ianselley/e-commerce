@@ -1,6 +1,17 @@
 <template>
   <div class="cart-product">
-    <div class="quantity">QUANTITY: {{ cartProduct.quantity }}</div>
+    <div class="quantity">QUANTITY:</div>
+    <select ref="quantity" @change="changeQuantity" :disabled="loading">
+      <option
+        v-for="quantity in 30"
+        :key="quantity"
+        :selected="quantity == cartProduct.quantity"
+        :value="quantity"
+      >
+        {{ quantity }}
+      </option>
+    </select>
+    <br />
     <button class="remove" @click="removeFromCart" :disabled="loading">
       Remove
     </button>
@@ -35,6 +46,20 @@ export default {
         .catch((error) => {
           this.loading = false;
           this.$store.dispatch('alert/setMessage', error);
+        });
+    },
+    changeQuantity() {
+      this.loading = true;
+      const cartProductId = this.$props.cartProduct.id;
+      const quantity = parseInt(this.$refs.quantity.value);
+      this.$store
+        .dispatch('cartProduct/changeQuantity', { cartProductId, quantity })
+        .then(() => {
+          this.loading = false;
+        })
+        .catch((error) => {
+          this.$store.dispatch('alert/setMessage', error);
+          this.loading = false;
         });
     },
   },

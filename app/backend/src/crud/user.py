@@ -56,6 +56,15 @@ def get_seller_by_user_id(db: Session, user_id: int):
     return db.query(models.Seller).filter_by(user_id=user_id).first()
 
 
+def update_user(db: Session, user_id: int, user: schemas.UserUpdate):
+    user_db = get_user(db, user_id)
+    for attribute, value in vars(user).items():
+        setattr(user_db, attribute, value)
+    db.commit()
+    db.refresh(user_db)
+    return user_db
+
+
 def verify_password(user: models.User, password: str):
     password_bytes = password.encode()
     user_hashed_password_bytes = user.hashed_password.encode()

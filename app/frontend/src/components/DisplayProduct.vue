@@ -10,11 +10,10 @@
         <strong>{{ product.title }}</strong> - {{ shortDescription }}
       </p>
       <p>
-        <Price :price="product.price" />
+        <Price :price="product.price" :available="product.available" />
       </p>
     </div>
     <div v-if="userIsOwner">
-      <p><span v-if="!product.available">Not</span> Available</p>
       <ChangeProductAvailability
         :productId="product.id"
         :available="product.available"

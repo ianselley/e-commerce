@@ -22,21 +22,28 @@
       {{ currentUser.email }}
     </p>
     <p>
+      <strong>Telephone:</strong>
+      {{ currentUser.telephone }}
+    </p>
+    <p>
       <strong>Role:</strong>
       {{ currentUser.role }}
     </p>
+    <EditUser :user="currentUser" />
     <BuyerProfile v-if="userIsBuyer" />
     <SellerProfile v-if="userIsSeller" />
   </div>
 </template>
 
 <script>
+import EditUser from '@/components/EditUser.vue';
 import BuyerProfile from '@/components/BuyerProfile.vue';
 import SellerProfile from '@/components/SellerProfile.vue';
 
 export default {
   name: 'Profile',
   components: {
+    EditUser,
     BuyerProfile,
     SellerProfile,
   },

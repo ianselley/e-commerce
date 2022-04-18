@@ -26,6 +26,19 @@ def add_to_cart(product_id: int, quantity: int, db: Session = Depends(utils.db.g
     return cart_product
 
 
+@router.put("", response_model=schemas.CartProduct)
+def change_quantity(cart_product_id: int, quantity: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+    token_data = utils.user.decode(token)
+    user_id = token_data.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    cart_product = crud.cart_product.get_cart_product(db=db, cart_product_id=cart_product_id)
+    if not cart_product:
+        raise HTTPException(status_code=404, detail="Cart product not found")
+    cart_product = crud.cart_product.change_quantity(db=db, cart_product_id=cart_product.id, quantity=quantity)
+    return cart_product
+
+
 @router.delete("", response_model=schemas.CartProduct)
 def remove_from_cart(cart_product_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)

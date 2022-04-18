@@ -3,9 +3,13 @@
     <DisplayImages :images="product.images" />
     <div class="cart">
       <div v-if="product.available && productHasStock">
-        <p><Price :price="product.price" /></p>
+        <p><Price :price="product.price" :available="product.available" /></p>
         <p v-if="productHasStock" class="available">In stock</p>
-        <AddToCart v-if="buyer" :productId="parseInt(productId)" />
+        <AddToCart
+          v-if="buyer"
+          :productId="parseInt(productId)"
+          :stock="product.stock"
+        />
       </div>
       <p v-else class="not-available">Currently not available</p>
     </div>

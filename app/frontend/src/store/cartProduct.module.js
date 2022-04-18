@@ -15,6 +15,20 @@ export const cartProduct = {
           return Promise.reject(error);
         });
     },
+    changeQuantity({ commit }, { cartProductId, quantity }) {
+      return CartProductService.changeQuantity(cartProductId, quantity)
+        .then((response) => {
+          commit(
+            'auth/changeCartProductQuantity',
+            { cartProductId, quantity },
+            { root: true }
+          );
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
     removeFromCart({ commit }, cartProductId) {
       return CartProductService.removeFromCart(cartProductId)
         .then(() => {

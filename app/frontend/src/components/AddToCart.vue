@@ -2,7 +2,7 @@
   <div>
     <div class="quantity">Quantity:</div>
     <select ref="quantity">
-      <option v-for="quantity in 30" :key="quantity" :value="quantity">
+      <option v-for="quantity in maxProducts" :key="quantity" :value="quantity">
         {{ quantity }}
       </option>
     </select>
@@ -15,6 +15,7 @@ export default {
   name: 'AddToCart',
   props: {
     productId: Number,
+    stock: Number,
   },
   data() {
     return {
@@ -25,10 +26,13 @@ export default {
     buyerId() {
       return this.$store.state.auth.buyer.id;
     },
+    maxProducts() {
+      return Math.min(this.$props.stock, 30);
+    },
   },
   methods: {
     addToCart() {
-      const quantity = parseInt(this.$refs.quantity.value);
+      const quantity = this.$refs.quantity.value;
       this.loading = true;
       this.$store
         .dispatch('cartProduct/addToCart', {

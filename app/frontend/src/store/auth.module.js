@@ -106,6 +106,12 @@ export const auth = {
     addToCart(state, cartProduct) {
       state.buyer.shopping_cart.push(cartProduct);
     },
+    changeCartProductQuantity(state, { cartProductId, quantity }) {
+      const cartProductIndex = state.buyer.shopping_cart.findIndex(
+        (cartProduct) => cartProduct.id == cartProductId
+      );
+      state.buyer.shopping_cart[cartProductIndex].quantity = quantity;
+    },
     removeFromCart(state, cartProductId) {
       state.buyer.shopping_cart = state.buyer.shopping_cart.filter(
         (cartProduct) => cartProduct.id != cartProductId
@@ -151,6 +157,17 @@ export const auth = {
         })
         .catch((error) => {
           commit('registerFailure');
+          return Promise.reject(error);
+        });
+    },
+
+    editUser({ commit }, user) {
+      return AuthService.editUser(user)
+        .then((response) => {
+          commit('loginSuccess', response);
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
           return Promise.reject(error);
         });
     },

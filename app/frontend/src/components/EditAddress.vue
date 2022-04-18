@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import RegisterAddress from './RegisterAddress.vue';
+import RegisterAddress from '@/components/RegisterAddress.vue';
 export default {
   name: 'EditAddress',
   components: { RegisterAddress },

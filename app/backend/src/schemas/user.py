@@ -24,6 +24,12 @@ class UserReturn(UserBase):
         orm_mode = True
 
 
+class UserUpdate(BaseModel):
+    email: str
+    telephone: Optional[str]
+    password: str
+
+
 class BuyerBase(BaseModel):
     name: str
     surname: str

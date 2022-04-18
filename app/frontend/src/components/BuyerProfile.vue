@@ -24,6 +24,7 @@
         :key="address"
         :address="address"
       />
+      <br />
       <button @click="addAddressFunction()">Add Address</button>
       <RegisterAddress v-if="addAddress && !$store.state.auth.addedAddress" />
     </div>

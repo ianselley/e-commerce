@@ -46,6 +46,20 @@ class AuthService {
     });
   }
 
+  editUser(user) {
+    const options = {
+      endpoint: '/user',
+      method: 'put',
+      headers: authHeader(),
+      data: user,
+    };
+    return axiosRequest(options, (response) => {
+      if (response.data.access_token) {
+        setUser(response);
+      }
+    });
+  }
+
   logout() {
     cookies.remove('user');
     localStorage.clear();

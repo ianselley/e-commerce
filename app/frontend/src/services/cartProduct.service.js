@@ -15,6 +15,22 @@ class CartProductService {
       localStorage.setItem('buyer', JSON.stringify(buyer));
     });
   }
+  changeQuantity(cartProductId, quantity) {
+    const options = {
+      endpoint: '/cart-product',
+      method: 'put',
+      headers: authHeader(),
+      params: { cart_product_id: cartProductId, quantity },
+    };
+    return axiosRequest(options, () => {
+      const buyer = JSON.parse(localStorage.getItem('buyer'));
+      const cartProductIndex = buyer.shopping_cart.findIndex(
+        (cartProduct) => cartProduct.id == cartProductId
+      );
+      buyer.shopping_cart[cartProductIndex].quantity = quantity;
+      localStorage.setItem('buyer', JSON.stringify(buyer));
+    });
+  }
   removeFromCart(cartProductId) {
     const options = {
       endpoint: '/cart-product',
