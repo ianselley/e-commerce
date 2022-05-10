@@ -117,6 +117,18 @@ export const auth = {
         (cartProduct) => cartProduct.id != cartProductId
       );
     },
+    removeManyFromCart(state, cartProductIds) {
+      let cartProductIdsList = cartProductIds.split(',');
+      console.log(cartProductIdsList);
+      console.log(state.buyer.shopping_cart);
+      state.buyer.shopping_cart = state.buyer.shopping_cart.filter(
+        (cartProduct) => !cartProductIdsList.includes(cartProduct.id.toString())
+      );
+      console.log(state.buyer.shopping_cart);
+    },
+    addOrders(state, newOrders) {
+      state.buyer.orders = state.buyer.orders.concat(newOrders);
+    },
   },
 
   actions: {
@@ -183,8 +195,30 @@ export const auth = {
         });
     },
 
+    editName({ commit }, name) {
+      return AuthService.editName(name)
+        .then((response) => {
+          commit('registerBuyer', response);
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
     registerSeller({ commit }, info) {
       return AuthService.registerSeller(info)
+        .then((response) => {
+          commit('registerSeller', response);
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
+    editBrand({ commit }, brand) {
+      return AuthService.editBrand(brand)
         .then((response) => {
           commit('registerSeller', response);
           return Promise.resolve(response);

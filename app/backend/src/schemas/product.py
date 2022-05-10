@@ -1,9 +1,6 @@
-from lib2to3.pgen2.token import OP
 from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime
-
-from pyparsing import Opt
 
 from src.schemas.image import Image
 
@@ -44,4 +41,3 @@ from src.schemas.cart_product import CartProductReturn
 class Product(ProductReturn):
     seller: SellerReturn
     cart_products: Optional[list[CartProductReturn]]
-    orders: list[OrderReturn]

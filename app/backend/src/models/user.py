@@ -22,7 +22,6 @@ class Buyer(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
-    surname = Column(String(64))
     main_address_id = Column(Integer)
     user_id = Column(Integer, ForeignKey('users.id'))
 
@@ -42,4 +41,4 @@ class Seller(Base):
 
     user = relationship("User", back_populates="seller")
     products = relationship("Product", back_populates="seller")
-    # orders made to the seller?
+    orders = relationship("Order", back_populates="seller")

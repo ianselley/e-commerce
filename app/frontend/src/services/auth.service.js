@@ -67,7 +67,7 @@ class AuthService {
 
   register(user) {
     const options = {
-      endpoint: '/user/signup',
+      endpoint: '/user',
       method: 'post',
       data: user,
     };
@@ -76,7 +76,7 @@ class AuthService {
 
   registerBuyer(buyer) {
     const options = {
-      endpoint: '/user/signup-buyer',
+      endpoint: '/user/buyer',
       method: 'post',
       headers: authHeader(),
       data: buyer,
@@ -88,12 +88,40 @@ class AuthService {
     });
   }
 
+  editName(name) {
+    const options = {
+      endpoint: '/user/buyer',
+      method: 'put',
+      headers: authHeader(),
+      data: { name },
+    };
+    return axiosRequest(options, (response) => {
+      if (response.data) {
+        localStorage.setItem('buyer', JSON.stringify(response.data));
+      }
+    });
+  }
+
   registerSeller(info) {
     const options = {
-      endpoint: '/user/signup-seller',
+      endpoint: '/user/seller',
       method: 'post',
       headers: authHeader(),
       data: info,
+    };
+    return axiosRequest(options, (response) => {
+      if (response.data) {
+        localStorage.setItem('seller', JSON.stringify(response.data));
+      }
+    });
+  }
+
+  editBrand(brand) {
+    const options = {
+      endpoint: '/user/seller',
+      method: 'put',
+      headers: authHeader(),
+      data: { brand },
     };
     return axiosRequest(options, (response) => {
       if (response.data) {

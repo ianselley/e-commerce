@@ -46,10 +46,10 @@ services:
       - 3306:3306
     healthcheck:
       test: [ "CMD", "/usr/local/bin/waitForMySQL.sh" ]
-      interval: 5s
-      timeout: 60s
-      retries: 15
-      start_period: 20s
+      interval: 10s
+      timeout: 20s
+      retries: 25
+      start_period: 120s
     restart: always
 
   phpmyadmin:

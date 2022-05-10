@@ -79,15 +79,18 @@ export default {
 .root {
   margin-bottom: 1rem;
 }
+
 .images {
   margin-top: 0.5rem;
 }
-.thumbnail /deep/ .image {
+
+.thumbnail :deep() .image {
   max-width: 3rem;
   max-height: 3rem;
   height: auto;
   width: auto;
 }
+
 .thumbnail {
   display: inline-block;
   margin: 0.3rem 0.2rem 0;

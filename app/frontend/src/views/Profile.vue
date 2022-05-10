@@ -4,7 +4,7 @@
       <h3>
         <strong>{{
           (currentSeller && currentSeller.brand) ||
-          (currentBuyer && currentBuyer.name + ' ' + currentBuyer.surname)
+          (currentBuyer && currentBuyer.name)
         }}</strong>
         Profile
       </h3>
@@ -12,10 +12,6 @@
     <p>
       <strong>Token:</strong>
       {{ currentUser.access_token }}
-    </p>
-    <p>
-      <strong>User id:</strong>
-      {{ currentUser.id }}
     </p>
     <p>
       <strong>Email:</strong>
@@ -29,7 +25,7 @@
       <strong>Role:</strong>
       {{ currentUser.role }}
     </p>
-    <EditUser :user="currentUser" />
+    <EditUser />
     <BuyerProfile v-if="userIsBuyer" />
     <SellerProfile v-if="userIsSeller" />
   </div>

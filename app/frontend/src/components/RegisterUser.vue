@@ -99,11 +99,6 @@ const emptyValues = {
 };
 export default {
   name: 'RegisterUser',
-  props: {
-    user: {
-      default: { ...emptyValues },
-    },
-  },
   data() {
     const telphoneRegex =
       /(\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$)|^$/;
@@ -111,7 +106,7 @@ export default {
     const registerUserSchema = yup.object({
       telephone: yup
         .string()
-        .matches(telphoneRegex, 'Thelphone number is invalid')
+        .matches(telphoneRegex, 'Telphone number is invalid')
         .optional(),
       email: yup
         .string()
@@ -128,13 +123,7 @@ export default {
         .oneOf([yup.ref('password'), null], 'Passwords must match')
         .required('Repeat password is required'),
     });
-    const values = {
-      role: 'buyer',
-      telephone: this.user.telephone,
-      email: this.user.email,
-      password: this.user.password,
-      repeatPassword: this.user.repeatPassword,
-    };
+    const values = { role: 'buyer', ...emptyValues };
     const errors = { ...emptyValues };
     return {
       loading: false,
@@ -151,9 +140,6 @@ export default {
         }
       }
       return true;
-    },
-    editingUser() {
-      return this.$props.user.id;
     },
   },
   mounted() {
@@ -178,33 +164,19 @@ export default {
       delete user.repeatPassword;
       this.validateAll();
       this.loading = true;
-      if (!this.$props.user.id) {
-        const userLogin = Object.assign({}, user);
-        delete userLogin.telephone;
-        delete userLogin.role;
-        this.$store
-          .dispatch('auth/register', user)
-          .then(() => {
-            this.loading = false;
-            this.$store.dispatch('auth/login', userLogin);
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.$store.dispatch('alert/setMessage', error);
-          });
-      } else {
-        delete user.role;
-        this.$store
-          .dispatch('auth/editUser', user)
-          .then(() => {
-            this.$parent.toggleEdit();
-            this.loading = false;
-          })
-          .catch((error) => {
-            this.$store.dispatch('alert/setMessage', error);
-            this.loading = false;
-          });
-      }
+      const userLogin = Object.assign({}, user);
+      delete userLogin.telephone;
+      delete userLogin.role;
+      this.$store
+        .dispatch('auth/register', user)
+        .then(() => {
+          this.loading = false;
+          this.$store.dispatch('auth/login', userLogin);
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.$store.dispatch('alert/setMessage', error);
+        });
     },
   },
 };

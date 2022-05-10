@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 import datetime
 
 from src.database import Base
-from .many_to_many import orders_and_products
 
 
 class Product(Base):
@@ -23,4 +22,3 @@ class Product(Base):
     seller = relationship("Seller", back_populates="products")
     images = relationship("Image", back_populates="product")
     cart_products = relationship("CartProduct", back_populates="product")
-    orders = relationship("Order", secondary=orders_and_products, back_populates="products")

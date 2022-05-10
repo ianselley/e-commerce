@@ -15,3 +15,4 @@ class CartProduct(Base):
 
     buyer = relationship("Buyer", back_populates="shopping_cart", uselist=False)
     product = relationship("Product", back_populates="cart_products", uselist=False)
+    order = relationship("Order", back_populates="cart_product", uselist=False)

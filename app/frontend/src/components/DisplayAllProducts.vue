@@ -12,7 +12,7 @@
 <script>
 import DisplayProduct from '@/components/DisplayProduct.vue';
 export default {
-  name: 'HelloWorld',
+  name: 'DisplayAllProducts',
   components: {
     DisplayProduct,
   },

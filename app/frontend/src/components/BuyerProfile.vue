@@ -1,16 +1,12 @@
 <template>
   <div>
-    <p><strong>THIS SECTION DISPLAYS THE BUYER INFORMATION</strong></p>
-    <div v-if="!currentBuyer">
-      <button @click="this.$router.push('/signup')">
-        FINISH REGISTERING AS BUYER
-      </button>
-    </div>
+    <button v-if="!currentBuyer" @click="this.$router.push('/signup')">
+      FINISH REGISTERING AS BUYER
+    </button>
     <div v-else>
-      <p>Name: {{ currentBuyer.name }}</p>
-      <p>Surname: {{ currentBuyer.surname }}</p>
-      <p>Buyer id: {{ currentBuyer.id }}</p>
-      <p>CART:</p>
+      <p><strong>Name:</strong> {{ currentBuyer.name }}</p>
+      <OrderProducts />
+      <p><strong>CART:</strong></p>
       <div class="cart" v-if="!cartIsEmpty">
         <DisplayCartProduct
           v-for="cartProduct in currentBuyer.shopping_cart"
@@ -25,21 +21,27 @@
         :address="address"
       />
       <br />
-      <button @click="addAddressFunction()">Add Address</button>
+      <button @click="addAddressFunction">Add Address</button>
       <RegisterAddress v-if="addAddress && !$store.state.auth.addedAddress" />
+      <div style="margin-top: 1.5rem"><strong>ORDERS:</strong></div>
+      <DisplayOrders />
     </div>
   </div>
 </template>
 
 <script>
+import OrderProducts from '@/components/OrderProducts.vue';
+import DisplayOrders from '@/components/DisplayOrders.vue';
 import DisplayAddress from '@/components/DisplayAddress.vue';
 import RegisterAddress from '@/components/RegisterAddress.vue';
 import DisplayCartProduct from '@/components/DisplayCartProduct.vue';
 export default {
   name: 'BuyerProfile',
   components: {
-    RegisterAddress,
+    OrderProducts,
+    DisplayOrders,
     DisplayAddress,
+    RegisterAddress,
     DisplayCartProduct,
   },
   data() {

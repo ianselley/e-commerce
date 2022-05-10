@@ -31,7 +31,9 @@ class AddressUpdate(AddressBase):
 
 
 from src.schemas.user import BuyerReturn
+from src.schemas.order import OrderReturn
 
 
 class Address(AddressReturn):
     buyer: BuyerReturn
+    orders: list[OrderReturn]

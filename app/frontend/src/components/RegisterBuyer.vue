@@ -19,18 +19,6 @@
         />
         <span>{{ errors.name }}</span>
       </div>
-      <div>
-        <label for="surname">Surname</label>
-        <input
-          id="surname"
-          name="surname"
-          v-model="values.surname"
-          @keyup="validateAll"
-          @blur="validateAll"
-          type="text"
-        />
-        <span>{{ errors.surname }}</span>
-      </div>
       <button type="submit" :disabled="loading || !isValid">
         Sign up as Buyer
       </button>
@@ -44,7 +32,6 @@ import RegisterAddress from './RegisterAddress.vue';
 import * as yup from 'yup';
 const emptyValues = {
   name: '',
-  surname: '',
 };
 export default {
   name: 'RegisterBuyer',
@@ -54,7 +41,6 @@ export default {
   data() {
     const registerBuyerSchema = yup.object({
       name: yup.string().required('Name is required'),
-      surname: yup.string().required('Surname is required'),
     });
     const values = { ...emptyValues };
     const errors = { ...emptyValues };

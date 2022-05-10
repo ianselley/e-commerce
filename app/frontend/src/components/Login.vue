@@ -61,8 +61,9 @@ export default {
   methods: {
     handleLogin() {
       this.loading = true;
+      const user = Object.assign({}, this.values);
       this.$store
-        .dispatch('auth/login', this.values)
+        .dispatch('auth/login', user)
         .then((response) => {
           if (response.seller) {
             const sellerId = response.seller.id;

@@ -40,6 +40,7 @@ export default {
           quantity,
         })
         .then(() => {
+          this.$store.dispatch('alert/setMessage', 'PRODUCT ADDED TO CART!');
           this.loading = false;
         })
         .catch((error) => {

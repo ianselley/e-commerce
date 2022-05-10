@@ -1,22 +1,43 @@
 <template>
   <div>
-    <button ref="toggleEditUser" @click="toggleEdit">Edit User</button>
-    <RegisterUser v-if="edit" :user="user" />
+    <button ref="toggleEditUser" @click="toggleEdit">Edit User Info</button>
+    <div v-if="edit">
+      <EditTelephone />
+      <EditEmail />
+      <EditPassword />
+      <EditName v-if="userIsBuyer" />
+      <EditBrand v-if="userIsSeller" />
+    </div>
   </div>
 </template>
 
 <script>
-import RegisterUser from '@/components/RegisterUser.vue';
+import EditTelephone from '@/components/EditTelephone.vue';
+import EditEmail from '@/components/EditEmail.vue';
+import EditPassword from '@/components/EditPassword.vue';
+import EditName from '@/components/EditName.vue';
+import EditBrand from '@/components/EditBrand.vue';
 export default {
   name: 'EditUser',
-  components: { RegisterUser },
-  props: {
-    user: Object,
+  components: {
+    EditTelephone,
+    EditEmail,
+    EditPassword,
+    EditName,
+    EditBrand,
   },
   data() {
     return {
       edit: false,
     };
+  },
+  computed: {
+    userIsBuyer() {
+      return this.$store.state.auth.user.buyer !== null;
+    },
+    userIsSeller() {
+      return this.$store.state.auth.user.seller !== null;
+    },
   },
   methods: {
     toggleEdit() {

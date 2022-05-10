@@ -1,19 +1,20 @@
 <template>
   <div v-if="productHasAttributes" class="base">
-    <img
-      v-if="productHasImages"
-      :src="`${API_URL}/product/images/${product.images[0].id}`"
-      style="width: auto; height: 200px"
-    />
-    <div>
-      <p @click="productPage" class="link">
-        <strong>{{ product.title }}</strong> - {{ shortDescription }}
-      </p>
+    <div @click="productPage" class="link">
+      <img
+        v-if="productHasImages"
+        :src="`${API_URL}/product/images/${product.images[0].id}`"
+        style="width: auto; height: 200px"
+      />
       <p>
-        <Price :price="product.price" :available="product.available" />
+        <strong>{{ product.title }}</strong>
+        <span v-if="product.description"> - {{ shortDescription }}</span>
       </p>
     </div>
-    <div v-if="userIsOwner">
+    <p>
+      <Price :price="product.price" :available="product.available" />
+    </p>
+    <div v-if="userIsOwner && edit">
       <ChangeProductAvailability
         :productId="product.id"
         :available="product.available"
@@ -43,6 +44,9 @@ export default {
   },
   props: {
     product: Object,
+    edit: {
+      default: true,
+    },
   },
   data() {
     const maxLength = 30;
@@ -89,6 +93,10 @@ export default {
 }
 
 .base > img {
+  margin: 2rem 2rem 0;
+}
+
+.link {
   margin: 2rem 2rem 0;
 }
 

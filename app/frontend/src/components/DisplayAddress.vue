@@ -9,9 +9,11 @@
     <p>{{ address.zip_code }} {{ address.city }} {{ address.state }}</p>
     <p>{{ address.country }}</p>
     <p>{{ address.details }}</p>
-    <EditAddress :address="address" />
-    <MakeItMainAddress v-if="!addressIsMainId" :addressId="address.id" />
-    <DeleteAddress :addressId="address.id" />
+    <div v-if="edit">
+      <EditAddress :address="address" />
+      <MakeItMainAddress v-if="!addressIsMainId" :addressId="address.id" />
+      <DeleteAddress :addressId="address.id" />
+    </div>
   </div>
 </template>
 
@@ -28,6 +30,9 @@ export default {
   },
   props: {
     address: Object,
+    edit: {
+      default: true,
+    },
   },
   computed: {
     hasAttributes() {
@@ -50,7 +55,7 @@ export default {
 .base {
   border-radius: 1rem;
   max-width: 50%;
-  margin: 3.5rem auto;
+  margin: 1.5rem auto;
 }
 
 .main-address {

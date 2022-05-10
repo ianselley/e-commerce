@@ -3,10 +3,10 @@ from datetime import datetime
 
 
 class OrderBase(BaseModel):
+    address_id: int
     buyer_id: int
-    product_id: int
-    quantity: int
-    date: datetime
+    seller_id: int
+    cart_product_id: int
 
 
 class OrderCreate(OrderBase):
@@ -15,15 +15,20 @@ class OrderCreate(OrderBase):
 
 class OrderReturn(OrderBase):
     id: int
+    date: datetime
+    delivered: bool
 
     class Config:
         orm_mode = True
 
 
-from src.schemas.product import ProductReturn
-from src.schemas.user import BuyerReturn
+from src.schemas.cart_product import CartProduct
+from src.schemas.user import BuyerReturn, SellerReturn
+from src.schemas.address import AddressReturn
 
 
 class Order(OrderReturn):
-    buyer: list[BuyerReturn]
-    product: list[ProductReturn]
+    address: AddressReturn
+    buyer: BuyerReturn
+    seller: SellerReturn
+    cart_product: CartProduct
