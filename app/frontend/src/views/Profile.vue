@@ -9,22 +9,14 @@
         Profile
       </h3>
     </header>
-    <p>
-      <strong>Token:</strong>
-      {{ currentUser.access_token }}
+    <p v-if="currentBuyer"><strong>Name:</strong> {{ currentBuyer.name }}</p>
+    <p v-if="currentSeller">
+      <strong>Brand:</strong> {{ currentSeller.brand }}
     </p>
-    <p>
-      <strong>Email:</strong>
-      {{ currentUser.email }}
-    </p>
-    <p>
-      <strong>Telephone:</strong>
-      {{ currentUser.telephone }}
-    </p>
-    <p>
-      <strong>Role:</strong>
-      {{ currentUser.role }}
-    </p>
+    <p><strong>Token:</strong> {{ currentUser.access_token }}</p>
+    <p><strong>Email:</strong> {{ currentUser.email }}</p>
+    <p><strong>Telephone:</strong> {{ currentUser.telephone }}</p>
+    <p><strong>Role:</strong> {{ currentUser.role }}</p>
     <EditUser />
     <BuyerProfile v-if="userIsBuyer" />
     <SellerProfile v-if="userIsSeller" />

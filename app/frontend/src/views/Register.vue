@@ -5,7 +5,7 @@
       src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png"
     />
     <RegisterUser v-if="!user" />
-    <RegisterAddress v-if="loggedInAsBuyer" />
+    <RegisterAddress v-if="loggedInAsBuyer" :doItLater="true" />
   </div>
 </template>
 

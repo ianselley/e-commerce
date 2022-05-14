@@ -6,7 +6,6 @@
       </button>
     </div>
     <div v-else>
-      <p>Brand: {{ currentSeller.brand }}</p>
       <p>Products sold: {{ currentSeller.number_of_products_sold }}</p>
       <DisplayProduct
         v-for="product in sellerProducts"

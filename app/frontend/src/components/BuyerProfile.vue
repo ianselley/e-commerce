@@ -4,7 +4,6 @@
       FINISH REGISTERING AS BUYER
     </button>
     <div v-else>
-      <p><strong>Name:</strong> {{ currentBuyer.name }}</p>
       <OrderProducts />
       <p><strong>CART:</strong></p>
       <div class="cart" v-if="!cartIsEmpty">

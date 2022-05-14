@@ -205,8 +205,8 @@ export default {
       delete userLogin.telephone;
       delete userLogin.role;
       try {
-        await this.$store.dispatch('auth/register', user)
-        await this.$store.dispatch('auth/login', userLogin)
+        await this.$store.dispatch('auth/register', user);
+        await this.$store.dispatch('auth/login', userLogin);
         if (this.registerBuyer) {
           await this.$store.dispatch('auth/registerBuyer', alias);
         } else {
@@ -214,9 +214,9 @@ export default {
           this.$router.push('/profile');
         }
         this.loading = false;
-      } catch(error) {
-          this.$store.dispatch('alert/setMessage', error);
-          this.loading = false;
+      } catch (error) {
+        this.$store.dispatch('alert/setMessage', error);
+        this.loading = false;
       }
     },
   },

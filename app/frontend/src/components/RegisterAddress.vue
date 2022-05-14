@@ -124,6 +124,7 @@
             </span>
           </button>
           <button
+            v-if="doItLater"
             type="button"
             title="CAREFUL! It won't save the current values"
             @click="goToProfile"
@@ -154,6 +155,9 @@ export default {
   props: {
     address: {
       default: { ...emptyValues },
+    },
+    doItLater: {
+      default: false,
     },
   },
   data() {
