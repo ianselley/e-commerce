@@ -74,12 +74,12 @@ class AuthService {
     return axiosRequest(options);
   }
 
-  registerBuyer(buyer) {
+  registerBuyer(name) {
     const options = {
       endpoint: '/user/buyer',
       method: 'post',
       headers: authHeader(),
-      data: buyer,
+      data: { name },
     };
     return axiosRequest(options, (response) => {
       if (response.data) {
@@ -102,12 +102,12 @@ class AuthService {
     });
   }
 
-  registerSeller(info) {
+  registerSeller(brand) {
     const options = {
       endpoint: '/user/seller',
       method: 'post',
       headers: authHeader(),
-      data: info,
+      data: { brand },
     };
     return axiosRequest(options, (response) => {
       if (response.data) {

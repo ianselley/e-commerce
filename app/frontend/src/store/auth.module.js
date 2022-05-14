@@ -129,6 +129,12 @@ export const auth = {
     addOrders(state, newOrders) {
       state.buyer.orders = state.buyer.orders.concat(newOrders);
     },
+    productArrives(state, orderId) {
+      const orderIndex = state.buyer.orders.findIndex(
+        (order) => order.id == orderId
+      );
+      state.buyer.orders[orderIndex].delivered = true;
+    },
   },
 
   actions: {
@@ -184,8 +190,8 @@ export const auth = {
         });
     },
 
-    registerBuyer({ commit }, buyer) {
-      return AuthService.registerBuyer(buyer)
+    registerBuyer({ commit }, name) {
+      return AuthService.registerBuyer(name)
         .then((response) => {
           commit('registerBuyer', response);
           return Promise.resolve(response);
@@ -206,8 +212,8 @@ export const auth = {
         });
     },
 
-    registerSeller({ commit }, info) {
-      return AuthService.registerSeller(info)
+    registerSeller({ commit }, brand) {
+      return AuthService.registerSeller(brand)
         .then((response) => {
           commit('registerSeller', response);
           return Promise.resolve(response);

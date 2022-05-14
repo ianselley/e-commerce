@@ -10,6 +10,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    repeat_password: str
 
 
 class UserLogin(BaseModel):

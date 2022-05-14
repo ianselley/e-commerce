@@ -1,20 +1,19 @@
 <template>
   <div>
-    <DisplayProduct
+    <DisplayOrder
       v-for="order in Array.from(orders).slice().reverse()"
       :key="order"
-      :product="order.cart_product.product"
-      :edit="false"
+      :order="order"
     />
   </div>
 </template>
 
 <script>
-import DisplayProduct from '@/components/DisplayProduct.vue';
+import DisplayOrder from '@/components/DisplayOrder.vue';
 export default {
   name: 'DisplayOrders',
   components: {
-    DisplayProduct,
+    DisplayOrder,
   },
   computed: {
     currentBuyer() {

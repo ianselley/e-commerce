@@ -5,31 +5,28 @@
       src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png"
     />
     <RegisterUser v-if="!user" />
-    <RegisterBuyer v-else-if="userIsBuyer" />
-    <RegisterSeller v-else />
+    <RegisterAddress v-if="loggedInAsBuyer" />
   </div>
 </template>
 
 <script>
 import RegisterUser from '@/components/RegisterUser.vue';
-import RegisterBuyer from '@/components/RegisterBuyer.vue';
-import RegisterSeller from '@/components/RegisterSeller.vue';
+import RegisterAddress from '@/components/RegisterAddress.vue';
 export default {
   name: 'Register',
   components: {
     RegisterUser,
-    RegisterBuyer,
-    RegisterSeller,
+    RegisterAddress,
   },
   computed: {
     user() {
       return this.$store.state.auth.user;
     },
-    userIsBuyer() {
-      return this.user && this.user.role == 'buyer';
+    buyer() {
+      return this.$store.state.auth.buyer;
     },
-    loggedIn() {
-      return this.$store.state.auth.loggedIn;
+    loggedInAsBuyer() {
+      return this.$store.state.auth.loggedInAs === 'buyer' && this.buyer;
     },
   },
   mounted() {
@@ -37,7 +34,7 @@ export default {
       this.user &&
       (this.$store.state.auth.seller ||
         (this.$store.state.auth.buyer &&
-          this.$storelstate.auth.buyer.main_address_id))
+          this.$store.state.auth.buyer.main_address_id))
     ) {
       this.$router.push('/profile');
       this.$store.commit(

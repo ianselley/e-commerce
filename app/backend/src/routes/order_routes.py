@@ -25,3 +25,21 @@ def create_order(address_id: int, cart_product_ids: str, db: Session = Depends(u
             raise HTTPException(status_code=400, detail="You can't buy this product, it's not in your cart")
     created_orders = crud.order.create_orders(db=db, address_id=address_id, buyer_id=buyer.id, cart_product_ids=cart_product_ids)
     return created_orders
+
+
+@router.put("")
+def product_arrives(order_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+    token_data = utils.user.decode(token)
+    user_id = token_data.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    buyer = crud.user.get_buyer_by_user_id(db=db, user_id=user_id)
+    if not buyer:
+        raise HTTPException(status_code=400, detail="Buyer not found")
+    order = crud.order.get_order(db=db, order_id=order_id)
+    if not order:
+        raise HTTPException(status_code=400, detail="Order not found")
+    if order.buyer_id != buyer.id:
+        raise HTTPException(status_code=400, detail="You can't update this order, it's not yours")
+    updated_order = crud.order.product_arrives(db=db, order_id=order_id)
+    return updated_order

@@ -2,11 +2,11 @@
   <div>
     <button ref="toggleEditUser" @click="toggleEdit">Edit User Info</button>
     <div v-if="edit">
+      <EditName v-if="userIsBuyer" />
+      <EditBrand v-if="userIsSeller" />
       <EditTelephone />
       <EditEmail />
       <EditPassword />
-      <EditName v-if="userIsBuyer" />
-      <EditBrand v-if="userIsSeller" />
     </div>
   </div>
 </template>

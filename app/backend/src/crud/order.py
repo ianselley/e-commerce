@@ -34,3 +34,12 @@ def create_orders(db: Session, address_id: int, buyer_id: int, cart_product_ids:
         order = create_order(db=db, address_id=address_id, cart_product_id=cart_product_id, buyer_id=buyer_id)
         orders.append(order)
     return orders
+
+
+def product_arrives(db: Session, order_id: int):
+    order = get_order(db=db, order_id=order_id)
+    order.delivered = True
+    db.commit()
+    db.refresh(order)
+    return order
+    

@@ -13,22 +13,26 @@ def signup_user(user: schemas.UserCreate, db: Session = Depends(utils.db.get_db)
     valid_email = utils.user.email_is_valid(user.email)
     if not valid_email:
         raise HTTPException(status_code=400, detail="Email not valid")
-
+    valid_telephone = utils.user.telephone_is_valid(user.telephone)
+    if not valid_telephone:
+        raise HTTPException(status_code=400, detail="Telephone not valid")
+    valid_passwords = utils.user.passwords_are_valid(user.password, user.repeat_password)
+    if not valid_passwords:
+        raise HTTPException(status_code=400, detail="Passwords not valid")
     user_db = crud.user.get_user_by_email(db, user_email=user.email)
     if user_db:
         raise HTTPException(status_code=400, detail="Email already registered")
-
+    if user.role not in ["buyer", "seller"]:
+        raise HTTPException(status_code=400, detail="Role not valid")
     user_created = crud.user.create_user(db=db, user=user)
     return user_created
 
 
 @router.get("", response_model=schemas.User)
-def read_user(user_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+def read_user(db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
-    token_user_id = token_data.get("sub")
-    if not token_user_id:
-        raise HTTPException(status_code=400, detail="Invalid token")
-    if token_user_id != user_id:
+    user_id = token_data.get("sub")
+    if not user_id:
         raise HTTPException(status_code=400, detail="Invalid token")
     user = crud.user.get_user(db=db, user_id=user_id)
     user.access_token = utils.user.encode(user)
@@ -78,9 +82,13 @@ def signup_buyer(buyer: schemas.BuyerCreate, db: Session = Depends(utils.db.get_
 
 
 @router.get("/buyer", response_model=schemas.Buyer)
-def read_buyer(buyer_id: int, db: Session = Depends(utils.db.get_db)):
-    buyer = crud.user.get_buyer(db=db, buyer_id=buyer_id)
-    return buyer
+def read_buyer(db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+    token_data = utils.user.decode(token)
+    user_id = token_data.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    buyer_db = crud.user.get_buyer_by_user_id(db, user_id=user_id)
+    return buyer_db
 
 
 @router.put("/buyer", response_model=schemas.Buyer)
@@ -115,9 +123,13 @@ def signup_seller(seller: schemas.SellerCreate, db: Session = Depends(utils.db.g
 
 
 @router.get("/seller", response_model=schemas.Seller)
-def read_seller(seller_id: int, db: Session = Depends(utils.db.get_db)):
-    seller = crud.user.get_seller(db=db, seller_id=seller_id)
-    return seller
+def read_seller(db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+    token_data = utils.user.decode(token)
+    user_id = token_data.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    seller_db = crud.user.get_seller_by_user_id(db, user_id=user_id)
+    return seller_db
 
 
 @router.put("/seller", response_model=schemas.Seller)

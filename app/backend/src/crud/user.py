@@ -6,7 +6,7 @@ from src import models, schemas
 
 def create_user(db: Session, user: schemas.UserCreate):
     password_bytes = user.password.encode()
-    created_user = models.User(**user.dict(exclude={'password'}))
+    created_user = models.User(**user.dict(exclude={'password', 'repeat_password'}))
     created_user.hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
     db.add(created_user)
     db.commit()

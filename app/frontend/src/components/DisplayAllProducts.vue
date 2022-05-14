@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>HERE ARE ALL THE PRODUCTS DISPLAYED</p>
     <DisplayProduct
       v-for="product in allProducts"
       :key="product"

@@ -19,6 +19,20 @@ class OrderService {
       localStorage.setItem('buyer', JSON.stringify(buyer));
     });
   }
+  productArrives(orderId) {
+    const options = {
+      endpoint: '/order',
+      method: 'put',
+      headers: authHeader(),
+      params: { order_id: orderId },
+    };
+    return axiosRequest(options, () => {
+      let buyer = JSON.parse(localStorage.getItem('buyer'));
+      const orderIndex = buyer.orders.findIndex((order) => order.id == orderId);
+      buyer.orders[orderIndex].delivered = true;
+      localStorage.setItem('buyer', JSON.stringify(buyer));
+    });
+  }
 }
 
 export default new OrderService();

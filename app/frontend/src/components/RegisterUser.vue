@@ -1,12 +1,13 @@
 <template>
   <div>
     <form
+      v-if="!loggedInAsBuyer"
       @submit="handleRegisterUser"
       :validation-schema="registerUserSchema"
       onsubmit="return false;"
     >
       <div>
-        <div v-if="!editingUser">
+        <div @change="validateAll">
           <input
             id="buyer"
             name="role"
@@ -25,6 +26,22 @@
           <label for="seller">Seller</label>
         </div>
         <div>
+          <label for="alias">
+            <span v-if="registerBuyer">Name</span>
+            <span v-else>Brand</span>
+          </label>
+          <input
+            id="alias"
+            name="alias"
+            v-model="values.alias"
+            @keyup="validateAll"
+            @blur="validateAll"
+            type="text"
+            autofocus
+          />
+          <span>{{ errors.alias }}</span>
+        </div>
+        <div>
           <label for="telephone">Telephone</label>
           <input
             id="telephone"
@@ -33,7 +50,6 @@
             @keyup="validateAll"
             @blur="validateAll"
             type="text"
-            autofocus
           />
           <span>{{ errors.telephone }}</span>
         </div>
@@ -79,8 +95,8 @@
           <button type="submit" :disabled="loading || !isValid">
             <span v-show="loading">LOADING</span>
             <span v-show="!loading">
-              <span v-if="editingUser">Submit Changes</span>
-              <span v-else>Next</span>
+              <span v-if="registerSeller">SIGN UP AS A SELLER</span>
+              <span v-else>NEXT</span>
             </span>
           </button>
         </div>
@@ -92,6 +108,7 @@
 <script>
 import * as yup from 'yup';
 const emptyValues = {
+  alias: '',
   telephone: '',
   email: '',
   password: '',
@@ -100,13 +117,16 @@ const emptyValues = {
 export default {
   name: 'RegisterUser',
   data() {
-    const telphoneRegex =
+    const telephoneRegex =
       /(\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$)|^$/;
     const emailRegex = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}/;
+    const values = { role: 'buyer', ...emptyValues };
+    const errors = { ...emptyValues };
     const registerUserSchema = yup.object({
+      alias: yup.string().required('Name is required'),
       telephone: yup
         .string()
-        .matches(telphoneRegex, 'Telphone number is invalid')
+        .matches(telephoneRegex, 'Telphone number is invalid')
         .optional(),
       email: yup
         .string()
@@ -123,8 +143,6 @@ export default {
         .oneOf([yup.ref('password'), null], 'Passwords must match')
         .required('Repeat password is required'),
     });
-    const values = { role: 'buyer', ...emptyValues };
-    const errors = { ...emptyValues };
     return {
       loading: false,
       values,
@@ -141,11 +159,26 @@ export default {
       }
       return true;
     },
+    registerBuyer() {
+      return this.values.role == 'buyer';
+    },
+    registerSeller() {
+      return this.values.role == 'seller';
+    },
   },
   mounted() {
     this.validateAll();
   },
   methods: {
+    handleAliasError() {
+      if (this.errors.alias) {
+        if (this.registerBuyer) {
+          this.errors.alias = 'Name is required';
+        } else {
+          this.errors.alias = 'Brand is required';
+        }
+      }
+    },
     validateAll() {
       this.registerUserSchema
         .validate(this.values, { abortEarly: false })
@@ -157,26 +190,34 @@ export default {
           err.inner.forEach((error) => {
             this.errors[error.path] = error.message;
           });
+          this.handleAliasError();
         });
     },
-    handleRegisterUser() {
-      const user = Object.assign({}, this.values);
-      delete user.repeatPassword;
-      this.validateAll();
+    async handleRegisterUser() {
       this.loading = true;
+      const user = Object.assign({}, this.values);
+      const alias = this.values.alias;
+      user.repeat_password = user.repeatPassword;
+      delete user.repeatPassword;
+      delete user.alias;
+      this.validateAll();
       const userLogin = Object.assign({}, user);
       delete userLogin.telephone;
       delete userLogin.role;
-      this.$store
-        .dispatch('auth/register', user)
-        .then(() => {
-          this.loading = false;
-          this.$store.dispatch('auth/login', userLogin);
-        })
-        .catch((error) => {
-          this.loading = false;
+      try {
+        await this.$store.dispatch('auth/register', user)
+        await this.$store.dispatch('auth/login', userLogin)
+        if (this.registerBuyer) {
+          await this.$store.dispatch('auth/registerBuyer', alias);
+        } else {
+          await this.$store.dispatch('auth/registerSeller', alias);
+          this.$router.push('/profile');
+        }
+        this.loading = false;
+      } catch(error) {
           this.$store.dispatch('alert/setMessage', error);
-        });
+          this.loading = false;
+      }
     },
   },
 };
