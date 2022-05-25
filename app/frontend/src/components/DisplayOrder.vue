@@ -18,11 +18,14 @@ export default {
     order: Object,
   },
   mounted() {
-    if (this.afterDeadline && !this.productDelivered) {
+    if (this.currentBuyer && this.afterDeadline && !this.productDelivered) {
       this.productArrives();
     }
   },
   computed: {
+    currentBuyer() {
+      return this.$store.state.auth.buyer;
+    },
     product() {
       return this.$props.order.cart_product.product;
     },

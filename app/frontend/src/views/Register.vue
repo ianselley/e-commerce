@@ -1,9 +1,6 @@
 <template>
-  <div>
-    <img
-      id="profile-img"
-      src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png"
-    />
+  <div class="flex flex-col justify-center">
+    <DefaultImageProfile />
     <RegisterUser v-if="!user" />
     <RegisterAddress v-if="loggedInAsBuyer" :doItLater="true" />
   </div>
@@ -12,11 +9,13 @@
 <script>
 import RegisterUser from '@/components/RegisterUser.vue';
 import RegisterAddress from '@/components/RegisterAddress.vue';
+import DefaultImageProfile from '@/components/DefaultImageProfile.vue';
 export default {
   name: 'Register',
   components: {
     RegisterUser,
     RegisterAddress,
+    DefaultImageProfile,
   },
   computed: {
     user() {

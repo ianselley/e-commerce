@@ -27,13 +27,8 @@ const routes = [
     component: () => import('@/views/Profile.vue'),
   },
   {
-    path: '/logout',
-    name: 'Logout',
-    component: () => import('@/components/Logout.vue'),
-  },
-  {
     path: '/product/:id',
-    // name: 'Product',
+    name: 'Product',
     component: () => import('@/views/Product.vue'),
   },
 ];

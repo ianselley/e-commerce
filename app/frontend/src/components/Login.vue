@@ -1,39 +1,44 @@
 <template>
-  <div>
-    <div>
-      <img
-        id="profile-img"
-        src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png"
-      />
-      <form @submit="handleLogin" onsubmit="return false;">
+  <div class="flex flex-col justify-center">
+    <DefaultImageProfile />
+    <form @submit="handleLogin" onsubmit="return false;">
+      <div class="form-content">
         <div>
-          <div>
-            <label for="email">Email</label>
-            <input id="email" name="email" v-model="values.email" type="text" />
-          </div>
-          <div>
-            <label for="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              v-model="values.password"
-              type="password"
-              autocomplete="on"
-            />
-          </div>
-          <button type="submit" :disabled="loading">
-            <span v-show="loading">LOADING</span>
-            <span v-show="!loading">Login</span>
-          </button>
+          <p><label for="email">Email</label></p>
+          <input
+            id="email"
+            name="email"
+            v-model="values.email"
+            type="text"
+            class="focus:outline-none"
+          />
         </div>
-      </form>
-    </div>
+        <div>
+          <p><label for="password">Password</label></p>
+          <input
+            id="password"
+            name="password"
+            v-model="values.password"
+            type="password"
+            autocomplete="on"
+          />
+        </div>
+        <button type="submit" :disabled="loading" class="register-button">
+          <img src="@/assets/loader.svg" alt="loading" v-show="loading" />
+          <span v-show="!loading">LOGIN</span>
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
+import DefaultImageProfile from '@/components/DefaultImageProfile.vue';
 export default {
   name: 'Login',
+  components: {
+    DefaultImageProfile,
+  },
   data() {
     const values = {
       email: '',

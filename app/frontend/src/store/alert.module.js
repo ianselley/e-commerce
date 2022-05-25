@@ -1,11 +1,11 @@
 export const alert = {
   namespaced: true,
   state: {
-    message: '',
+    message: undefined,
   },
   mutations: {
     removeMessage(state) {
-      state.message = '';
+      state.message = undefined;
     },
     setMessage(state, value) {
       state.message = value;

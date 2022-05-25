@@ -1,34 +1,48 @@
 <template>
   <div>
     <form
-      v-if="!loggedInAsBuyer"
       @submit="handleRegisterUser"
       :validation-schema="registerUserSchema"
       onsubmit="return false;"
     >
-      <div>
-        <div @change="validateAll">
-          <input
-            id="buyer"
-            name="role"
-            type="radio"
-            value="buyer"
-            v-model="values.role"
-          />
-          <label for="buyer">Buyer</label>
-          <input
-            id="seller"
-            name="role"
-            type="radio"
-            value="seller"
-            v-model="values.role"
-          />
-          <label for="seller">Seller</label>
+      <div class="form-content">
+        <div
+          @change="validateAll"
+          class="flex justify-center mx-auto w-min items-center bg-gradient-to-br from-indigo-50 to-violet-50 rounded-lg"
+        >
+          <div class="inline-flex rounded-lg">
+            <input
+              id="buyer"
+              name="role"
+              type="radio"
+              value="buyer"
+              v-model="values.role"
+              checked
+              hidden
+            />
+            <label for="buyer" class="radio">Buyer</label>
+          </div>
+          <div class="inline-flex rounded-lg">
+            <input
+              id="seller"
+              name="role"
+              type="radio"
+              value="seller"
+              v-model="values.role"
+              hidden
+            />
+            <label for="seller" class="radio">Seller</label>
+          </div>
         </div>
         <div>
-          <label for="alias">
-            <span v-if="registerBuyer">Name</span>
-            <span v-else>Brand</span>
+          <label
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.alias }"
+            for="alias"
+          >
+            <span v-if="registerBuyer">Name *</span>
+            <span v-else>Brand *</span>
+            <span class="tooltip-text">{{ errors.alias }}</span>
           </label>
           <input
             id="alias"
@@ -39,22 +53,32 @@
             type="text"
             autofocus
           />
-          <span>{{ errors.alias }}</span>
         </div>
         <div>
-          <label for="telephone">Telephone</label>
+          <label
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.telephone }"
+            for="telephone"
+            >Telephone
+            <span class="tooltip-text">{{ errors.telephone }}</span>
+          </label>
           <input
             id="telephone"
             name="telephone"
             v-model="values.telephone"
             @keyup="validateAll"
             @blur="validateAll"
-            type="text"
+            type="tel"
           />
-          <span>{{ errors.telephone }}</span>
         </div>
         <div>
-          <label for="email">Email</label>
+          <label
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.email }"
+            for="email"
+            >Email *
+            <span class="tooltip-text">{{ errors.email }}</span>
+          </label>
           <input
             id="email"
             name="email"
@@ -63,10 +87,15 @@
             @blur="validateAll"
             type="text"
           />
-          <span>{{ errors.email }}</span>
         </div>
         <div>
-          <label for="password">Password</label>
+          <label
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.password }"
+            for="password"
+            >Password *
+            <span class="tooltip-text">{{ errors.password }}</span>
+          </label>
           <input
             id="password"
             name="password"
@@ -76,10 +105,15 @@
             type="password"
             autocomplete="on"
           />
-          <span>{{ errors.password }}</span>
         </div>
         <div>
-          <label for="repeatPassword">Repeat password</label>
+          <label
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.repeatPassword }"
+            for="repeatPassword"
+            >Repeat password *
+            <span class="tooltip-text">{{ errors.repeatPassword }}</span>
+          </label>
           <input
             id="repeatPassword"
             name="repeatPassword"
@@ -89,17 +123,18 @@
             type="password"
             autocomplete="on"
           />
-          <span>{{ errors.repeatPassword }}</span>
         </div>
-        <div>
-          <button type="submit" :disabled="loading || !isValid">
-            <span v-show="loading">LOADING</span>
-            <span v-show="!loading">
-              <span v-if="registerSeller">SIGN UP AS A SELLER</span>
-              <span v-else>NEXT</span>
-            </span>
-          </button>
-        </div>
+        <button
+          type="submit"
+          :disabled="loading || !isValid"
+          class="register-button"
+        >
+          <span v-show="loading">LOADING</span>
+          <span v-show="!loading">
+            <span v-if="registerSeller">SIGN UP AS A SELLER</span>
+            <span v-else>NEXT</span>
+          </span>
+        </button>
       </div>
     </form>
   </div>
@@ -168,6 +203,12 @@ export default {
   },
   mounted() {
     this.validateAll();
+    const phoneInputField = document.querySelector('#telephone');
+    const phoneInput = window.intlTelInput(phoneInputField, {
+      utilsScript:
+        'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.15/js/utils.js',
+    });
+    console.log(phoneInput.getNumber());
   },
   methods: {
     handleAliasError() {
@@ -223,4 +264,33 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.radio {
+  @apply m-0 w-min inline text-center self-center py-2 px-4 rounded-lg cursor-pointer;
+}
+
+:not(input:checked) ~ .radio {
+  @apply transition ease-in-out duration-200 hover:bg-amber-50;
+}
+
+input:checked ~ .radio {
+  @apply text-amber-50 font-bold bg-amber-400;
+}
+
+.tooltip-error {
+  @apply text-red-700;
+}
+
+.tooltip {
+  @apply relative;
+}
+
+.tooltip .tooltip-text {
+  @apply bg-red-400 w-max rounded-md text-white text-center px-3 absolute z-10;
+  @apply opacity-0 invisible transition duration-300 left-0;
+}
+
+.tooltip:hover .tooltip-text {
+  @apply visible opacity-100;
+}
+</style>

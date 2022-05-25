@@ -1,34 +1,40 @@
 <template>
-  <div v-if="product" class="image-info-cart">
-    <DisplayImages :images="product.images" />
-    <div class="cart">
-      <div v-if="product.available && productHasStock">
-        <p><Price :price="product.price" :available="product.available" /></p>
-        <p v-if="productHasStock" class="available">In stock</p>
-        <AddToCart
-          v-if="buyer"
-          :productId="parseInt(productId)"
-          :stock="product.stock"
-        />
+  <div>
+    <div v-if="product" class="image-info-cart">
+      <DisplayImages :images="product.images" />
+      <div class="cart">
+        <div v-if="product.available && productHasStock">
+          <p><Price :price="product.price" :available="product.available" /></p>
+          <p v-if="productHasStock" class="available">In stock</p>
+          <AddToCart
+            v-if="buyer"
+            :productId="parseInt(productId)"
+            :stock="product.stock"
+          />
+        </div>
+        <p v-else class="not-available">Currently not available</p>
       </div>
-      <p v-else class="not-available">Currently not available</p>
     </div>
+    <NotFound v-else />
   </div>
 </template>
 
 <script>
-import DisplayImages from '@/components/DisplayImages.vue';
 import Price from '@/components/Price.vue';
+import NotFound from '@/components/NotFound.vue';
 import AddToCart from '@/components/AddToCart.vue';
+import DisplayImages from '@/components/DisplayImages.vue';
 export default {
   name: 'Product',
   components: {
-    DisplayImages,
-    AddToCart,
     Price,
+    NotFound,
+    AddToCart,
+    DisplayImages,
   },
   data() {
     return {
+      found: undefined,
       loading: false,
       productId: this.$route.params.id,
     };
@@ -49,10 +55,11 @@ export default {
     this.$store
       .dispatch('product/getProduct', this.productId)
       .then(() => {
+        this.found = true;
         this.loading = false;
       })
-      .catch((error) => {
-        this.$store.dispatch('alert/setMessage', error);
+      .catch(() => {
+        this.found = false;
       });
   },
 };

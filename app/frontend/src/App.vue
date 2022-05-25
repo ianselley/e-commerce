@@ -1,30 +1,29 @@
 <template>
   <div>
-    <div id="nav">
-      <IanSelleyLogo />
-      <router-link
-        v-for="route in this.$router.options.routes"
-        :key="route.name"
-        :to="route.path"
-      >
-        <span v-if="route.name">{{ route.name }} |</span>
-      </router-link>
-    </div>
-    <Alert />
+    <Navbar />
+    <Alert v-if="!messageEmpty" />
     <router-view />
     <footer />
   </div>
 </template>
 
 <script>
-import IanSelleyLogo from '@/components/IanSelleyLogo.vue';
+import Navbar from '@/components/Navbar.vue';
 import Alert from '@/components/Alert.vue';
 
 export default {
   name: 'App',
   components: {
-    IanSelleyLogo,
+    Navbar,
     Alert,
+  },
+  computed: {
+    message() {
+      return this.$store.state.alert.message;
+    },
+    messageIsEmpty() {
+      return this.message == undefined;
+    },
   },
 };
 </script>
@@ -40,19 +39,6 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
 }
 
 footer {
