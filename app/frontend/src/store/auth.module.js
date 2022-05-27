@@ -64,7 +64,7 @@ export const auth = {
     },
     deleteAddress(state, addressId) {
       if (state.buyer.main_address_id == addressId) {
-        this.commit('makeItMainAddress', null);
+        state.buyer.main_address_id = null;
       }
       state.buyer.addresses = state.buyer.addresses.filter(
         (address) => address.id != addressId

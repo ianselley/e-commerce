@@ -1,7 +1,11 @@
 <template>
-  <div v-show="!messageIsEmpty" class="bg-amber-100 w-full p-4">
-    <span class="text-violet-900 mr-8">{{ message }}</span>
-    <button @click="removeMessage">OK</button>
+  <div class="relative w-0 h-0">
+    <div v-show="!messageIsEmpty" class="alert">
+      <div class="blend"></div>
+      <span class="text-violet-900 mr-8">{{ message }}</span>
+      <button @click="removeMessage">OK</button>
+      <div class="blend"></div>
+    </div>
   </div>
 </template>
 
@@ -24,4 +28,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.alert {
+  @apply bg-amber-100 w-full fixed top-28 z-40;
+}
+.blend {
+  @apply w-full bg-amber-100 h-0;
+  box-shadow: 0 0 20px 20px #fef3c7;
+}
+</style>

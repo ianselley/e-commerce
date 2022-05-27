@@ -1,8 +1,10 @@
 <template>
-  <span v-if="available">
-    <span class="price">{{ price.toFixed(2) }} </span>€
-  </span>
-  <span v-else class="not-available">Not available</span>
+  <div>
+    <span v-if="available">
+      <span class="price">{{ price.toFixed(2) }} </span>€
+    </span>
+    <span v-else class="not-available">Not available</span>
+  </div>
 </template>
 
 <script>

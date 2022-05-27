@@ -13,12 +13,14 @@
     "vue": "^3.2.33",
     "vue-axios": "^3.4.0",
     "vue-router": "^4.0.0-0",
+    "vue-tel-input": "^5.11.0",
     "vue-timer-hook": "^1.0.0",
     "vue3-cookies": "^1.0.6",
     "vuex": "^4.0.0-0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@types/vue-tel-input": "^2.1.2",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-e2e-cypress": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",

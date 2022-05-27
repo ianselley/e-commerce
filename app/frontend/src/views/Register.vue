@@ -38,7 +38,7 @@ export default {
       this.$router.push('/profile');
       this.$store.commit(
         'alert/setMessage',
-        'You are already logged in, you would have to log out to access this'
+        'You are already registered, you would have to log out to access this'
       );
     }
   },

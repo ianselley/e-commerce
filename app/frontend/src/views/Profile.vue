@@ -13,7 +13,6 @@
     <p v-if="currentSeller">
       <strong>Brand:</strong> {{ currentSeller.brand }}
     </p>
-    <p><strong>Token:</strong> {{ currentUser.access_token }}</p>
     <p><strong>Email:</strong> {{ currentUser.email }}</p>
     <p><strong>Telephone:</strong> {{ currentUser.telephone }}</p>
     <p><strong>Role:</strong> {{ currentUser.role }}</p>

@@ -1,7 +1,7 @@
 <template>
   <div
     id="nav"
-    class="px-10 py-6 sticky top-0 z-50 flex flex-row justify-between bg-white bg-opacity-50 backdrop-filter backdrop-blur-md shadow"
+    class="px-10 py-6 sticky top-0 z-50 flex flex-row justify-between bg-white bg-opacity-60 backdrop-filter backdrop-blur-md shadow"
   >
     <IanSelleyLogo />
     <div id="endpoints" class="flex flex-row content-center space-x-8">

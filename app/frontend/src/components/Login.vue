@@ -3,6 +3,7 @@
     <DefaultImageProfile />
     <form @submit="handleLogin" onsubmit="return false;">
       <div class="form-content">
+        <div class="form-title">LOGIN</div>
         <div>
           <p><label for="email">Email</label></p>
           <input

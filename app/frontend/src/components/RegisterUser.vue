@@ -6,6 +6,7 @@
       onsubmit="return false;"
     >
       <div class="form-content">
+        <div class="form-title">SIGN UP</div>
         <div
           @change="validateAll"
           class="flex justify-center mx-auto w-min items-center bg-gradient-to-br from-indigo-50 to-violet-50 rounded-lg"
@@ -47,28 +48,29 @@
           <input
             id="alias"
             name="alias"
+            type="text"
+            :placeholder="registerBuyer ? 'John Smith' : 'Apple'"
             v-model="values.alias"
             @keyup="validateAll"
             @blur="validateAll"
-            type="text"
             autofocus
           />
         </div>
         <div>
           <label
             class="tooltip"
-            :class="{ 'tooltip-error': errors.telephone }"
+            :class="{ 'tooltip-error': telephone.error }"
             for="telephone"
             >Telephone
-            <span class="tooltip-text">{{ errors.telephone }}</span>
+            <span class="tooltip-text">{{ telephone.error }}</span>
           </label>
           <input
             id="telephone"
             name="telephone"
-            v-model="values.telephone"
+            type="tel"
+            v-model="telephone.value"
             @keyup="validateAll"
             @blur="validateAll"
-            type="tel"
           />
         </div>
         <div>
@@ -82,10 +84,13 @@
           <input
             id="email"
             name="email"
+            type="text"
+            :placeholder="
+              registerBuyer ? 'johnsmith@example.com' : 'apple@contact.com'
+            "
             v-model="values.email"
             @keyup="validateAll"
             @blur="validateAll"
-            type="text"
           />
         </div>
         <div>
@@ -99,10 +104,10 @@
           <input
             id="password"
             name="password"
+            type="password"
             v-model="values.password"
             @keyup="validateAll"
             @blur="validateAll"
-            type="password"
             autocomplete="on"
           />
         </div>
@@ -117,10 +122,10 @@
           <input
             id="repeatPassword"
             name="repeatPassword"
+            type="password"
             v-model="values.repeatPassword"
             @keyup="validateAll"
             @blur="validateAll"
-            type="password"
             autocomplete="on"
           />
         </div>
@@ -129,7 +134,7 @@
           :disabled="loading || !isValid"
           class="register-button"
         >
-          <span v-show="loading">LOADING</span>
+          <img src="@/assets/loader.svg" alt="loading" v-show="loading" />
           <span v-show="!loading">
             <span v-if="registerSeller">SIGN UP AS A SELLER</span>
             <span v-else>NEXT</span>
@@ -144,7 +149,6 @@
 import * as yup from 'yup';
 const emptyValues = {
   alias: '',
-  telephone: '',
   email: '',
   password: '',
   repeatPassword: '',
@@ -152,17 +156,12 @@ const emptyValues = {
 export default {
   name: 'RegisterUser',
   data() {
-    const telephoneRegex =
-      /(\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$)|^$/;
     const emailRegex = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}/;
     const values = { role: 'buyer', ...emptyValues };
     const errors = { ...emptyValues };
+    const telephone = { value: '', error: '' };
     const registerUserSchema = yup.object({
       alias: yup.string().required('Name is required'),
-      telephone: yup
-        .string()
-        .matches(telephoneRegex, 'Telphone number is invalid')
-        .optional(),
       email: yup
         .string()
         .max(64, 'Must be maximum 64 characters')
@@ -182,11 +181,16 @@ export default {
       loading: false,
       values,
       errors,
+      telephone,
       registerUserSchema,
+      phoneInput: undefined,
     };
   },
   computed: {
     isValid() {
+      if (this.telephone.error !== '') {
+        return false;
+      }
       for (let [, value] of Object.entries(this.errors)) {
         if (value !== '') {
           return false;
@@ -202,15 +206,28 @@ export default {
     },
   },
   mounted() {
-    this.validateAll();
     const phoneInputField = document.querySelector('#telephone');
-    const phoneInput = window.intlTelInput(phoneInputField, {
+    this.phoneInput = window.intlTelInput(phoneInputField, {
+      initialCountry: 'auto',
+      geoIpLookup: this.getIp,
       utilsScript:
         'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.15/js/utils.js',
     });
-    console.log(phoneInput.getNumber());
+    this.validateAll();
   },
   methods: {
+    getIp(callback) {
+      fetch('https://ipinfo.io/json?token=0e078cf2613cc6', {
+        headers: { Accept: 'application/json' },
+      })
+        .then((resp) => resp.json())
+        .catch(() => {
+          return {
+            country: 'us',
+          };
+        })
+        .then((resp) => callback(resp.country));
+    },
     handleAliasError() {
       if (this.errors.alias) {
         if (this.registerBuyer) {
@@ -220,7 +237,16 @@ export default {
         }
       }
     },
+    validateTelephone() {
+      if (this.phoneInput.isValidNumber() || this.telephone.value == '') {
+        this.telephone.error = '';
+      } else {
+        this.telephone.error = 'Telephone number is invalid';
+      }
+      console.log(this.phoneInput.getNumber());
+    },
     validateAll() {
+      this.validateTelephone();
       this.registerUserSchema
         .validate(this.values, { abortEarly: false })
         .then(() => {
@@ -239,6 +265,7 @@ export default {
       const user = Object.assign({}, this.values);
       const alias = this.values.alias;
       user.repeat_password = user.repeatPassword;
+      user.telephone = this.phoneInput.getNumber();
       delete user.repeatPassword;
       delete user.alias;
       this.validateAll();
@@ -291,6 +318,6 @@ input:checked ~ .radio {
 }
 
 .tooltip:hover .tooltip-text {
-  @apply visible opacity-100;
+  @apply visible opacity-100 transition duration-300;
 }
 </style>
