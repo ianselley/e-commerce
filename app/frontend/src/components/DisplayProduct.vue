@@ -45,7 +45,7 @@ export default {
   props: {
     product: Object,
     edit: {
-      default: true,
+      default: false,
     },
   },
   data() {
@@ -82,7 +82,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .base {
   border: 1px solid black;
   border-radius: 1rem;

@@ -1,9 +1,8 @@
 <template>
-  <div v-if="timer.isRunning">
+  <div>
     <span>{{ timer.days }}</span
     >:<span>{{ timer.hours }}</span
-    >:<span>{{ timer.minutes }}</span
-    >:<span>{{ timer.seconds }}</span>
+    >:<span>{{ timer.minutes }}</span>
   </div>
 </template>
 
@@ -23,4 +22,4 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style lang="postcss" scoped></style>

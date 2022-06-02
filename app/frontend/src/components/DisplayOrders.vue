@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="orders">
     <DisplayOrder
       v-for="order in Array.from(orders).slice().reverse()"
       :key="order"
@@ -19,12 +19,17 @@ export default {
     currentBuyer() {
       return this.$store.state.auth.buyer;
     },
+    currentSeller() {
+      return this.$store.state.auth.seller;
+    },
     orders() {
-      if (this.currentBuyer) return this.$store.state.auth.buyer.orders;
-      return this.$store.state.auth.seller.orders;
+      if (this.currentBuyer) {
+        return this.currentBuyer && this.currentBuyer.orders;
+      }
+      return this.currentSeller && this.currentSeller.orders;
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style lang="postcss" scoped></style>

@@ -104,12 +104,11 @@ class ProductService {
     return axiosRequest(options);
   }
 
-  getSellerProducts(sellerId) {
+  getSellerProducts() {
     const options = {
       endpoint: '/user/seller',
       method: 'get',
       headers: authHeader(),
-      params: { seller_id: sellerId },
     };
     return axiosRequest(options, (response) => {
       const { products } = response.data;

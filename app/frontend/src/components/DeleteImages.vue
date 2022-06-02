@@ -75,7 +75,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .root {
   margin-bottom: 1rem;
 }

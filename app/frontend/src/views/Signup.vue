@@ -11,7 +11,7 @@ import RegisterUser from '@/components/RegisterUser.vue';
 import RegisterAddress from '@/components/RegisterAddress.vue';
 import DefaultImageProfile from '@/components/DefaultImageProfile.vue';
 export default {
-  name: 'Register',
+  name: 'Signup',
   components: {
     RegisterUser,
     RegisterAddress,
@@ -28,7 +28,7 @@ export default {
       return this.$store.state.auth.loggedInAs === 'buyer' && this.buyer;
     },
   },
-  mounted() {
+  created() {
     if (
       this.user &&
       (this.$store.state.auth.seller ||
@@ -38,7 +38,7 @@ export default {
       this.$router.push('/profile');
       this.$store.commit(
         'alert/setMessage',
-        'You are already registered, you would have to log out to access this'
+        'You are already registered, you would have to log out to access the signup page'
       );
     }
   },

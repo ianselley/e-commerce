@@ -121,8 +121,8 @@ export const product = {
         });
     },
 
-    getSellerProducts({ commit }, sellerId) {
-      return ProductService.getSellerProducts(sellerId).then((response) => {
+    getSellerProducts({ commit }) {
+      return ProductService.getSellerProducts().then((response) => {
         commit('setSellerProducts', response);
       });
     },

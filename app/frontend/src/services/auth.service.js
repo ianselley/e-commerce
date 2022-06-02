@@ -32,12 +32,11 @@ class AuthService {
     });
   }
 
-  getUser(userId) {
+  getUser() {
     const options = {
       endpoint: '/user',
       method: 'get',
       headers: authHeader(),
-      params: { user_id: userId },
     };
     return axiosRequest(options, (response) => {
       if (response.data.access_token) {

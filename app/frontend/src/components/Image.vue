@@ -21,7 +21,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .image {
   width: auto;
   height: 20rem;

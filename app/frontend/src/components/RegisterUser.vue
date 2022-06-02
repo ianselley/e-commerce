@@ -243,7 +243,6 @@ export default {
       } else {
         this.telephone.error = 'Telephone number is invalid';
       }
-      console.log(this.phoneInput.getNumber());
     },
     validateAll() {
       this.validateTelephone();
@@ -291,7 +290,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .radio {
   @apply m-0 w-min inline text-center self-center py-2 px-4 rounded-lg cursor-pointer;
 }

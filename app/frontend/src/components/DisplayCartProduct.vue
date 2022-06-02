@@ -66,7 +66,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .cart-product {
   margin: 0 3rem;
 }

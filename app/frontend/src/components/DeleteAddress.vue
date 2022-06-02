@@ -32,4 +32,4 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style lang="postcss" scoped></style>

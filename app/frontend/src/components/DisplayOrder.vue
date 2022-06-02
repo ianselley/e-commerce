@@ -1,7 +1,7 @@
 <template>
   <div>
     <DisplayProduct :product="product" :edit="false" />
-    <Countdown :deadline="deadline" />
+    <Countdown v-if="!afterDeadline" :deadline="deadline" />
   </div>
 </template>
 
@@ -40,7 +40,6 @@ export default {
       const date = new Date(this.order.date);
       date.setDate(date.getDate() + 1);
       date.setTime(date.getTime() + 2 * 60 * 60 * 1000);
-      console.log(date);
       return date;
     },
   },
@@ -55,4 +54,4 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style lang="postcss" scoped></style>

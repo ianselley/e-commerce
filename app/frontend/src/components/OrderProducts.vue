@@ -4,7 +4,7 @@
       <strong>TOTAL:</strong> {{ cartTotal }} €
       <button
         :disabled="!buyerHasAddresses || emptyCart"
-        @click="toggleProcessOrder"
+        @click="activateModal"
       >
         Process order
       </button>
@@ -20,7 +20,7 @@
         <RegisterAddress v-if="addAddress" />
       </div>
     </div>
-    <div v-if="processOrder" class="order-products">
+    <Modal>
       <p>
         <strong>1. Selected address </strong
         ><button @click="toggleChangeSelectedAddress">Change address</button>
@@ -63,17 +63,19 @@
       <button :disabled="allCheckedIdsFalse" @click="orderProducts">
         Order Products
       </button>
-    </div>
+    </Modal>
   </div>
 </template>
 
 <script>
+import Modal from '@/components/Modal.vue';
 import RegisterAddress from '@/components/RegisterAddress.vue';
 import DisplayAddress from '@/components/DisplayAddress.vue';
 import DisplayProduct from '@/components/DisplayProduct.vue';
 export default {
   name: 'OrderProducts',
   components: {
+    Modal,
     RegisterAddress,
     DisplayAddress,
     DisplayProduct,
@@ -90,11 +92,14 @@ export default {
     };
   },
   computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
     currentBuyer() {
       return this.$store.state.auth.buyer;
     },
     shopping_cart() {
-      return this.currentBuyer.shopping_cart;
+      return (this.currentBuyer && this.currentBuyer.shopping_cart) || [];
     },
     emptyCart() {
       return this.shopping_cart.length == 0;
@@ -108,7 +113,7 @@ export default {
       }, 0);
     },
     buyerHasAddresses() {
-      return this.currentBuyer.addresses.length > 0;
+      return this.currentBuyer && this.currentBuyer.addresses.length > 0;
     },
     mainAddress() {
       const main_address_id = this.currentBuyer.main_address_id;
@@ -133,13 +138,29 @@ export default {
       return true;
     },
   },
+  created() {
+    if (!this.currentUser) {
+      this.$router.push('/login');
+      this.$store.dispatch('alert/setMessage', 'You are not logged in');
+    } else if (!this.currentBuyer) {
+      this.$router.push('/profile');
+      this.$store.dispatch(
+        'alert/setMessage',
+        'Only buyers can view their shopping cart'
+      );
+    } else {
+      this.$store.dispatch('auth/getUser').catch((error) => {
+        this.$store.dispatch('alert/setMessage', error);
+      });
+    }
+  },
   methods: {
     goToHome() {
       this.$router.push('/');
     },
-    toggleProcessOrder() {
+    activateModal() {
       this.initializeChechedIds();
-      this.processOrder = !this.processOrder;
+      this.$store.commit('modal/activateModal');
     },
     toggleAddAddress() {
       this.addAddress = !this.addAddress;
@@ -167,7 +188,7 @@ export default {
       if (this.allCheckedIdsFalse) {
         this.$store.dispatch(
           'alert/setMessage',
-          'You can not make an order with out selecting products'
+          'You need to select at least one product'
         );
         return;
       }
@@ -183,7 +204,7 @@ export default {
       this.$store
         .dispatch('order/orderProducts', { addressId, cartProductIds })
         .then(() => {
-          this.toggleProcessOrder();
+          this.$store.commit('modal/activateModal');
           this.loading = false;
         })
         .catch((error) => {
@@ -195,7 +216,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .process-order {
   background-color: azure;
   border: 1px solid black;

@@ -1,29 +1,30 @@
 <template>
   <div>
-    <button @click="toggleEdit">Edit Product</button>
-    <UploadProduct v-if="edit" :product="product" />
+    <button @click="activateModal">Edit Product</button>
+    <Modal>
+      <UploadProduct :product="product" />
+    </Modal>
   </div>
 </template>
 
 <script>
+import Modal from '@/components/Modal.vue';
 import UploadProduct from '@/components/UploadProduct.vue';
 export default {
   name: 'EditProduct',
-  components: { UploadProduct },
+  components: {
+    Modal,
+    UploadProduct,
+  },
   props: {
     product: Object,
   },
-  data() {
-    return {
-      edit: false,
-    };
-  },
   methods: {
-    toggleEdit() {
-      this.edit = !this.edit;
+    activateModal() {
+      this.$store.commit('modal/activateModal');
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style lang="postcss" scoped></style>

@@ -119,12 +119,9 @@ export const auth = {
     },
     removeManyFromCart(state, cartProductIds) {
       let cartProductIdsList = cartProductIds.split(',');
-      console.log(cartProductIdsList);
-      console.log(state.buyer.shopping_cart);
       state.buyer.shopping_cart = state.buyer.shopping_cart.filter(
         (cartProduct) => !cartProductIdsList.includes(cartProduct.id.toString())
       );
-      console.log(state.buyer.shopping_cart);
     },
     addOrders(state, newOrders) {
       state.buyer.orders = state.buyer.orders.concat(newOrders);
@@ -150,8 +147,8 @@ export const auth = {
         });
     },
 
-    getUser({ commit }, userId) {
-      return AuthService.getUser(userId)
+    getUser({ commit }) {
+      return AuthService.getUser()
         .then((response) => {
           commit('loginSuccess', response);
           return Promise.resolve(response);

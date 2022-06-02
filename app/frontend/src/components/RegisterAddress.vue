@@ -277,7 +277,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .tooltip-error {
   @apply text-red-700;
 }

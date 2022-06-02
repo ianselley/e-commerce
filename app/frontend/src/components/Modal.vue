@@ -1,7 +1,11 @@
 <template>
-  <div class="backdrop">
-    <div class="modal">
-      <p>{{ modal_content }}</p>
+  <div
+    v-if="activeModal"
+    @click="this.$store.commit('modal/deactivateModal')"
+    class="z-50 fixed top-0 left-0 w-full h-full bg-black bg-opacity-50"
+  >
+    <div @click.stop class="modal">
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -9,36 +13,37 @@
 <script>
 export default {
   name: 'Modal',
-  props: {
-    modal_content: String,
+  data() {
+    return {
+      isOpen: true,
+    };
+  },
+  methods: {
+    close() {
+      this.isOpen = false;
+    },
+  },
+  computed: {
+    activeModal() {
+      return this.$store.state.modal.active;
+    },
   },
 };
 </script>
 
-<style>
-.backdrop {
-  position: fixed;
-  top: 10%;
-  left: 0;
-  width: 100%;
-  height: 90%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 10;
+<style lang="postcss" scoped>
+html,
+body {
+  height: 100%;
+  overflow: hidden;
 }
 
 .modal {
-  position: fixed;
+  @apply fixed bg-white p-12 rounded-md shadow-lg;
   top: 50%;
   left: 50%;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
   transform: translate(-50%, -50%);
-  background-color: #fff;
-  width: 300px;
-  height: 200px;
-  border-radius: 5px;
-  z-index: 11;
-}
-
-p {
-  padding: auto;
 }
 </style>

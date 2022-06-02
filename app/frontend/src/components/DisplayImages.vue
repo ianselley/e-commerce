@@ -50,7 +50,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .total-images {
   display: flex;
   flex-direction: row;

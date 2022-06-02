@@ -1,11 +1,7 @@
 <template>
-  <div class="relative w-0 h-0">
-    <div v-show="!messageIsEmpty" class="alert">
-      <div class="blend"></div>
-      <span class="text-violet-900 mr-8">{{ message }}</span>
-      <button @click="removeMessage">OK</button>
-      <div class="blend"></div>
-    </div>
+  <div class="alert">
+    <span class="text-violet-900 mr-8">{{ message }}</span>
+    <button @click="removeMessage">OK</button>
   </div>
 </template>
 
@@ -16,9 +12,6 @@ export default {
     message() {
       return this.$store.state.alert.message;
     },
-    messageIsEmpty() {
-      return this.message == undefined;
-    },
   },
   methods: {
     removeMessage() {
@@ -28,12 +21,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .alert {
-  @apply bg-amber-100 w-full fixed top-28 z-40;
-}
-.blend {
-  @apply w-full bg-amber-100 h-0;
-  box-shadow: 0 0 20px 20px #fef3c7;
+  @apply py-4 bg-amber-100 w-full fixed z-30 border-violet-300;
+  top: 5.5rem;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
 }
 </style>

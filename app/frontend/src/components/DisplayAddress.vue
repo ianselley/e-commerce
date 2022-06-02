@@ -4,7 +4,9 @@
     class="base"
     :class="[addressIsMainId ? 'main-address' : 'not-main-address']"
   >
-    <p>{{ address.name }}</p>
+    <p>
+      <strong>{{ address.name }}</strong>
+    </p>
     <p>{{ address.street }} {{ address.number }} {{ address.flat }}</p>
     <p>{{ address.zip_code }} {{ address.city }} {{ address.state }}</p>
     <p>{{ address.country }}</p>
@@ -51,7 +53,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .base {
   border-radius: 1rem;
   max-width: 50%;

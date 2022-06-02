@@ -17,7 +17,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .price {
   font-size: 30px;
   font-weight: 600;

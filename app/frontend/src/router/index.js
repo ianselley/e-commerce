@@ -13,13 +13,13 @@ const routes = [
   },
   {
     path: '/signup',
-    name: 'Register',
-    component: () => import('@/views/Register.vue'),
+    name: 'Signup',
+    component: () => import('@/views/Signup.vue'),
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/LoginView.vue'),
+    component: () => import('@/views/Login.vue'),
   },
   {
     path: '/profile',
@@ -30,6 +30,21 @@ const routes = [
     path: '/product/:id',
     name: 'Product',
     component: () => import('@/views/Product.vue'),
+  },
+  {
+    path: '/products',
+    name: 'Products',
+    component: () => import('@/views/Products.vue'),
+  },
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: () => import('@/views/Cart.vue'),
+  },
+  {
+    path: '/orders',
+    name: 'Orders',
+    component: () => import('@/views/Orders.vue'),
   },
 ];
 

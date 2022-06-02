@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <Alert v-if="!messageEmpty" />
+    <Alert v-if="!messageIsEmpty" />
     <router-view />
     <footer />
   </div>

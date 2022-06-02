@@ -65,7 +65,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .image-info-cart {
   display: flex;
   justify-content: space-between;

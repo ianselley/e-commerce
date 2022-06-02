@@ -52,7 +52,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .quantity {
   display: inline-block;
   margin-right: 0.7rem;

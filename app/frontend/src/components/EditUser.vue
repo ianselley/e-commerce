@@ -1,35 +1,34 @@
 <template>
   <div>
-    <button ref="toggleEditUser" @click="toggleEdit">Edit User Info</button>
-    <div v-if="edit">
+    <button ref="activateEditUser" @click="activateModal">
+      Edit User Info
+    </button>
+    <Modal>
       <EditName v-if="userIsBuyer" />
       <EditBrand v-if="userIsSeller" />
       <EditTelephone />
       <EditEmail />
       <EditPassword />
-    </div>
+    </Modal>
   </div>
 </template>
 
 <script>
-import EditTelephone from '@/components/EditTelephone.vue';
-import EditEmail from '@/components/EditEmail.vue';
-import EditPassword from '@/components/EditPassword.vue';
+import Modal from '@/components/Modal.vue';
 import EditName from '@/components/EditName.vue';
 import EditBrand from '@/components/EditBrand.vue';
+import EditEmail from '@/components/EditEmail.vue';
+import EditPassword from '@/components/EditPassword.vue';
+import EditTelephone from '@/components/EditTelephone.vue';
 export default {
   name: 'EditUser',
   components: {
-    EditTelephone,
-    EditEmail,
-    EditPassword,
+    Modal,
     EditName,
     EditBrand,
-  },
-  data() {
-    return {
-      edit: false,
-    };
+    EditEmail,
+    EditPassword,
+    EditTelephone,
   },
   computed: {
     userIsBuyer() {
@@ -38,13 +37,16 @@ export default {
     userIsSeller() {
       return this.$store.state.auth.user.seller !== null;
     },
+    activeModal() {
+      return this.$store.state.modal.active;
+    },
   },
   methods: {
-    toggleEdit() {
-      this.edit = !this.edit;
+    activateModal() {
+      this.$store.commit('modal/activateModal');
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style lang="postcss" scoped></style>
