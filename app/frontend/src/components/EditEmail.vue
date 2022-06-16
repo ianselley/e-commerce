@@ -1,40 +1,47 @@
 <template>
   <div>
-    <div>
-      <strong>Email: </strong>
-      <span v-if="!edit">{{ currentUser().email }}</span>
+    <div v-if="!edit" class="edit-profile">
+      <span><strong>Email:</strong> {{ currentUser().email }}</span>
+      <button @click="toggleEdit" class="btn-edit-profile">Edit</button>
+    </div>
+    <div v-else>
       <form
-        v-else
         @submit="submitChange"
         :validation-schema="editEmailSchema"
         onsubmit="return false;"
       >
-        <div>
+        <label
+          class="tooltip font-bold"
+          :class="{ 'tooltip-error': errors.email }"
+          for="email"
+          >Email *
+          <span class="tooltip-text">{{ errors.email }}</span>
+        </label>
+        <div class="flex items-center">
           <input
             id="email"
             name="email"
+            type="text"
             v-model="values.email"
             @keyup="validate"
             @blur="validate"
-            type="text"
           />
-          <span>{{ errors.email }}</span>
+          <button class="icon-button" :disabled="loading || !isValid">
+            <img src="@/assets/check.svg" alt="apply changes" />
+          </button>
+          <button @click="toggleEdit" class="icon-button" :disabled="loading">
+            <img src="@/assets/cross.svg" alt="cancel changes" />
+          </button>
         </div>
-        <button type="submit" :disabled="loading || !isValid">
-          Apply Change
-        </button>
       </form>
     </div>
-    <button @click="toggleEdit">
-      <span v-if="edit">Cancel</span><span v-else>Edit</span>
-    </button>
   </div>
 </template>
 
 <script>
 import * as yup from 'yup';
 export default {
-  email: 'EditEmail',
+  name: 'EditEmail',
   data() {
     const emailRegex = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}/;
     const editEmailSchema = yup.object({

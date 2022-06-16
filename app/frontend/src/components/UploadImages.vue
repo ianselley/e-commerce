@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-bottom: 1.25rem">
+  <div class="mb-5">
     <form onsubmit="return false;">
       <div class="imgContent">
         <input

@@ -1,42 +1,47 @@
 <template>
   <div>
-    <div>
-      <strong>Password: </strong>
-      <span v-if="!edit">******</span>
+    <div v-if="!edit" class="edit-profile">
+      <span><strong>Password:</strong> ******</span>
+      <button @click="toggleEdit" class="btn-edit-profile">Edit</button>
+    </div>
+    <div v-else>
       <form
-        v-else
         @submit="submitChange"
         :validation-schema="editPasswordSchema"
         onsubmit="return false;"
       >
-        <div>
+        <label
+          class="tooltip font-bold"
+          :class="{ 'tooltip-error': errors.password }"
+          for="password"
+          >Password *
+          <span class="tooltip-text">{{ errors.password }}</span>
+        </label>
+        <div class="flex items-center">
           <input
             id="password"
             name="password"
-            ref="password"
+            type="password"
             v-model="values.password"
             @keyup="validate"
             @blur="validate"
-            type="password"
-            autocomplete="off"
           />
-          <span>{{ errors.password }}</span>
+          <button class="icon-button" :disabled="loading || !isValid">
+            <img src="@/assets/check.svg" alt="apply changes" />
+          </button>
+          <button @click="toggleEdit" class="icon-button" :disabled="loading">
+            <img src="@/assets/cross.svg" alt="cancel changes" />
+          </button>
         </div>
-        <button type="submit" :disabled="loading || !isValid">
-          Apply Change
-        </button>
       </form>
     </div>
-    <button @click="toggleEdit">
-      <span v-if="edit">Cancel</span><span v-else>Edit</span>
-    </button>
   </div>
 </template>
 
 <script>
 import * as yup from 'yup';
 export default {
-  password: 'EditPassword',
+  name: 'EditPassword',
   data() {
     const editPasswordSchema = yup.object({
       password: yup

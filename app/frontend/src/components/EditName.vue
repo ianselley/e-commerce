@@ -1,33 +1,41 @@
 <template>
   <div>
-    <div>
-      <strong>Name: </strong>
-      <span v-if="!edit">{{ currentBuyer().name }}</span>
+    <div v-if="!edit" class="edit-profile">
+      <span><strong>Name:</strong> {{ currentBuyer().name }}</span>
+      <button @click="toggleEdit" class="btn-edit-profile">Edit</button>
+    </div>
+    <div v-else>
       <form
-        v-else
         @submit="submitChange"
         :validation-schema="editNameSchema"
         onsubmit="return false;"
       >
-        <div>
+        <label
+          class="tooltip font-bold"
+          :class="{ 'tooltip-error': errors.name }"
+          for="name"
+          >Name *
+          <span class="tooltip-text">{{ errors.name }}</span>
+        </label>
+        <div class="flex items-center">
           <input
             id="name"
             name="name"
+            type="text"
             v-model="values.name"
             @keyup="validate"
             @blur="validate"
-            type="text"
+            autofocus
           />
-          <span>{{ errors.name }}</span>
+          <button class="icon-button" :disabled="loading || !isValid">
+            <img src="@/assets/check.svg" alt="apply changes" />
+          </button>
+          <button @click="toggleEdit" class="icon-button" :disabled="loading">
+            <img src="@/assets/cross.svg" alt="cancel changes" />
+          </button>
         </div>
-        <button type="submit" :disabled="loading || !isValid">
-          Apply Change
-        </button>
       </form>
     </div>
-    <button @click="toggleEdit">
-      <span v-if="edit">Cancel</span><span v-else>Edit</span>
-    </button>
   </div>
 </template>
 
@@ -37,7 +45,10 @@ export default {
   name: 'EditName',
   data() {
     const editNameSchema = yup.object({
-      name: yup.string().required('Name is required'),
+      name: yup
+        .string()
+        .max(64, 'Must be maximum 64 characters')
+        .required('Name is required'),
     });
     return {
       edit: false,

@@ -161,7 +161,10 @@ export default {
     const errors = { ...emptyValues };
     const telephone = { value: '', error: '' };
     const registerUserSchema = yup.object({
-      alias: yup.string().required('Name is required'),
+      alias: yup
+        .string()
+        .max(64, 'Must be maximum 64 characters')
+        .required('Name is required'),
       email: yup
         .string()
         .max(64, 'Must be maximum 64 characters')
@@ -238,11 +241,13 @@ export default {
       }
     },
     validateTelephone() {
+      let message;
       if (this.phoneInput.isValidNumber() || this.telephone.value == '') {
-        this.telephone.error = '';
+        message = '';
       } else {
-        this.telephone.error = 'Telephone number is invalid';
+        message = 'Telephone number is invalid';
       }
+      this.telephone.error = message;
     },
     validateAll() {
       this.validateTelephone();
@@ -301,22 +306,5 @@ export default {
 
 input:checked ~ .radio {
   @apply text-amber-50 font-bold bg-amber-400;
-}
-
-.tooltip-error {
-  @apply text-red-700;
-}
-
-.tooltip {
-  @apply relative;
-}
-
-.tooltip .tooltip-text {
-  @apply bg-red-400 w-max rounded-md text-white text-center px-3 absolute z-10;
-  @apply opacity-0 invisible transition duration-300 left-0;
-}
-
-.tooltip:hover .tooltip-text {
-  @apply visible opacity-100 transition duration-300;
 }
 </style>

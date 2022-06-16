@@ -11,7 +11,7 @@ class User(Base):
     email = Column(VARCHAR(128), nullable=False, unique=True)
     hashed_password = Column(Text, nullable=False)
     telephone = Column(String(64), nullable=False)
-    role = Column(String(64), nullable=False)
+    role = Column(String(16), nullable=False)
 
     buyer = relationship("Buyer", back_populates="user", uselist=False)
     seller = relationship("Seller", back_populates="user", uselist=False)

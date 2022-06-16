@@ -1,14 +1,13 @@
 <template>
   <div>
-    <button ref="activateEditUser" @click="activateModal">
-      Edit User Info
-    </button>
-    <Modal>
-      <EditName v-if="userIsBuyer" />
-      <EditBrand v-if="userIsSeller" />
-      <EditTelephone />
-      <EditEmail />
-      <EditPassword />
+    <Modal class="modal-class" button-text="Edit User Info">
+      <div class="min-w-max flex flex-col space-y-4">
+        <EditName v-if="userIsBuyer" />
+        <EditBrand v-if="userIsSeller" />
+        <EditTelephone />
+        <EditEmail />
+        <EditPassword />
+      </div>
     </Modal>
   </div>
 </template>
@@ -32,21 +31,16 @@ export default {
   },
   computed: {
     userIsBuyer() {
-      return this.$store.state.auth.user.buyer !== null;
+      return this.$store.state.auth.loggedInAs == 'buyer';
     },
     userIsSeller() {
-      return this.$store.state.auth.user.seller !== null;
-    },
-    activeModal() {
-      return this.$store.state.modal.active;
-    },
-  },
-  methods: {
-    activateModal() {
-      this.$store.commit('modal/activateModal');
+      return this.$store.state.auth.loggedInAs == 'seller';
     },
   },
 };
 </script>
 
-<style lang="postcss" scoped></style>
+<style lang="postcss" scoped>
+.modal-class :deep() .modal-button {
+}
+</style>

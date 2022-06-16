@@ -57,18 +57,6 @@
           <span>{{ errors.stock }}</span>
         </div>
         <div>
-          <label for="specifications">Specifications</label>
-          <input
-            id="specifications"
-            name="specifications"
-            v-model="values.specifications"
-            @keyup="validateAll"
-            @blur="validateAll"
-            type="text"
-          />
-          <span>{{ errors.specifications }}</span>
-        </div>
-        <div>
           <button type="submit" :disabled="loading || !isValid">
             <span v-show="loading">LOADING</span>
             <span v-show="!loading">Submit product and add images</span>
@@ -88,7 +76,6 @@ const emptyValues = {
   description: '',
   price: '',
   stock: '',
-  specifications: '',
 };
 export default {
   name: 'UploadProduct',
@@ -106,14 +93,12 @@ export default {
       description: yup.string().optional(),
       price: yup.string().required('Price is required'),
       stock: yup.string().required('Stock is required'),
-      specifications: yup.string().optional(),
     });
     const values = {
       title: this.product.title,
       description: this.product.description,
       price: this.product.price,
       stock: this.product.stock,
-      specifications: this.product.specifications,
     };
     const errors = { ...emptyValues };
     return {
@@ -177,8 +162,6 @@ export default {
           .dispatch('product/editProduct', { product, productId })
           .then(() => {
             this.loading = false;
-            // this.productId = response.id;
-            // this.submitted = true;
           })
           .catch((error) => {
             this.loading = false;

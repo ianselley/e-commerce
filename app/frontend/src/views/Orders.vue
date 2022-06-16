@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="margin-top: 1.5rem"><strong>ORDERS:</strong></div>
+    <strong>ORDERS:</strong>
     <DisplayOrders />
   </div>
 </template>

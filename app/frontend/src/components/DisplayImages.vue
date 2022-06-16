@@ -61,13 +61,10 @@ export default {
 .left-images :deep() .image {
   max-width: 3.5rem;
   max-height: 3.5rem;
-  height: auto;
-  width: auto;
+  @apply h-auto w-auto;
 }
 .big-image :deep() .image {
-  max-width: 40rem;
-  max-height: 40rem;
-  height: auto;
-  width: auto;
+  max-height: 42rem;
+  @apply max-w-2xl h-auto w-auto;
 }
 </style>

@@ -26,6 +26,9 @@ export default {
     currentUser() {
       return this.$store.state.auth.user;
     },
+    userIsBuyer() {
+      return this.$store.state.auth.loggedInAs == 'buyer';
+    },
     currentBuyer() {
       return this.$store.state.auth.buyer;
     },
@@ -40,7 +43,7 @@ export default {
     if (!this.currentUser) {
       this.$router.push('/login');
       this.$store.dispatch('alert/setMessage', 'You are not logged in');
-    } else if (!this.currentBuyer) {
+    } else if (!this.userIsBuyer) {
       this.$router.push('/profile');
       this.$store.dispatch(
         'alert/setMessage',

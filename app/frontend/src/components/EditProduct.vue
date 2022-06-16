@@ -1,7 +1,6 @@
 <template>
   <div>
-    <button @click="activateModal">Edit Product</button>
-    <Modal>
+    <Modal button-text="Edit Product">
       <UploadProduct :product="product" />
     </Modal>
   </div>
@@ -18,11 +17,6 @@ export default {
   },
   props: {
     product: Object,
-  },
-  methods: {
-    activateModal() {
-      this.$store.commit('modal/activateModal');
-    },
   },
 };
 </script>

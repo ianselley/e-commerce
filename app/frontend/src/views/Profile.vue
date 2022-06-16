@@ -1,37 +1,58 @@
 <template>
   <div v-if="currentUser">
-    <header>
-      <div class="text-2xl">
-        <strong
-          >{{
-            (currentSeller && currentSeller.brand) ||
-            (currentBuyer && currentBuyer.name)
-          }}, PROFILE</strong
-        >
+    <div class="text-2xl font-bold mb-8">PROFILE</div>
+    <div class="md:flex flex-row items-start justify-center md:space-x-10">
+      <div class="md:sticky md:top-28 z-50">
+        <div class="form-content card">
+          <div v-if="userIsBuyer" class="text-left">
+            <strong>Name:</strong> {{ currentBuyer.name }}
+          </div>
+          <div v-if="userIsSeller" class="text-left">
+            <strong>Brand:</strong> {{ currentSeller.brand }}
+          </div>
+          <div class="text-left">
+            <strong>Email:</strong> {{ currentUser.email }}
+          </div>
+          <div class="text-left">
+            <strong>Telephone:</strong> {{ currentUser.telephone }}
+          </div>
+          <div v-if="userIsSeller" class="text-left">
+            Products sold: {{ currentSeller.number_of_products_sold }}
+          </div>
+          <EditUser class="edit-user" />
+        </div>
+        <Modal v-if="userIsBuyer" :key="modalKey" button-text="Add Address">
+          <RegisterAddress @submit="addAddress" />
+        </Modal>
       </div>
-    </header>
-    <p v-if="currentBuyer"><strong>Name:</strong> {{ currentBuyer.name }}</p>
-    <p v-if="currentSeller">
-      <strong>Brand:</strong> {{ currentSeller.brand }}
-    </p>
-    <p><strong>Email:</strong> {{ currentUser.email }}</p>
-    <p><strong>Telephone:</strong> {{ currentUser.telephone }}</p>
-    <p v-if="userIsSeller">
-      Products sold: {{ currentSeller.number_of_products_sold }}
-    </p>
-    <EditUser />
-    <BuyerProfile v-if="userIsBuyer" />
+      <div v-if="userIsBuyer" class="space-y-10 mt-10 md:mt-0">
+        <DisplayAddress
+          v-for="address in currentBuyer.addresses"
+          :key="address"
+          :address="address"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import Modal from '@/components/Modal.vue';
 import EditUser from '@/components/EditUser.vue';
-import BuyerProfile from '@/components/BuyerProfile.vue';
+import DisplayAddress from '@/components/DisplayAddress.vue';
+import RegisterAddress from '@/components/RegisterAddress.vue';
 export default {
   name: 'Profile',
   components: {
+    Modal,
     EditUser,
-    BuyerProfile,
+    DisplayAddress,
+    RegisterAddress,
+  },
+  data() {
+    return {
+      modalKey: 0,
+    };
   },
   computed: {
     currentUser() {
@@ -68,5 +89,28 @@ export default {
         });
     }
   },
+  methods: {
+    addAddress() {
+      this.modalKey++;
+    },
+  },
 };
 </script>
+
+<style lang="postcss" scoped>
+.card {
+  max-width: 80vw;
+  @apply mb-10 md:mx-0 p-10 space-y-3 break-words;
+}
+
+@screen md {
+  .card {
+    width: max-content;
+    max-width: 35vw;
+  }
+}
+
+.edit-user :deep() .modal {
+  @apply p-12;
+}
+</style>

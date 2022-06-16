@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="hasAttributes"
-    class="base"
+    class="base break-words"
     :class="[addressIsMainId ? 'main-address' : 'not-main-address']"
   >
     <p>
@@ -11,8 +11,13 @@
     <p>{{ address.zip_code }} {{ address.city }} {{ address.state }}</p>
     <p>{{ address.country }}</p>
     <p>{{ address.details }}</p>
-    <div v-if="edit">
-      <EditAddress :address="address" />
+    <div
+      v-if="edit"
+      class="flex flex-col md:flex-row justify-center md:items-center space-y-2 md:space-y-0 md:space-x-2 mt-4"
+    >
+      <Modal button-text="Edit Address" class="edit-address">
+        <RegisterAddress v-if="edit" :address="address" />
+      </Modal>
       <MakeItMainAddress v-if="!addressIsMainId" :addressId="address.id" />
       <DeleteAddress :addressId="address.id" />
     </div>
@@ -20,13 +25,15 @@
 </template>
 
 <script>
-import EditAddress from '@/components/EditAddress.vue';
+import Modal from '@/components/Modal.vue';
+import RegisterAddress from '@/components/RegisterAddress.vue';
 import DeleteAddress from '@/components/DeleteAddress.vue';
 import MakeItMainAddress from '@/components/MakeItMainAddress.vue';
 export default {
   name: 'DisplayAddress',
   components: {
-    EditAddress,
+    Modal,
+    RegisterAddress,
     DeleteAddress,
     MakeItMainAddress,
   },
@@ -55,18 +62,25 @@ export default {
 
 <style lang="postcss" scoped>
 .base {
-  border-radius: 1rem;
-  max-width: 50%;
-  margin: 1.5rem auto;
+  @apply rounded-md mx-auto p-6;
+  max-width: 80vw;
+}
+
+@screen md {
+  .base {
+    max-width: 50vw;
+  }
 }
 
 .main-address {
-  border: 2px solid hsl(44, 81%, 49%);
-  background-color: bisque;
+  @apply border-2 border-amber-400 bg-amber-100;
 }
 
 .not-main-address {
-  border: 1px solid black;
-  background-color: #eee;
+  @apply border border-gray-300 bg-gray-100;
+}
+
+.edit-address :deep() .form-content {
+  @apply shadow-none;
 }
 </style>

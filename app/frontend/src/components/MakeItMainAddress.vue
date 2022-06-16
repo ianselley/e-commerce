@@ -1,7 +1,7 @@
 <template>
   <div>
     <button :disabled="loading" @click="makeItMainAddress">
-      Make this address the main one
+      Make it main address
     </button>
   </div>
 </template>

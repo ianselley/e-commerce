@@ -1,7 +1,8 @@
 <template>
   <div>
-    <button @click="uploadProductFunction()">UPLOAD PRODUCT</button>
-    <UploadProduct v-if="uploadProduct" />
+    <Modal button-text="UPLOAD PRODUCT">
+      <UploadProduct />
+    </Modal>
     <DisplayProduct
       v-for="product in sellerProducts"
       :key="product"
@@ -12,22 +13,22 @@
 </template>
 
 <script>
+import Modal from '@/components/Modal.vue';
 import UploadProduct from '@/components/UploadProduct.vue';
 import DisplayProduct from '@/components/DisplayProduct.vue';
 export default {
   name: 'Products',
   components: {
+    Modal,
     UploadProduct,
     DisplayProduct,
-  },
-  data() {
-    return {
-      uploadProduct: false,
-    };
   },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
+    },
+    userIsSeller() {
+      return this.$store.state.auth.loggedInAs == 'seller';
     },
     sellerProducts() {
       return this.$store.state.product.sellerProducts;
@@ -40,7 +41,7 @@ export default {
     if (!this.currentUser) {
       this.$router.push('/login');
       this.$store.dispatch('alert/setMessage', 'You are not logged in');
-    } else if (!this.currentSeller) {
+    } else if (!this.userIsSeller) {
       this.$router.push('/profile');
       this.$store.dispatch(
         'alert/setMessage',
@@ -59,11 +60,6 @@ export default {
           this.$store.dispatch('alert/setMessage', error);
         });
     }
-  },
-  methods: {
-    uploadProductFunction() {
-      this.uploadProduct = !this.uploadProduct;
-    },
   },
 };
 </script>

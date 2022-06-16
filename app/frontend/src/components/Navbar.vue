@@ -11,9 +11,9 @@
       <router-link v-if="!loggedIn" to="/login" class="button-a">
         <button>Login</button>
       </router-link>
-      <router-link v-if="currentSeller" to="/products">Products</router-link>
+      <router-link v-if="userIsSeller" to="/products">Products</router-link>
       <router-link v-if="loggedIn" to="/orders">Orders</router-link>
-      <router-link v-if="currentBuyer" to="/cart">
+      <router-link v-if="userIsBuyer" to="/cart">
         <ShoppingCartLogo class="color" />
       </router-link>
       <router-link v-if="loggedIn" to="/profile">
@@ -42,8 +42,14 @@ export default {
     currentUser() {
       return this.$store.state.auth.user;
     },
+    userIsSeller() {
+      return this.$store.state.auth.loggedInAs == 'seller';
+    },
     currentSeller() {
       return this.$store.state.auth.seller;
+    },
+    userIsBuyer() {
+      return this.$store.state.auth.loggedInAs == 'buyer';
     },
     currentBuyer() {
       return this.$store.state.auth.buyer;
@@ -83,6 +89,7 @@ export default {
 
 #nav a.router-link-exact-active .color :deep(.color) {
   fill: #f59e0b;
+  stroke: #f59e0b;
 }
 
 #endpoints > * {

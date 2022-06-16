@@ -20,7 +20,6 @@
             v-model="values.name"
             @keyup="validateAll"
             @blur="validateAll"
-            autofocus
           />
         </div>
         <div>
@@ -203,7 +202,8 @@ export default {
       zipCode: yup.string().required('Zip Code is required'),
       country: yup.string().required('Country is required'),
     });
-    const values = { ...this.address };
+    const { zip_code, ...values } = { ...this.address };
+    values.zipCode = zip_code;
     const errors = { ...emptyValues };
     return {
       loading: false,
@@ -277,21 +277,4 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
-.tooltip-error {
-  @apply text-red-700;
-}
-
-.tooltip {
-  @apply relative;
-}
-
-.tooltip .tooltip-text {
-  @apply bg-red-400 w-max rounded-md text-white text-center px-3 absolute z-10;
-  @apply opacity-0 invisible transition duration-300 left-0;
-}
-
-.tooltip:hover .tooltip-text {
-  @apply visible opacity-100 transition duration-300;
-}
-</style>
+<style lang="postcss" scoped></style>

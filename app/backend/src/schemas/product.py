@@ -10,7 +10,6 @@ class ProductBase(BaseModel):
     description: Optional[str]
     price: float
     stock: int
-    specifications: dict[str, str]
 
 
 class ProductCreate(ProductBase):

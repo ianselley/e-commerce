@@ -1,11 +1,18 @@
 <template>
   <div v-if="productHasAttributes" class="base">
-    <div @click="productPage" class="link">
-      <img
-        v-if="productHasImages"
-        :src="`${API_URL}/product/images/${product.images[0].id}`"
-        style="width: auto; height: 200px"
-      />
+    <div
+      @click="productPage"
+      class="mt-3 mx-3 text-violet-900 hover:text-amber-600 hover:cursor-pointer"
+    >
+      <div class="h-0 w-full pb-full relative mb-6">
+        <div class="flex items-center justify-center">
+          <img
+            v-if="productHasImages"
+            :src="`${API_URL}/product/images/${product.images[0].id}`"
+            class="max-w-full max-h-full w-auto h-auto absolute"
+          />
+        </div>
+      </div>
       <p>
         <strong>{{ product.title }}</strong>
         <span v-if="product.description"> - {{ shortDescription }}</span>
@@ -84,25 +91,11 @@ export default {
 
 <style lang="postcss" scoped>
 .base {
-  border: 1px solid black;
-  border-radius: 1rem;
-  background-color: #eee;
-  max-width: 50%;
-  min-width: fit-content;
-  margin: 3.5rem auto;
+  @apply bg-white border rounded;
+  @apply transition duration-500 ease-in-out hover:shadow;
 }
 
-.base > img {
-  margin: 2rem 2rem 0;
-}
-
-.link {
-  margin: 2rem 2rem 0;
-}
-
-.link:hover {
-  text-decoration: underline;
-  color: rgb(46, 56, 122);
-  cursor: pointer;
+img {
+  margin-top: 100%;
 }
 </style>

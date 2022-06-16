@@ -12,6 +12,7 @@
             v-model="values.email"
             type="text"
             class="focus:outline-none"
+            autofocus
           />
         </div>
         <div>

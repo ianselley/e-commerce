@@ -13,7 +13,6 @@ class Product(Base):
     description = Column(Text)
     price = Column(Float, nullable=False)
     stock = Column(Integer, nullable=False)
-    specifications = Column(JSON)
     total_sold = Column(Integer, default=0)
     day_added = Column(DateTime, default=datetime.datetime.now)
     available = Column(Boolean, default=True)

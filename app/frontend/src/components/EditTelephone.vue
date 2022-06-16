@@ -1,33 +1,40 @@
 <template>
   <div>
-    <div>
-      <strong>Telephone: </strong>
-      <span v-if="!edit">{{ currentUser().telephone }}</span>
+    <div v-if="!edit" class="edit-profile">
+      <span><strong>Telephone:</strong> {{ currentUser().telephone }}</span>
+      <button @click="toggleEdit" class="btn-edit-profile">Edit</button>
+    </div>
+    <div v-else>
       <form
-        v-else
         @submit="submitChange"
         :validation-schema="editTelephoneSchema"
         onsubmit="return false;"
       >
-        <div>
+        <label
+          class="tooltip font-bold"
+          :class="{ 'tooltip-error': errors.telephone }"
+          for="telephone"
+          >Telephone
+          <span class="tooltip-text">{{ errors.telephone }}</span>
+        </label>
+        <div class="flex items-center">
           <input
             id="telephone"
             name="telephone"
+            type="text"
             v-model="values.telephone"
             @keyup="validate"
             @blur="validate"
-            type="text"
           />
-          <span>{{ errors.telephone }}</span>
+          <button class="icon-button" :disabled="loading || !isValid">
+            <img src="@/assets/check.svg" alt="apply changes" />
+          </button>
+          <button @click="toggleEdit" class="icon-button" :disabled="loading">
+            <img src="@/assets/cross.svg" alt="cancel changes" />
+          </button>
         </div>
-        <button type="submit" :disabled="loading || !isValid">
-          Apply Change
-        </button>
       </form>
     </div>
-    <button @click="toggleEdit">
-      <span v-if="edit">Cancel</span><span v-else>Edit</span>
-    </button>
   </div>
 </template>
 
@@ -41,7 +48,10 @@ export default {
     const editTelephoneSchema = yup.object({
       telephone: yup
         .string()
-        .matches(telphoneRegex, 'Telphone number is invalid')
+        .matches(
+          telphoneRegex,
+          'Telphone number is invalid (no spaces and must have a prefix)'
+        )
         .optional(),
     });
     return {
