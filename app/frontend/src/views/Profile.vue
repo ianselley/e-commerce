@@ -1,8 +1,8 @@
 <template>
   <div v-if="currentUser">
-    <div class="text-2xl font-bold mb-8">PROFILE</div>
+    <div class="main-title">PROFILE</div>
     <div class="md:flex flex-row items-start justify-center md:space-x-10">
-      <div class="md:sticky md:top-28 z-50">
+      <div class="md:sticky md:top-48 z-50">
         <div class="form-content card">
           <div v-if="userIsBuyer" class="text-left">
             <strong>Name:</strong> {{ currentBuyer.name }}
@@ -19,7 +19,7 @@
           <div v-if="userIsSeller" class="text-left">
             Products sold: {{ currentSeller.number_of_products_sold }}
           </div>
-          <EditUser class="edit-user" />
+          <EditUser />
         </div>
         <Modal v-if="userIsBuyer" :key="modalKey" button-text="Add Address">
           <RegisterAddress @submit="addAddress" />
@@ -108,9 +108,5 @@ export default {
     width: max-content;
     max-width: 35vw;
   }
-}
-
-.edit-user :deep() .modal {
-  @apply p-12;
 }
 </style>

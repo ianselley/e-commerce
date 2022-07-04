@@ -23,7 +23,7 @@ export default {
 
 <style lang="postcss" scoped>
 .alert {
-  @apply py-4 bg-amber-100 w-full fixed z-30 border-violet-300;
+  @apply py-4 bg-amber-100 w-full fixed z-40 border-violet-300;
   top: 5.5rem;
   border-top-width: 1px;
   border-bottom-width: 1px;

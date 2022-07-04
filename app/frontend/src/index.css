@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gradient-to-br from-indigo-50 to-violet-50 min-h-screen flex flex-col;
+  min-width: 1024px;
+  width: auto !important;
+  @apply bg-violet-50 min-h-screen flex flex-col;
 }
 
 input {
@@ -50,6 +52,10 @@ button.register-button:disabled {
 
 label {
   @apply inline-block w-full text-left text-violet-900 mb-1;
+}
+
+.main-title {
+  @apply text-2xl font-bold mb-10;
 }
 
 .edit-profile {

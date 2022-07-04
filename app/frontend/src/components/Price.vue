@@ -12,7 +12,10 @@ export default {
   name: 'Price',
   props: {
     price: Number,
-    available: Boolean,
+    available: {
+      type: Boolean,
+      default: true,
+    },
   },
 };
 </script>

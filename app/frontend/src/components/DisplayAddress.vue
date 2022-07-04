@@ -66,6 +66,10 @@ export default {
   max-width: 80vw;
 }
 
+.base p {
+  @apply text-left;
+}
+
 @screen md {
   .base {
     max-width: 50vw;
@@ -80,7 +84,7 @@ export default {
   @apply border border-gray-300 bg-gray-100;
 }
 
-.edit-address :deep() .form-content {
+.edit-address :deep(.form-content) {
   @apply shadow-none;
 }
 </style>

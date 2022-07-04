@@ -58,12 +58,12 @@ export default {
 .left-images {
   margin-right: 2rem;
 }
-.left-images :deep() .image {
+.left-images :deep(.image) {
   max-width: 3.5rem;
   max-height: 3.5rem;
   @apply h-auto w-auto;
 }
-.big-image :deep() .image {
+.big-image :deep(.image) {
   max-height: 42rem;
   @apply max-w-2xl h-auto w-auto;
 }

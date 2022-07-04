@@ -1,13 +1,22 @@
 <template>
   <div>
-    <button @click="open" class="modal-button">{{ buttonText }}</button>
+    <button @click="open" class="modal-button" :disabled="disabled">
+      {{ buttonText }}
+    </button>
     <div
       v-if="isOpen"
+      @click.stop
       @mousedown="closeDown"
       @mouseup="closeUp"
       class="z-50 fixed top-0 left-0 w-full h-full bg-black bg-opacity-50"
     >
-      <div @mouseup.stop @mousedown.stop @mouseup="upInside" class="modal">
+      <div
+        @mouseup.stop
+        @mousedown.stop
+        @mouseup="upInside"
+        class="modal"
+        :class="modalClass"
+      >
         <slot></slot>
       </div>
     </div>
@@ -21,6 +30,14 @@ export default {
     buttonText: {
       type: String,
       default: 'Open Modal',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    modalClass: {
+      type: String,
+      default: '',
     },
   },
   data() {

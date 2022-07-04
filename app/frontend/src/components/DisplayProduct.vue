@@ -6,16 +6,16 @@
     >
       <div class="h-0 w-full pb-full relative mb-6">
         <div class="flex items-center justify-center">
-          <img
+          <Image
             v-if="productHasImages"
-            :src="`${API_URL}/product/images/${product.images[0].id}`"
-            class="max-w-full max-h-full w-auto h-auto absolute"
+            :src="product.images[0].id"
+            class="image"
           />
         </div>
       </div>
-      <p>
+      <p class="truncate">
         <strong>{{ product.title }}</strong>
-        <span v-if="product.description"> - {{ shortDescription }}</span>
+        <span v-if="product.description"> - {{ product.description }}</span>
       </p>
     </div>
     <p>
@@ -34,20 +34,21 @@
 </template>
 
 <script>
-import ChangeProductAvailability from '@/components/ChangeProductAvailability.vue';
+import Image from '@/components/Image.vue';
+import Price from '@/components/Price.vue';
+import EditProduct from '@/components/EditProduct.vue';
 import UploadImages from '@/components/UploadImages.vue';
 import DeleteImages from '@/components/DeleteImages.vue';
-import EditProduct from '@/components/EditProduct.vue';
-import Price from '@/components/Price.vue';
-import { API_URL } from '@/config.json';
+import ChangeProductAvailability from '@/components/ChangeProductAvailability.vue';
 export default {
   name: 'DisplayProduct',
   components: {
-    ChangeProductAvailability,
+    Image,
+    Price,
+    EditProduct,
     UploadImages,
     DeleteImages,
-    EditProduct,
-    Price,
+    ChangeProductAvailability,
   },
   props: {
     product: Object,
@@ -56,13 +57,7 @@ export default {
     },
   },
   data() {
-    const maxLength = 30;
-    const description = this.$props.product.description;
     return {
-      API_URL,
-      shortDescription:
-        description.slice(0, maxLength) +
-        (description.length > maxLength ? '...' : ''),
       productHasAttributes:
         this.product.title && this.product.price && this.product.stock,
     };
@@ -95,7 +90,8 @@ export default {
   @apply transition duration-500 ease-in-out hover:shadow;
 }
 
-img {
+.image {
   margin-top: 100%;
+  @apply absolute max-w-full max-h-full w-auto h-auto;
 }
 </style>

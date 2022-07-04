@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal button-text="UPLOAD PRODUCT">
+    <Modal button-text="UPLOAD PRODUCT" modal-class="p-12">
       <UploadProduct />
     </Modal>
     <DisplayProduct

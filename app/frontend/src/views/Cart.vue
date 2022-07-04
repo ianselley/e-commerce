@@ -1,15 +1,18 @@
 <template>
-  <div class="flex flex-row-reverse">
-    <OrderProducts />
-    <p><strong>CART:</strong></p>
-    <div class="cart" v-if="!cartIsEmpty">
-      <DisplayCartProduct
-        v-for="cartProduct in shopping_cart"
-        :key="cartProduct"
-        :cartProduct="cartProduct"
-      />
+  <div class="mx-6">
+    <div class="main-title">CART</div>
+    <div class="flex flex-row">
+      <div v-if="!cartIsEmpty" class="w-full space-y-4">
+        <DisplayCartProduct
+          v-for="cartProduct in shoppingCart"
+          :key="cartProduct"
+          :cartProduct="cartProduct"
+          class="m-auto"
+        />
+      </div>
+      <div v-else class="mx-auto my-20">Your cart is empty</div>
+      <OrderProducts />
     </div>
-    <div v-else>Your cart is empty</div>
   </div>
 </template>
 
@@ -32,11 +35,11 @@ export default {
     currentBuyer() {
       return this.$store.state.auth.buyer;
     },
-    shopping_cart() {
+    shoppingCart() {
       return (this.currentBuyer && this.currentBuyer.shopping_cart) || [];
     },
     cartIsEmpty() {
-      return this.shopping_cart.length == 0;
+      return this.shoppingCart.length == 0;
     },
   },
   created() {
@@ -58,11 +61,4 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
-.cart {
-  border: 1px solid rgb(106, 90, 205);
-  border-radius: 0.4rem;
-  background: rgba(192, 192, 192, 0.6);
-  display: inline-block;
-}
-</style>
+<style lang="postcss" scoped></style>

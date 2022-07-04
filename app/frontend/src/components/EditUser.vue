@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal class="modal-class" button-text="Edit User Info">
+    <Modal modal-class="p-12" button-text="Edit User Info">
       <div class="min-w-max flex flex-col space-y-4">
         <EditName v-if="userIsBuyer" />
         <EditBrand v-if="userIsSeller" />
@@ -40,7 +40,4 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
-.modal-class :deep() .modal-button {
-}
-</style>
+<style lang="postcss" scoped></style>
