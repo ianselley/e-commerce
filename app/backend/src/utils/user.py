@@ -1,12 +1,26 @@
 import jwt
 import re
 import os
+import phonenumbers
 
 
-email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
- 
+email_regex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
+
 def email_is_valid(email):
-    if(re.fullmatch(email_regex, email)):
+    if re.fullmatch(email_regex, email):
+        return True
+    return False
+
+
+def telephone_is_valid(telephone):
+    number = phonenumbers.parse(telephone)
+    if telephone == "" or phonenumbers.is_valid_number(number):
+        return True
+    return False
+
+
+def passwords_are_valid(password, password_confirmation):
+    if password == password_confirmation and len(password) >= 8:
         return True
     return False
 

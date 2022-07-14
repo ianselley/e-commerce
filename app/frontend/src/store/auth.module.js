@@ -1,7 +1,6 @@
 import { useCookies } from 'vue3-cookies';
 
 import AuthService from '@/services/auth.service.js';
-import AddressService from '@/services/address.service.js';
 
 const { cookies } = useCookies();
 const user = cookies.get('user');
@@ -53,13 +52,33 @@ export const auth = {
       state.buyer.addresses.push(address);
       state.addedAddress = true;
     },
+    editAddress(state, { address, addressId }) {
+      delete address.buyer;
+      const addressIndex = state.buyer.addresses.findIndex(
+        (address) => address.id == addressId
+      );
+      state.buyer.addresses[addressIndex] = address;
+    },
+    makeItMainAddress(state, addressId) {
+      state.buyer.main_address_id = addressId;
+    },
+    deleteAddress(state, addressId) {
+      if (state.buyer.main_address_id == addressId) {
+        state.buyer.main_address_id = null;
+      }
+      state.buyer.addresses = state.buyer.addresses.filter(
+        (address) => address.id != addressId
+      );
+    },
     resetAddedAddress(state) {
       state.addedAddress = false;
     },
     loginSuccess(state, user) {
       if (user.role == 'seller') {
         state.loggedInAs = 'seller';
-        delete user.seller.products;
+        if (user.seller) {
+          delete user.seller.products;
+        }
         state.seller = user.seller;
       } else if (user.role == 'buyer') {
         state.loggedInAs = 'buyer';
@@ -84,11 +103,52 @@ export const auth = {
       state.buyer = null;
       state.seller = null;
     },
+    addToCart(state, cartProduct) {
+      state.buyer.shopping_cart.push(cartProduct);
+    },
+    changeCartProductQuantity(state, { cartProductId, quantity }) {
+      const cartProductIndex = state.buyer.shopping_cart.findIndex(
+        (cartProduct) => cartProduct.id == cartProductId
+      );
+      state.buyer.shopping_cart[cartProductIndex].quantity = quantity;
+    },
+    removeFromCart(state, cartProductId) {
+      state.buyer.shopping_cart = state.buyer.shopping_cart.filter(
+        (cartProduct) => cartProduct.id != cartProductId
+      );
+    },
+    removeManyFromCart(state, cartProductIds) {
+      let cartProductIdsList = cartProductIds.split(',');
+      state.buyer.shopping_cart = state.buyer.shopping_cart.filter(
+        (cartProduct) => !cartProductIdsList.includes(cartProduct.id.toString())
+      );
+    },
+    addOrders(state, newOrders) {
+      state.buyer.orders = state.buyer.orders.concat(newOrders);
+    },
+    productArrives(state, orderId) {
+      const orderIndex = state.buyer.orders.findIndex(
+        (order) => order.id == orderId
+      );
+      state.buyer.orders[orderIndex].delivered = true;
+    },
   },
 
   actions: {
     login({ commit }, user) {
       return AuthService.login(user)
+        .then((response) => {
+          commit('loginSuccess', response);
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          commit('loginFailure');
+          return Promise.reject(error);
+        });
+    },
+
+    getUser({ commit }) {
+      return AuthService.getUser()
         .then((response) => {
           commit('loginSuccess', response);
           return Promise.resolve(response);
@@ -116,8 +176,19 @@ export const auth = {
         });
     },
 
-    registerBuyer({ commit }, buyer) {
-      return AuthService.registerBuyer(buyer)
+    editUser({ commit }, user) {
+      return AuthService.editUser(user)
+        .then((response) => {
+          commit('loginSuccess', response);
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
+    registerBuyer({ commit }, name) {
+      return AuthService.registerBuyer(name)
         .then((response) => {
           commit('registerBuyer', response);
           return Promise.resolve(response);
@@ -127,8 +198,19 @@ export const auth = {
         });
     },
 
-    registerSeller({ commit }, info) {
-      return AuthService.registerSeller(info)
+    editName({ commit }, name) {
+      return AuthService.editName(name)
+        .then((response) => {
+          commit('registerBuyer', response);
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
+    registerSeller({ commit }, brand) {
+      return AuthService.registerSeller(brand)
         .then((response) => {
           commit('registerSeller', response);
           return Promise.resolve(response);
@@ -138,10 +220,10 @@ export const auth = {
         });
     },
 
-    registerAddress({ commit }, address) {
-      return AddressService.registerAddress(address)
+    editBrand({ commit }, brand) {
+      return AuthService.editBrand(brand)
         .then((response) => {
-          commit('registerAddress', response);
+          commit('registerSeller', response);
           return Promise.resolve(response);
         })
         .catch((error) => {

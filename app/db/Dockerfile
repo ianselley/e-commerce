@@ -1,4 +1,4 @@
-FROM mysql
+FROM mysql:8.0
 
 ADD waitForMySQL.sh /usr/local/bin/
 

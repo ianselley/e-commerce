@@ -2,11 +2,11 @@ import axios from 'axios';
 
 import { API_URL } from '@/config.json';
 
-export default async function axiosRequest(options, callback) {
+export default function axiosRequest(options, callback) {
   if (options.endpoint) {
     options.url = API_URL + options.endpoint;
   }
-  return await axios(options)
+  return axios(options)
     .then((response) => {
       typeof callback === 'function' && callback(response);
       return Promise.resolve(response.data);

@@ -1,19 +1,40 @@
 import authHeader from './auth-header.js';
 import axiosRequest from './axios.service.js';
 
+function findProductIndex(list, productId) {
+  return list.findIndex((product) => product.id == productId);
+}
+
 class ProductService {
   registerProduct(product) {
     const options = {
-      endpoint: '/product/create-product',
+      endpoint: '/product',
       method: 'post',
       headers: authHeader(),
       data: product,
     };
     return axiosRequest(options, (response) => {
       if (response.data) {
-        let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
-        if (!sellerProducts) sellerProducts = [];
+        let sellerProducts =
+          JSON.parse(localStorage.getItem('sellerProducts')) || [];
         sellerProducts.push(response.data);
+        localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
+      }
+    });
+  }
+
+  editProduct(product, productId) {
+    const options = {
+      endpoint: '/product',
+      method: 'put',
+      headers: authHeader(),
+      data: { ...product, id: productId },
+    };
+    return axiosRequest(options, (response) => {
+      if (response.data) {
+        let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
+        const productIndex = findProductIndex(sellerProducts, productId);
+        sellerProducts[productIndex] = response.data;
         localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
       }
     });
@@ -26,7 +47,7 @@ class ProductService {
       bodyFormData.append('images', image);
     }
     const options = {
-      endpoint: '/product/upload-images',
+      endpoint: '/product/images',
       method: 'post',
       headers: {
         ...authHeader(),
@@ -36,10 +57,41 @@ class ProductService {
     };
     return axiosRequest(options, (response) => {
       let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
-      const productListId = sellerProducts.findIndex(
-        (product) => product.id == productId
-      );
-      sellerProducts[productListId].images = response.data;
+      const productIndex = findProductIndex(sellerProducts, productId);
+      sellerProducts[productIndex].images = response.data;
+      localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
+    });
+  }
+
+  changeProductAvailability(productId) {
+    const options = {
+      endpoint: '/product/availability',
+      method: 'put',
+      headers: authHeader(),
+      params: { product_id: productId },
+    };
+    return axiosRequest(options, () => {
+      let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
+      const productIndex = findProductIndex(sellerProducts, productId);
+      sellerProducts[productIndex].available =
+        !sellerProducts[productIndex].available;
+      localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
+    });
+  }
+
+  deleteImages(productId, imageIds) {
+    const options = {
+      endpoint: '/product/images',
+      method: 'delete',
+      headers: authHeader(),
+      params: { product_id: productId, image_ids: imageIds },
+    };
+    return axiosRequest(options, () => {
+      let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
+      const productIndex = findProductIndex(sellerProducts, productId);
+      sellerProducts[productIndex].images = sellerProducts[
+        productIndex
+      ].images.filter((image) => !imageIds.includes(image.id));
       localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
     });
   }
@@ -52,11 +104,11 @@ class ProductService {
     return axiosRequest(options);
   }
 
-  getSellerProducts(sellerId) {
+  getSellerProducts() {
     const options = {
       endpoint: '/user/seller',
       method: 'get',
-      params: { seller_id: sellerId },
+      headers: authHeader(),
     };
     return axiosRequest(options, (response) => {
       const { products } = response.data;
@@ -66,8 +118,9 @@ class ProductService {
 
   getProduct(productId) {
     const options = {
-      endpoint: `/product/${productId}`,
+      endpoint: '/product',
       method: 'get',
+      params: { product_id: productId },
     };
     return axiosRequest(options);
   }

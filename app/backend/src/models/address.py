@@ -20,3 +20,4 @@ class Address(Base):
     buyer_id = Column(Integer, ForeignKey("buyers.id"))
 
     buyer = relationship("Buyer", back_populates="addresses")
+    orders = relationship("Order", back_populates="address")

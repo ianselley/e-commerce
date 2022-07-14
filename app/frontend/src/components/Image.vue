@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <img :src="`${API_URL}/product/images/${src}`" class="image" :alt="alt" />
-  </div>
+  <img :src="`${API_URL}/product/images/${src}`" :alt="alt" />
 </template>
 
 <script>
@@ -11,7 +9,6 @@ export default {
   props: {
     src: Number,
     alt: String,
-    Class: String,
   },
   data() {
     return {
@@ -21,9 +18,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.image {
-  width: auto;
-  height: 20rem;
-}
-</style>
+<style lang="postcss" scoped></style>

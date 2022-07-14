@@ -1,7 +1,24 @@
 <template>
-  <div class="backdrop">
-    <div class="modal">
-      <p>{{ modal_content }}</p>
+  <div>
+    <button @click="open" class="modal-button" :disabled="disabled">
+      {{ buttonText }}
+    </button>
+    <div
+      v-if="isOpen"
+      @click.stop
+      @mousedown="closeDown"
+      @mouseup="closeUp"
+      class="z-50 fixed top-0 left-0 w-full h-full bg-black bg-opacity-50"
+    >
+      <div
+        @mouseup.stop
+        @mousedown.stop
+        @mouseup="upInside"
+        class="modal"
+        :class="modalClass"
+      >
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -10,35 +27,52 @@
 export default {
   name: 'Modal',
   props: {
-    modal_content: String,
+    buttonText: {
+      type: String,
+      default: 'Open Modal',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    modalClass: {
+      type: String,
+      default: '',
+    },
+  },
+  data() {
+    return {
+      isOpen: false,
+      downOustide: false,
+    };
+  },
+  methods: {
+    closeDown() {
+      this.downOutside = true;
+    },
+    closeUp() {
+      if (this.downOutside) {
+        this.isOpen = false;
+      }
+    },
+    upInside() {
+      this.downOutside = false;
+    },
+    open() {
+      this.isOpen = true;
+    },
   },
 };
 </script>
 
-<style>
-.backdrop {
-  position: fixed;
-  top: 10%;
-  left: 0;
-  width: 100%;
-  height: 90%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 10;
-}
-
+<style lang="postcss" scoped>
 .modal {
-  position: fixed;
+  @apply fixed bg-white rounded-xl shadow-lg;
   top: 50%;
   left: 50%;
+  max-height: calc(100vh - 80px);
+  max-width: 100vw;
+  overflow: auto;
   transform: translate(-50%, -50%);
-  background-color: #fff;
-  width: 300px;
-  height: 200px;
-  border-radius: 5px;
-  z-index: 11;
-}
-
-p {
-  padding: auto;
 }
 </style>

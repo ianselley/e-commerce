@@ -1,7 +1,11 @@
 import ProductService from '@/services/product.service';
 
-const allProducts = JSON.parse(localStorage.getItem('allProducts'));
-const sellerProducts = JSON.parse(localStorage.getItem('sellerProducts'));
+const allProducts = JSON.parse(localStorage.getItem('allProducts')) || [];
+const sellerProducts = JSON.parse(localStorage.getItem('sellerProducts')) || [];
+
+function findProductIndex(list, productId) {
+  return list.findIndex((product) => product.id == productId);
+}
 
 export const product = {
   namespaced: true,
@@ -19,11 +23,29 @@ export const product = {
     registerProduct(state, product) {
       state.sellerProducts.push(product);
     },
-    uploadImages(state, { productId, images }) {
-      const productListId = state.sellerProducts.findIndex(
-        (product) => product.id == productId
+    editProduct(state, { product, productId }) {
+      const sellerProductIndex = findProductIndex(
+        state.sellerProducts,
+        productId
       );
-      state.sellerProducts[productListId].images = images;
+      state.sellerProducts[sellerProductIndex] = product;
+      const allProductIndex = findProductIndex(state.allProducts, productId);
+      state.allProducts[allProductIndex] = product;
+    },
+    uploadImages(state, { productId, images }) {
+      const productIndex = findProductIndex(state.sellerProducts, productId);
+      state.sellerProducts[productIndex].images = images;
+    },
+    changeProductAvailability(state, productId) {
+      const productIndex = findProductIndex(state.sellerProducts, productId);
+      state.sellerProducts[productIndex].available =
+        !state.sellerProducts[productIndex].available;
+    },
+    deleteImages(state, { productId, imageIds }) {
+      const productIndex = findProductIndex(state.sellerProducts, productId);
+      state.sellerProducts[productIndex].images = state.sellerProducts[
+        productIndex
+      ].images.filter((image) => !imageIds.includes(image.id));
     },
     removeSellerProducts(state) {
       state.sellerProducts = null;
@@ -55,6 +77,17 @@ export const product = {
         });
     },
 
+    editProduct({ commit }, { product, productId }) {
+      return ProductService.editProduct(product, productId)
+        .then((response) => {
+          commit('editProduct', { product: response, productId });
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
     uploadImages({ commit }, { productId, images }) {
       return ProductService.uploadImages(productId, images)
         .then((images) => {
@@ -66,8 +99,30 @@ export const product = {
         });
     },
 
-    getSellerProducts({ commit }, sellerId) {
-      return ProductService.getSellerProducts(sellerId).then((response) => {
+    changeProductAvailability({ commit }, productId) {
+      return ProductService.changeProductAvailability(productId)
+        .then((response) => {
+          commit('changeProductAvailability', productId);
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
+    deleteImages({ commit }, { productId, imageIds }) {
+      return ProductService.deleteImages(productId, imageIds)
+        .then(() => {
+          commit('deleteImages', { productId, imageIds });
+          return Promise.resolve();
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+    },
+
+    getSellerProducts({ commit }) {
+      return ProductService.getSellerProducts().then((response) => {
         commit('setSellerProducts', response);
       });
     },

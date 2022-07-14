@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  min-width: 1024px;
+  width: auto !important;
+  @apply bg-violet-50 min-h-screen flex flex-col;
+}
+
+input {
+  @apply border border-solid border-gray-300 rounded-lg;
+  @apply px-4 py-2 text-lg w-96;
+  @apply focus:outline-none focus:border-violet-500;
+}
+
+button:not(.icon-button) {
+  @apply bg-violet-400 text-white font-bold py-2 px-4 rounded-lg;
+  @apply transition ease-in-out duration-300 hover:bg-violet-500;
+}
+
+button.icon-button {
+  @apply bg-transparent border-0 p-0 m-0;
+  @apply transition transform ease-in-out duration-500 hover:scale-125;
+}
+
+button:not(.icon-button):disabled {
+  @apply hover:bg-violet-400;
+}
+
+button:disabled {
+  @apply transform-none cursor-not-allowed opacity-50;
+}
+
+button.btn-edit-profile {
+  @apply ml-4 py-1 px-3 font-light;
+}
+
+button.register-button {
+  width: fit-content;
+  @apply mx-auto px-12 py-2 rounded-full text-2xl font-bold;
+  @apply text-amber-500 bg-amber-200 border-2 border-amber-400;
+  @apply transition transform ease-in-out duration-500;
+  @apply hover:translate-y-2 hover:text-amber-100 hover:scale-110;
+  @apply hover:border-amber-100 hover:bg-amber-400;
+}
+
+button.register-button:disabled {
+  @apply hover:bg-amber-200 transform-none;
+  @apply text-amber-500 bg-amber-200 border-amber-400;
+}
+
+label {
+  @apply inline-block w-full text-left text-violet-900 mb-1;
+}
+
+.main-title {
+  @apply text-2xl font-bold mb-10;
+}
+
+.edit-profile {
+  @apply flex flex-row items-center justify-between;
+}
+
+.form-content {
+  box-shadow: 0 10px 15px -3px #ddd6fe, 0 4px 6px -4px #ddd6fe;
+  @apply flex flex-col space-y-8 w-min mx-auto rounded-xl p-12;
+  @apply bg-gradient-to-br from-violet-200 to-violet-300;
+}
+
+.form-title {
+  @apply text-3xl font-extrabold text-violet-400;
+}
+
+.tooltip-error {
+  @apply text-red-700;
+}
+
+.tooltip {
+  @apply relative;
+}
+
+.tooltip .tooltip-text {
+  @apply bg-red-400 w-max rounded-md text-white text-center px-3 absolute z-10;
+  @apply opacity-0 transition duration-300 left-0 ease-in-out;
+}
+
+.tooltip:hover .tooltip-text {
+  @apply opacity-100 transition duration-300 ease-in-out;
+}
+
+.tooltip-address ~ .float-address {
+  @apply absolute opacity-0 pointer-events-none transition duration-300 ease-in-out;
+}
+
+.tooltip-address:hover ~ .float-address {
+  @apply opacity-100 pointer-events-auto transition duration-300 ease-in-out;
+}
+
+.pb-full {
+  padding-bottom: 100%;
+}
+
+.image-link:hover {
+  cursor: pointer;
+}
+
+.image-link:hover ~ * > .link {
+  @apply text-amber-600;
+}
+
+.link:hover {
+  cursor: pointer;
+  @apply text-amber-600;
+}

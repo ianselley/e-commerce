@@ -1,42 +1,60 @@
 <template>
   <div v-if="productHasAttributes" class="base">
-    <img
-      v-if="productHasImages"
-      :src="`${API_URL}/product/images/${product.images[0].id}`"
-      style="width: auto; height: 200px"
-    />
-    <div>
-      <p @click="productPage" class="link">
-        <strong>{{ product.title }}</strong> - {{ shortDescription }}
-      </p>
-      <p>
-        <span class="price">{{ product.price.toFixed(2) }}</span
-        >€
+    <div @click="productPage" class="mt-3 mx-3 text-violet-900 link">
+      <div class="h-0 w-full pb-full relative mb-6">
+        <div class="flex items-center justify-center">
+          <Image
+            v-if="productHasImages"
+            :src="product.images[0].id"
+            class="image"
+          />
+        </div>
+      </div>
+      <p class="two-lines overflow-hidden">
+        <strong>{{ product.title }}</strong>
+        <span v-if="product.description"> - {{ product.description }}</span>
       </p>
     </div>
-    <UploadImages v-if="userIsOwner" :productId="product.id" />
+    <p>
+      <Price :price="product.price" :available="product.available" />
+    </p>
+    <div v-if="userIsOwner && edit">
+      <ChangeProductAvailability
+        :productId="product.id"
+        :available="product.available"
+      />
+      <EditProduct :product="product" />
+      <UploadImages :productId="product.id" />
+      <DeleteImages :productId="product.id" :images="product.images" />
+    </div>
   </div>
 </template>
 
 <script>
+import Image from '@/components/Image.vue';
+import Price from '@/components/Price.vue';
+import EditProduct from '@/components/EditProduct.vue';
 import UploadImages from '@/components/UploadImages.vue';
-import { API_URL } from '@/config.json';
+import DeleteImages from '@/components/DeleteImages.vue';
+import ChangeProductAvailability from '@/components/ChangeProductAvailability.vue';
 export default {
   name: 'DisplayProduct',
   components: {
+    Image,
+    Price,
+    EditProduct,
     UploadImages,
+    DeleteImages,
+    ChangeProductAvailability,
   },
   props: {
     product: Object,
+    edit: {
+      default: false,
+    },
   },
   data() {
-    const maxLength = 30;
-    const description = this.$props.product.description;
     return {
-      API_URL,
-      shortDescription:
-        description.slice(0, maxLength) +
-        (description.length > maxLength ? '...' : ''),
       productHasAttributes:
         this.product.title && this.product.price && this.product.stock,
     };
@@ -53,7 +71,7 @@ export default {
     },
     productHasImages() {
       return this.$props.product.images.length > 0;
-    }
+    },
   },
   methods: {
     productPage() {
@@ -63,28 +81,21 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .base {
-  border: 1px solid black;
-  border-radius: 1rem;
-  background-color: #eee;
-  max-width: 50%;
-  margin: 3.5rem auto;
+  @apply bg-white border rounded;
+  @apply transition duration-500 ease-in-out hover:shadow;
 }
 
-.base > img {
-  margin-top: 2rem;
+.image {
+  margin-top: 100%;
+  @apply absolute max-w-full max-h-full w-auto h-auto;
 }
 
-.price {
-  font-size: 30px;
-  font-weight: 600;
-  font-style: italic;
-}
-
-.link:hover {
-  text-decoration: underline;
-  color: rgb(46, 56, 122);
-  cursor: pointer;
+.two-lines {
+  height: 3rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 </style>

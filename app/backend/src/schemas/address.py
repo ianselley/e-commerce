@@ -26,8 +26,14 @@ class AddressReturn(AddressBase):
         orm_mode = True
 
 
+class AddressUpdate(AddressBase):
+    id: int
+
+
 from src.schemas.user import BuyerReturn
+from src.schemas.order import OrderReturn
 
 
 class Address(AddressReturn):
     buyer: BuyerReturn
+    orders: list[OrderReturn]

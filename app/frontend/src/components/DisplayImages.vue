@@ -33,22 +33,24 @@ export default {
   data() {
     return {
       imageId: undefined,
-    }
+    };
   },
   computed: {
     selectedImage() {
-      return this.images.find(image => image.id == this.imageId) || this.images[0];
-    }
+      return (
+        this.images.find((image) => image.id == this.imageId) || this.images[0]
+      );
+    },
   },
   methods: {
     changeSelectedImage(imageId) {
       this.imageId = imageId;
-    }
+    },
   },
 };
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .total-images {
   display: flex;
   flex-direction: row;
@@ -56,16 +58,13 @@ export default {
 .left-images {
   margin-right: 2rem;
 }
-.left-images /deep/ .image {
+.left-images :deep(.image) {
   max-width: 3.5rem;
   max-height: 3.5rem;
-  height: auto;
-  width: auto;
+  @apply h-auto w-auto;
 }
-.big-image /deep/ .image {
-  max-width: 40rem;
-  max-height: 40rem;
-  height: auto;
-  width: auto;
+.big-image :deep(.image) {
+  max-height: 42rem;
+  @apply max-w-2xl h-auto w-auto;
 }
 </style>

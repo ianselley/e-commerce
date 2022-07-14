@@ -21,6 +21,15 @@ def create_product(db: Session, product: schemas.ProductCreate, user_id: int):
     return product_created
 
 
+def update_product(db: Session, product: schemas.ProductUpdate):
+    product_db = get_product(db=db, product_id=product.id)
+    for attribute, value in vars(product).items():
+        setattr(product_db, attribute, value)
+    db.commit()
+    db.refresh(product_db)
+    return product_db
+
+
 def upload_image(image: UploadFile, name: int):
     file = Path("/app/product_images") / str(name)
     if file.exists():
@@ -45,6 +54,14 @@ def upload_images(db: Session, images: list[UploadFile], product_id: int):
             db.refresh(product)
             upload_image(image=image, name=product.images[-1].id)
     return product.images
+
+
+def change_product_availability(db: Session, product_id: int):
+    product = get_product(db=db, product_id=product_id)
+    product.available = not product.available
+    db.commit()
+    db.refresh(product)
+    return product
 
 
 def get_products(db: Session, substring: str = "", skip: int = 0, limit: int = 20):
@@ -81,3 +98,9 @@ def delete_image(db: Session, image_id: int):
     db.delete(image)
     db.commit()
     return image
+
+
+def delete_images(db: Session, image_ids: list[int]):
+    for image_id in image_ids:
+        delete_image(db=db, image_id=image_id)
+    return image_ids
