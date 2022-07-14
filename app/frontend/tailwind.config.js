@@ -4,8 +4,10 @@ module.exports = {
   content: ['./public/index.html', './src/**/*.{vue,js}'],
   theme: {
     maxWidth: {
-      70: '70vw',
-      50: '50vw',
+      64: '13rem',
+    },
+    minWidth: {
+      40: '10rem',
     },
     extend: {
       colors: {

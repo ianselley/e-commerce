@@ -1,9 +1,6 @@
 <template>
   <div v-if="productHasAttributes" class="base">
-    <div
-      @click="productPage"
-      class="mt-3 mx-3 text-violet-900 hover:text-amber-600 hover:cursor-pointer"
-    >
+    <div @click="productPage" class="mt-3 mx-3 text-violet-900 link">
       <div class="h-0 w-full pb-full relative mb-6">
         <div class="flex items-center justify-center">
           <Image
@@ -13,7 +10,7 @@
           />
         </div>
       </div>
-      <p class="truncate">
+      <p class="two-lines overflow-hidden">
         <strong>{{ product.title }}</strong>
         <span v-if="product.description"> - {{ product.description }}</span>
       </p>
@@ -93,5 +90,12 @@ export default {
 .image {
   margin-top: 100%;
   @apply absolute max-w-full max-h-full w-auto h-auto;
+}
+
+.two-lines {
+  height: 3rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 </style>

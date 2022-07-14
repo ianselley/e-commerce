@@ -66,12 +66,6 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-html,
-body {
-  height: 100%;
-  overflow: hidden;
-}
-
 .modal {
   @apply fixed bg-white rounded-xl shadow-lg;
   top: 50%;

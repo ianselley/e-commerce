@@ -47,7 +47,7 @@ export default {
     const editNameSchema = yup.object({
       name: yup
         .string()
-        .max(64, 'Must be maximum 64 characters')
+        .max(64, 'Must be a maximum of 64 characters')
         .required('Name is required'),
     });
     return {

@@ -1,18 +1,55 @@
 <template>
-  <div>
-    <DisplayProduct :product="product" :edit="false" />
-    <Countdown v-if="!afterDeadline" :deadline="deadline" />
+  <div class="w-3/4 relative">
+    <div class="bg-amber-50 rounded-t-lg p-4 flex justify-around">
+      <div>Order placed on {{ orderDate }}</div>
+      <div>Quantity: {{ cartProduct.quantity }}</div>
+      <div>TOTAL: {{ product.price * cartProduct.quantity }}€</div>
+      <div class="truncate tooltip-address">
+        Address: {{ order.address.name }}
+      </div>
+      <DisplayAddress
+        class="float-address top-14 right-4 scale-75 z-20"
+        :address="order.address"
+        :edit="false"
+      />
+    </div>
+    <div class="bg-white rounded-b-sm flex flex-row p-4">
+      <div
+        @click="productPage"
+        class="min-w-40 w-40 h-40 flex justify-center items-center image-link"
+      >
+        <Image
+          :src="image.id"
+          :alt="image.filename"
+          class="max-w-full max-h-full w-auto h-auto"
+        />
+      </div>
+      <div class="flex flex-col justify-between ml-6 left-content">
+        <div class="font-semibold text-2xl text-left">
+          Product <span v-if="afterDeadline">delivered</span
+          ><span v-else>will be delivered</span> on {{ deliveryDate }}
+        </div>
+        <div @click="productPage" class="two-lines text-left link">
+          {{ product.title }} - {{ product.description }}
+        </div>
+        <div class="flex items-center">
+          Price: <Price :price="product.price" class="inline-block ml-4" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import Countdown from '@/components/Countdown.vue';
-import DisplayProduct from '@/components/DisplayProduct.vue';
+import Image from '@/components/Image.vue';
+import Price from '@/components/Price.vue';
+import DisplayAddress from '@/components/DisplayAddress.vue';
 export default {
   name: 'DisplayOrder',
   components: {
-    DisplayProduct,
-    Countdown,
+    Image,
+    Price,
+    DisplayAddress,
   },
   props: {
     order: Object,
@@ -26,21 +63,33 @@ export default {
     currentBuyer() {
       return this.$store.state.auth.buyer;
     },
+    cartProduct() {
+      return this.order.cart_product;
+    },
     product() {
-      return this.$props.order.cart_product.product;
+      return this.cartProduct.product;
     },
     productDelivered() {
       return this.order.delivered;
     },
-    afterDeadline() {
-      const now = new Date();
-      return now > this.deadline;
+    orderDate() {
+      return new Date(this.order.date).toISOString().slice(0, 10);
     },
     deadline() {
       const date = new Date(this.order.date);
       date.setDate(date.getDate() + 1);
       date.setTime(date.getTime() + 2 * 60 * 60 * 1000);
       return date;
+    },
+    deliveryDate() {
+      return new Date(this.deadline).toISOString().slice(0, 10);
+    },
+    afterDeadline() {
+      const now = new Date();
+      return now > this.deadline;
+    },
+    image() {
+      return this.product.images[0];
     },
   },
   methods: {
@@ -50,8 +99,32 @@ export default {
         this.$store.dispatch('alert/setMessage', error);
       });
     },
+    productPage() {
+      this.$router.push(`/product/${this.product.id}`);
+    },
   },
 };
 </script>
 
-<style lang="postcss" scoped></style>
+<style lang="postcss" scoped>
+* {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.tooltip-address:hover {
+  cursor: default;
+}
+
+.float-address {
+  max-width: 20rem;
+}
+
+.two-lines {
+  max-height: 3.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  @apply overflow-hidden;
+}
+</style>

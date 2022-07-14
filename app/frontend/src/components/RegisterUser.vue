@@ -163,17 +163,17 @@ export default {
     const registerUserSchema = yup.object({
       alias: yup
         .string()
-        .max(64, 'Must be maximum 64 characters')
+        .max(64, 'Must be a maximum of 64 characters')
         .required('Name is required'),
       email: yup
         .string()
-        .max(64, 'Must be maximum 64 characters')
+        .max(64, 'Must be a maximum of 64 characters')
         .matches(emailRegex, 'Email is invalid')
         .required('Email is required'),
       password: yup
         .string()
         .min(8, 'Must be at least 8 characters')
-        .max(64, 'Must be maximum 64 characters')
+        .max(64, 'Must be a maximum of 64 characters')
         .required('Password is required'),
       repeatPassword: yup
         .string()

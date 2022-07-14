@@ -11,7 +11,13 @@
           ><span v-else>REGISTER</span> ADDRESS
         </div>
         <div>
-          <label for="name">Name</label>
+          <label
+            for="name"
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.name }"
+            >Name
+            <span class="tooltip-text">{{ errors.name }}</span>
+          </label>
           <input
             id="name"
             name="name"
@@ -41,7 +47,14 @@
           />
         </div>
         <div>
-          <label for="number">Number</label>
+          <label
+            for="number"
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.number }"
+          >
+            Number
+            <span class="tooltip-text">{{ errors.number }}</span>
+          </label>
           <input
             id="number"
             name="number"
@@ -71,7 +84,13 @@
           />
         </div>
         <div>
-          <label for="flat">Flat</label>
+          <label
+            for="flat"
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.flat }"
+            >Flat
+            <span class="tooltip-text">{{ errors.flat }}</span>
+          </label>
           <input
             id="flat"
             name="flat"
@@ -196,11 +215,26 @@ export default {
   },
   data() {
     const registerAddressSchema = yup.object({
-      street: yup.string().required('Street is required'),
-      city: yup.string().required('City is required'),
+      name: yup.string().max(64, 'Must be a maximum of 64 characters'),
+      street: yup
+        .string()
+        .required('Street is required')
+        .max(128, 'Must be a maximum of 128 characters'),
+      number: yup.string().max(64, 'Must be a maximum of 64 characters'),
+      city: yup
+        .string()
+        .required('City is required')
+        .max(64, 'Must be a maximum of 64 characters'),
+      flat: yup.string().max(64, 'Must be a maximum of 64 characters'),
       state: yup.string().required('State is required'),
-      zipCode: yup.string().required('Zip Code is required'),
-      country: yup.string().required('Country is required'),
+      zipCode: yup
+        .string()
+        .required('Zip Code is required')
+        .max(64, 'Must be a maximum of 64 characters'),
+      country: yup
+        .string()
+        .required('Country is required')
+        .max(64, 'Must be a maximum of 64 characters'),
     });
     const { zip_code, ...values } = { ...this.address };
     values.zipCode = zip_code;

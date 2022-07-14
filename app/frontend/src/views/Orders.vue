@@ -1,20 +1,42 @@
 <template>
   <div>
     <strong>ORDERS:</strong>
-    <DisplayOrders />
+    <div
+      v-if="orders"
+      class="w-full flex flex-col justify-center space-y-4 mt-6"
+    >
+      <DisplayOrder
+        v-for="order in Array.from(orders).slice().reverse()"
+        :key="order.id"
+        :order="order"
+        class="mx-auto"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import DisplayOrders from '@/components/DisplayOrders.vue';
+import DisplayOrder from '@/components/DisplayOrder.vue';
 export default {
   name: 'Orders',
   components: {
-    DisplayOrders,
+    DisplayOrder,
   },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
+    },
+    currentBuyer() {
+      return this.$store.state.auth.buyer;
+    },
+    currentSeller() {
+      return this.$store.state.auth.seller;
+    },
+    orders() {
+      if (this.currentBuyer) {
+        return this.currentBuyer && this.currentBuyer.orders;
+      }
+      return this.currentSeller && this.currentSeller.orders;
     },
   },
   created() {

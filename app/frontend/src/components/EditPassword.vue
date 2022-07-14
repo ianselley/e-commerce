@@ -47,7 +47,7 @@ export default {
       password: yup
         .string()
         .min(8, 'Must be at least 8 characters')
-        .max(64, 'Must be maximum 64 characters')
+        .max(64, 'Must be a maximum of 64 characters')
         .required('Password is required'),
     });
     return {

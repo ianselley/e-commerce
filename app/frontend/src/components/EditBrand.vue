@@ -46,7 +46,7 @@ export default {
     const editBrandSchema = yup.object({
       brand: yup
         .string()
-        .max(64, 'Must be maximum 64 characters')
+        .max(64, 'Must be a maximum of 64 characters')
         .required('Brand is required'),
     });
     return {

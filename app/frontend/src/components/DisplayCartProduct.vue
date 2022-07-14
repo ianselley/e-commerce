@@ -1,8 +1,9 @@
 <template>
-  <div
-    class="bg-white rounded-sm w-full p-4 flex flex-row sm:max-w-70 md:max-w-50"
-  >
-    <div class="w-40 h-40 flex justify-center items-center">
+  <div class="bg-white rounded-sm w-3/4 p-4 flex flex-row">
+    <div
+      @click="productPage"
+      class="min-w-40 w-40 h-40 flex justify-center items-center image-link"
+    >
       <Image
         :src="image.id"
         :alt="image.filename"
@@ -10,7 +11,7 @@
       />
     </div>
     <div class="flex flex-col justify-between ml-6 left-content">
-      <div class="two-lines">
+      <div @click="productPage" class="two-lines text-left link">
         {{ product.title }} - {{ product.description }}
       </div>
       <div class="flex items-center">
@@ -104,27 +105,29 @@ export default {
           this.loading = false;
         });
     },
+    productPage() {
+      this.$router.push(`/product/${this.product.id}`);
+    },
   },
 };
 </script>
 
 <style lang="postcss" scoped>
-:root {
-  --h: 1.75rem;
-}
-
 .left-content * {
   @apply mr-auto;
 }
 
 * {
   font-size: 1.125rem;
-  line-height: var(--h);
+  line-height: 1.75rem;
 }
 
 .two-lines {
-  /* height: calc(var(--h) * 2); It doesn't work :( */
-  height: 3.5rem;
+  max-height: 3.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  @apply overflow-hidden;
 }
 
 button {

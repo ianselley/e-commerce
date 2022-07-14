@@ -82,13 +82,34 @@ label {
 
 .tooltip .tooltip-text {
   @apply bg-red-400 w-max rounded-md text-white text-center px-3 absolute z-10;
-  @apply opacity-0 invisible transition duration-300 left-0;
+  @apply opacity-0 transition duration-300 left-0 ease-in-out;
 }
 
 .tooltip:hover .tooltip-text {
-  @apply visible opacity-100 transition duration-300;
+  @apply opacity-100 transition duration-300 ease-in-out;
+}
+
+.tooltip-address ~ .float-address {
+  @apply absolute opacity-0 pointer-events-none transition duration-300 ease-in-out;
+}
+
+.tooltip-address:hover ~ .float-address {
+  @apply opacity-100 pointer-events-auto transition duration-300 ease-in-out;
 }
 
 .pb-full {
   padding-bottom: 100%;
+}
+
+.image-link:hover {
+  cursor: pointer;
+}
+
+.image-link:hover ~ * > .link {
+  @apply text-amber-600;
+}
+
+.link:hover {
+  cursor: pointer;
+  @apply text-amber-600;
 }
