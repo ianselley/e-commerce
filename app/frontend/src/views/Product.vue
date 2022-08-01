@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div v-if="product" class="image-info-cart">
+    <div v-if="product" class="flex justify-between">
       <DisplayImages :images="product.images" />
-      <div class="cart">
+      <div class="cart-extra w-40 pb-8 border border-black rounded-lg">
         <div v-if="product.available && productHasStock">
           <p><Price :price="product.price" :available="product.available" /></p>
-          <p v-if="productHasStock" class="available">In stock</p>
+          <p v-if="productHasStock" class="font-bold text-lime-600">In stock</p>
           <AddToCart
             v-if="buyer"
             :productId="parseInt(productId)"
             :stock="product.stock"
           />
         </div>
-        <p v-else class="not-available">Currently not available</p>
+        <p v-else class="font-bold text-red-500">Currently not available</p>
       </div>
     </div>
     <NotFound v-else />
@@ -34,8 +34,6 @@ export default {
   },
   data() {
     return {
-      found: undefined,
-      loading: false,
       productId: this.$route.params.id,
     };
   },
@@ -50,45 +48,18 @@ export default {
       return this.product.stock > 0;
     },
   },
-  mounted() {
-    this.loading = true;
+  created() {
     this.$store
       .dispatch('product/getProduct', this.productId)
-      .then(() => {
-        this.found = true;
-        this.loading = false;
-      })
-      .catch(() => {
-        this.found = false;
+      .catch((error) => {
+        this.$store.dispatch('alert/setMessage', error);
       });
   },
 };
 </script>
 
 <style lang="postcss" scoped>
-.image-info-cart {
-  display: flex;
-  justify-content: space-between;
-}
-
-.cart {
-  width: 10rem;
+.cart-extra {
   height: fit-content;
-  padding-bottom: 2rem;
-  border: 1px solid black;
-  border-radius: 1.5rem;
-}
-
-.available,
-.not-available {
-  font-weight: 700;
-}
-
-.available {
-  color: rgb(120, 171, 61);
-}
-
-.not-available {
-  color: red;
 }
 </style>

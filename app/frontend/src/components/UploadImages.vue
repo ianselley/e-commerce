@@ -1,18 +1,19 @@
 <template>
-  <div class="mb-5">
+  <div>
     <form onsubmit="return false;">
-      <div class="imgContent">
+      <div class="flex flex-col space-y-2">
         <input
           type="file"
-          class="file_input"
           name="images"
           ref="images"
           @change="onFileChange"
           accept="image/*"
           multiple
+          class="w-full"
         />
         <button @click="onUploadImage" :disabled="zeroImages || loading">
-          Upload Images
+          <span v-show="!loading">Upload images</span>
+          <span v-show="loading">UPLOADING</span>
         </button>
       </div>
     </form>
@@ -58,9 +59,13 @@ export default {
         })
         .catch((error) => {
           this.loading = false;
+          this.$refs.images.value = null;
+          this.images = [];
           this.$store.dispatch('alert/setMessage', error);
         });
     },
   },
 };
 </script>
+
+<style lang="postcss" scoped></style>

@@ -28,7 +28,7 @@ def create_order(address_id: int, cart_product_ids: str, db: Session = Depends(u
 
 
 @router.put("")
-def product_arrives(order_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
+def product_delivered(order_id: int, db: Session = Depends(utils.db.get_db), token: str = Depends(token_auth_schema)):
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")
     if not user_id:
@@ -41,5 +41,5 @@ def product_arrives(order_id: int, db: Session = Depends(utils.db.get_db), token
         raise HTTPException(status_code=400, detail="Order not found")
     if order.buyer_id != buyer.id:
         raise HTTPException(status_code=400, detail="You can't update this order, it's not yours")
-    updated_order = crud.order.product_arrives(db=db, order_id=order_id)
+    updated_order = crud.order.product_delivered(db=db, order_id=order_id)
     return updated_order

@@ -4,7 +4,8 @@ module.exports = {
   content: ['./public/index.html', './src/**/*.{vue,js}'],
   theme: {
     maxWidth: {
-      64: '13rem',
+      full: '100%',
+      52: '13rem',
     },
     minWidth: {
       40: '10rem',
@@ -14,6 +15,7 @@ module.exports = {
         violet: colors.violet,
         sky: colors.sky,
         amber: colors.amber,
+        lime: colors.lime,
       },
     },
   },

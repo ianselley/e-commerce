@@ -11,13 +11,18 @@
             <strong>Brand:</strong> {{ currentSeller.brand }}
           </div>
           <div class="text-left">
-            <strong>Email:</strong> {{ currentUser.email }}
-          </div>
-          <div class="text-left">
             <strong>Telephone:</strong> {{ currentUser.telephone }}
           </div>
+          <div class="text-left">
+            <strong>Email:</strong> {{ currentUser.email }}
+          </div>
           <div v-if="userIsSeller" class="text-left">
-            Products sold: {{ currentSeller.number_of_products_sold }}
+            <strong>Total products sold:</strong>
+            {{ commafy(currentSeller.total_sold) }}
+          </div>
+          <div v-if="userIsSeller" class="text-left">
+            <strong>Total money made:</strong>
+            {{ commafy(currentSeller.total_made.toFixed(2)) }} €
           </div>
           <EditUser />
         </div>
@@ -92,6 +97,9 @@ export default {
   methods: {
     addAddress() {
       this.modalKey++;
+    },
+    commafy(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
   },
 };

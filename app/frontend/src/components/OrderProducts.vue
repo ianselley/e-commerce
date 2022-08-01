@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="sticky top-48 z-50 w-56 rounded-sm bg-white p-4">
-      <strong>Total:</strong> <Price :price="cartTotal" class="inline-block" />
+      <strong>Total: </strong><Price :price="cartTotal" class="inline-block" />
       <Modal
         :key="modalKey"
         button-text="Process order"
@@ -25,24 +25,27 @@
             <div v-show="changeSelectedAddress" class="space-y-4">
               <div
                 v-for="address in addresses"
-                :key="address"
+                :key="address.id"
                 class="flex space-x-4"
               >
                 <input
+                  :id="address.id"
                   type="radio"
                   name="selectAddress"
                   :value="address.id"
                   @change="temporarySave(address.id)"
                 />
-                <DisplayAddress
-                  :address="address"
-                  :edit="false"
-                  class="w-full"
-                />
+                <label :for="address.id">
+                  <DisplayAddress
+                    :address="address"
+                    :edit="false"
+                    class="w-full"
+                  />
+                </label>
               </div>
               <button
                 :disabled="loading"
-                @click="saveSelectedAddress(temporaryAddressId)"
+                @click="saveSelectedAddress()"
                 class="mt-2"
               >
                 Send to selected address
@@ -58,20 +61,26 @@
             <p><strong>3. Select products</strong></p>
             <div
               v-for="cartProduct in shopping_cart"
-              :key="cartProduct"
+              :key="cartProduct.id"
               class="flex"
             >
               <input
+                :id="cartProduct.id"
                 type="checkbox"
                 :value="cartProduct.id"
                 checked
                 @change="check($event, cartProduct.id)"
               />
-              <DisplayCartProduct :cart-product="cartProduct" class="w-full" />
+              <label :for="cartProduct.id">
+                <DisplayCartProduct
+                  :cart-product="cartProduct"
+                  class="w-full"
+                />
+              </label>
             </div>
           </div>
           <div>
-            <strong>Total:</strong>
+            <strong>Total: </strong>
             <Price :price="cartTotal" class="inline-block" />
           </div>
           <button :disabled="allCheckedIdsFalse" @click="orderProducts">
@@ -236,7 +245,6 @@ export default {
       this.$store
         .dispatch('order/orderProducts', { addressId, cartProductIds })
         .then(() => {
-          this.$store.commit('modal/activateModal');
           this.loading = false;
         })
         .catch((error) => {
@@ -249,9 +257,7 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-input[type='checkbox'],
-input[type='radio'] {
-  accent-color: #d97706;
-  @apply w-min inline;
+label {
+  @apply text-black;
 }
 </style>

@@ -1,6 +1,7 @@
 <template>
   <div class="bg-white rounded-sm w-3/4 p-4 flex flex-row">
     <div
+      @click.stop
       @click="productPage"
       class="min-w-40 w-40 h-40 flex justify-center items-center image-link"
     >
@@ -11,7 +12,7 @@
       />
     </div>
     <div class="flex flex-col justify-between ml-6 left-content">
-      <div @click="productPage" class="two-lines text-left link">
+      <div @click.stop @click="productPage" class="two-lines text-left link">
         {{ product.title }} - {{ product.description }}
       </div>
       <div class="flex items-center">
@@ -26,6 +27,7 @@
           Quantity
           <select
             ref="quantity"
+            @click.stop
             @change="changeQuantity"
             :disabled="loading"
             class="rounded-md bg-amber-50 border border-amber-300"
@@ -41,7 +43,12 @@
             </option>
           </select>
         </div>
-        <button class="ml-12" @click="removeFromCart" :disabled="loading">
+        <button
+          class="ml-12"
+          @click.stop
+          @click="removeFromCart"
+          :disabled="loading"
+        >
           Remove
         </button>
       </div>
@@ -137,5 +144,9 @@ button {
 .text-xxs {
   font-size: 0.7rem;
   line-height: 0.85rem;
+}
+
+.max-w-full {
+  max-width: 100%;
 }
 </style>

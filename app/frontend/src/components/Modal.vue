@@ -1,6 +1,11 @@
 <template>
   <div>
-    <button @click="open" class="modal-button" :disabled="disabled">
+    <button
+      @click="open"
+      :disabled="disabled"
+      class="button"
+      :class="buttonClass"
+    >
       {{ buttonText }}
     </button>
     <div
@@ -36,6 +41,10 @@ export default {
       default: false,
     },
     modalClass: {
+      type: String,
+      default: '',
+    },
+    buttonClass: {
       type: String,
       default: '',
     },

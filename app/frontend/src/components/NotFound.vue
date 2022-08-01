@@ -3,7 +3,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: 'NotFound',
+};
 </script>
 
 <style lang="postcss" scoped></style>

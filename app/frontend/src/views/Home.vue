@@ -1,6 +1,6 @@
 <template>
   <div
-    class="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-screen-xl gap-x-4 gap-y-6"
+    class="p-8 grid grid-cols-3 lg:grid-cols-4 max-w-screen-xl gap-x-4 gap-y-6"
   >
     <DisplayProduct
       v-for="product in allProducts"

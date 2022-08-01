@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="quantity">Quantity:</div>
+    <div class="inline-block mr-3">Quantity:</div>
     <select ref="quantity">
       <option v-for="quantity in maxProducts" :key="quantity" :value="quantity">
         {{ quantity }}
@@ -52,9 +52,4 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
-.quantity {
-  display: inline-block;
-  margin-right: 0.7rem;
-}
-</style>
+<style lang="postcss" scoped></style>

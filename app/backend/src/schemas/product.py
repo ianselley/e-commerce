@@ -18,7 +18,8 @@ class ProductCreate(ProductBase):
 
 class ProductReturn(ProductBase):
     id: int
-    total_sold: int
+    items_sold: int
+    money_made: float
     images: list[Image]
     day_added: datetime
     available: bool
@@ -40,3 +41,4 @@ from src.schemas.cart_product import CartProductReturn
 class Product(ProductReturn):
     seller: SellerReturn
     cart_products: Optional[list[CartProductReturn]]
+    orders: Optional[list[OrderReturn]]

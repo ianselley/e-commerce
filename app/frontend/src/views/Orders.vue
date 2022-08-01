@@ -1,6 +1,6 @@
 <template>
   <div>
-    <strong>ORDERS:</strong>
+    <div class="main-title">ORDERS</div>
     <div
       v-if="orders"
       class="w-full flex flex-col justify-center space-y-4 mt-6"

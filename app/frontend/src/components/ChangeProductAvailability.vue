@@ -1,6 +1,10 @@
 <template>
   <div>
-    <button @click="changeProductAvailability">
+    <button
+      :disabled="loading"
+      @click="changeProductAvailability"
+      class="w-full"
+    >
       Make product <span v-if="available">not</span> available
     </button>
   </div>

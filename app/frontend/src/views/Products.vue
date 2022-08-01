@@ -1,14 +1,18 @@
 <template>
   <div>
-    <Modal button-text="UPLOAD PRODUCT" modal-class="p-12">
+    <Modal button-text="UPLOAD PRODUCT">
       <UploadProduct />
     </Modal>
-    <DisplayProduct
-      v-for="product in sellerProducts"
-      :key="product"
-      :product="product"
-      :edit="true"
-    />
+    <div
+      class="p-8 grid grid-cols-3 2xl:grid-cols-4 max-w-screen-xl gap-x-4 gap-y-6"
+    >
+      <DisplayProduct
+        v-for="product in sellerProducts"
+        :key="product"
+        :product="product"
+        :edit="true"
+      />
+    </div>
   </div>
 </template>
 

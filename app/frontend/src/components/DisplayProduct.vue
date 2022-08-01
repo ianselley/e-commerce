@@ -15,17 +15,35 @@
         <span v-if="product.description"> - {{ product.description }}</span>
       </p>
     </div>
-    <p>
+    <div class="mt-4 flex justify-around items-center">
       <Price :price="product.price" :available="product.available" />
-    </p>
-    <div v-if="userIsOwner && edit">
+      <span v-if="userIsOwner && edit">
+        Stock: <strong>{{ product.stock }}</strong>
+      </span>
+    </div>
+    <div
+      v-if="userIsOwner && edit"
+      class="mt-3 flex justify-around items-center"
+    >
+      <div>
+        Money made:
+        <strong>{{ commafy(product.money_made.toFixed(2)) }}</strong> €
+      </div>
+      <div>
+        Items sold: <strong>{{ commafy(product.items_sold) }}</strong>
+      </div>
+    </div>
+    <div
+      v-if="userIsOwner && edit"
+      class="mt-6 flex flex-col justify-items-stretch space-y-3"
+    >
       <ChangeProductAvailability
         :productId="product.id"
         :available="product.available"
       />
       <EditProduct :product="product" />
-      <UploadImages :productId="product.id" />
       <DeleteImages :productId="product.id" :images="product.images" />
+      <UploadImages :productId="product.id" />
     </div>
   </div>
 </template>
@@ -64,10 +82,7 @@ export default {
       return this.$store.state.auth.seller;
     },
     userIsOwner() {
-      return (
-        this.owner &&
-        this.$store.state.auth.seller.id == this.$props.product.seller_id
-      );
+      return this.owner && this.owner.id == this.$props.product.seller_id;
     },
     productHasImages() {
       return this.$props.product.images.length > 0;
@@ -77,19 +92,23 @@ export default {
     productPage() {
       this.$router.push(`/product/${this.product.id}`);
     },
+    commafy(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
   },
 };
 </script>
 
 <style lang="postcss" scoped>
 .base {
-  @apply bg-white border rounded;
+  @apply bg-white border rounded p-6;
   @apply transition duration-500 ease-in-out hover:shadow;
 }
 
 .image {
   margin-top: 100%;
-  @apply absolute max-w-full max-h-full w-auto h-auto;
+  max-width: 100%;
+  @apply absolute max-h-full w-auto h-auto;
 }
 
 .two-lines {

@@ -1,10 +1,9 @@
 <template>
   <div>
     <div class="total-images">
-      <div class="group-images">
+      <div v-for="image in images" :key="image" class="group-images">
         <Image
-          v-for="image in images"
-          :key="image"
+          v-if="image"
           :src="image.id"
           :alt="image.filename"
           class="left-images"
@@ -12,6 +11,7 @@
         />
       </div>
       <Image
+        v-if="selectedImage"
         :src="selectedImage.id"
         :alt="selectedImage.filename"
         class="big-image"
@@ -56,15 +56,12 @@ export default {
   flex-direction: row;
 }
 .left-images {
-  margin-right: 2rem;
-}
-.left-images :deep(.image) {
   max-width: 3.5rem;
-  max-height: 3.5rem;
-  @apply h-auto w-auto;
+  @apply mr-8 h-auto w-auto max-h-14;
 }
-.big-image :deep(.image) {
+.big-image {
   max-height: 42rem;
-  @apply max-w-2xl h-auto w-auto;
+  max-width: 42rem;
+  @apply h-auto w-auto;
 }
 </style>
