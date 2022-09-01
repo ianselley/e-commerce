@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="font-publicSans">
     <Navbar />
     <Alert v-if="!messageIsEmpty" />
     <router-view />

@@ -3,7 +3,7 @@
     <div class="bg-amber-50 rounded-t-lg p-4 flex justify-around">
       <div>Order placed on {{ orderDate }}</div>
       <div>Quantity: {{ order.quantity }}</div>
-      <div>TOTAL: {{ order.price * order.quantity }}€</div>
+      <div>TOTAL: {{ commafy(order.price * order.quantity) }}€</div>
       <div class="max-w-52 truncate tooltip-address">
         Address: {{ order.address.name }}
       </div>
@@ -19,6 +19,7 @@
         class="min-w-40 w-40 h-40 flex justify-center items-center image-link"
       >
         <Image
+          v-if="productHasImages"
           :src="image.id"
           :alt="image.filename"
           class="max-w-full max-h-full w-auto h-auto"
@@ -27,7 +28,7 @@
       <div class="flex flex-col justify-between ml-6 left-content">
         <div class="font-semibold text-2xl text-left">
           Product<span v-if="order.quantity > 1">s</span>
-          <span v-if="afterDeadline">delivered</span
+          <span v-if="afterDeadline"> delivered</span
           ><span v-else> will be delivered</span> on {{ deliveryDate }}
         </div>
         <div @click="productPage" class="two-lines text-left link">
@@ -55,17 +56,15 @@ export default {
   props: {
     order: Object,
   },
-  mounted() {
-    if (this.currentBuyer && this.afterDeadline && !this.productDelivered) {
-      this.productArrives();
-    }
-  },
   computed: {
     currentBuyer() {
       return this.$store.state.auth.buyer;
     },
     product() {
       return this.order.product;
+    },
+    productHasImages() {
+      return this.product.images.length > 0;
     },
     productDelivered() {
       return this.order.delivered;
@@ -99,6 +98,12 @@ export default {
     },
     productPage() {
       this.$router.push(`/product/${this.product.id}`);
+    },
+    commafy(x) {
+      return x
+        .toFixed(2)
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
   },
 };

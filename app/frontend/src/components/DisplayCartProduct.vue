@@ -6,6 +6,7 @@
       class="min-w-40 w-40 h-40 flex justify-center items-center image-link"
     >
       <Image
+        v-if="productHasImages"
         :src="image.id"
         :alt="image.filename"
         class="max-w-full max-h-full w-auto h-auto"
@@ -16,32 +17,41 @@
         {{ product.title }} - {{ product.description }}
       </div>
       <div class="flex items-center">
-        Price: <Price :price="product.price" class="inline-block ml-4" />
-        <span v-if="multipleProducts" class="ml-4 text-xxs text-amber-900">
+        <div v-if="productAvailable" class="pr-1">Price:</div>
+        <Price
+          :price="product.price"
+          :available="productAvailable"
+          class="inline-block"
+        />
+        <span
+          v-if="multipleProducts && productAvailable"
+          class="ml-4 text-xxs text-amber-900"
+        >
           ({{ product.price }}€ x {{ cartProduct.quantity }} =
-          {{ product.price * cartProduct.quantity }}€)
+          {{ commafy(product.price * cartProduct.quantity) }}€)
         </span>
       </div>
       <div class="flex justify-between items-center">
         <div class="w-max">
-          Quantity
+          Quantity:
           <select
+            v-if="product.stock > 0"
             ref="quantity"
             @click.stop
             @change="changeQuantity"
             :disabled="loading"
-            class="rounded-md bg-amber-50 border border-amber-300"
+            class="text-center"
           >
             <option
-              v-for="quantity in 30"
+              v-for="quantity in maxProducts"
               :key="quantity"
               :selected="quantity == cartProduct.quantity"
               :value="quantity"
-              class="bg-white text-center"
             >
               {{ quantity }}
             </option>
           </select>
+          <span v-else>0</span>
         </div>
         <button
           class="ml-12"
@@ -80,11 +90,26 @@ export default {
     image() {
       return this.product.images[0];
     },
+    productHasImages() {
+      return this.product.images.length > 0;
+    },
     multipleProducts() {
       return this.$props.cartProduct.quantity > 1;
     },
+    maxProducts() {
+      return Math.min(this.product.stock, 30);
+    },
+    productAvailable() {
+      return this.product.available && this.product.stock > 0;
+    },
   },
   methods: {
+    commafy(x) {
+      return x
+        .toFixed(2)
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
     removeFromCart() {
       const cartProductId = this.$props.cartProduct.id;
       this.loading = true;

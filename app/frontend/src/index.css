@@ -60,6 +60,14 @@ label {
   @apply inline-block w-full text-left text-violet-900 mb-1;
 }
 
+select {
+  @apply rounded-md bg-amber-50 border border-amber-300;
+}
+
+option {
+  @apply bg-white text-center;
+}
+
 .main-title {
   @apply text-2xl font-bold mb-10;
 }
@@ -118,4 +126,8 @@ label {
 .link:hover {
   cursor: pointer;
   @apply text-amber-600;
+}
+
+.border-spacing-1 {
+  border-spacing: 0.25rem 0.25rem;
 }

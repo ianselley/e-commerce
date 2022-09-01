@@ -79,9 +79,16 @@ export default {
   @apply fixed bg-white rounded-xl shadow-lg;
   top: 50%;
   left: 50%;
-  max-height: calc(100vh - 80px);
-  max-width: 100vw;
+  width: minmax(max-content, 90vw);
+  min-height: max-content;
+  max-height: 90%;
   overflow: auto;
   transform: translate(-50%, -50%);
+}
+
+@screen md {
+  .modal {
+    max-height: calc(100vh - 80px);
+  }
 }
 </style>

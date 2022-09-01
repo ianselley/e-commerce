@@ -226,7 +226,7 @@ export default {
         .required('City is required')
         .max(64, 'Must be a maximum of 64 characters'),
       flat: yup.string().max(64, 'Must be a maximum of 64 characters'),
-      state: yup.string().required('State is required'),
+      state: yup.string().required('State/Province/Region is required'),
       zipCode: yup
         .string()
         .required('Zip Code is required')

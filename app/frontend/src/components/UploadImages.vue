@@ -9,7 +9,6 @@
           @change="onFileChange"
           accept="image/*"
           multiple
-          class="w-full"
         />
         <button @click="onUploadImage" :disabled="zeroImages || loading">
           <span v-show="!loading">Upload images</span>
@@ -46,6 +45,10 @@ export default {
       this.loading = true;
       const images = Object.assign([], this.images);
       const productId = this.$props.productId;
+      if (images.length == 0) {
+        this.dispatch('alert/setMessage', 'No images selected');
+        return;
+      }
       this.$store
         .dispatch('product/uploadImages', { productId, images })
         .then(() => {

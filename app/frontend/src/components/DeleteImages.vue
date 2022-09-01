@@ -1,6 +1,10 @@
 <template>
   <div>
-    <Modal button-text="Select images to delete" button-class="w-full">
+    <Modal
+      :key="modalKey"
+      button-text="Select images to delete"
+      button-class="w-full"
+    >
       <div class="bg-white big-width sticky top-0 py-4 z-20">
         <button :disabled="loading || noneChecked" @click="deleteImages">
           Delete Images
@@ -42,6 +46,7 @@ export default {
   },
   data() {
     return {
+      modalKey: 0,
       loading: false,
       checkedIds: {},
     };
@@ -86,6 +91,7 @@ export default {
           this.loading = false;
           this.$store.dispatch('alert/setMessage', error);
         });
+      this.modalKey++;
     },
   },
 };

@@ -1,16 +1,15 @@
 <template>
-  <div>
+  <div class="max-w-screen-xl mx-auto">
     <Modal button-text="UPLOAD PRODUCT">
       <UploadProduct />
     </Modal>
-    <div
-      class="p-8 grid grid-cols-3 2xl:grid-cols-4 max-w-screen-xl gap-x-4 gap-y-6"
-    >
+    <div class="p-8 grid grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-6">
       <DisplayProduct
         v-for="product in sellerProducts"
         :key="product"
         :product="product"
         :edit="true"
+        :available="product.available"
       />
     </div>
   </div>
@@ -35,7 +34,7 @@ export default {
       return this.$store.state.auth.loggedInAs == 'seller';
     },
     sellerProducts() {
-      return this.$store.state.product.sellerProducts;
+      return this.$store.state.product.sellerProducts.slice().reverse();
     },
     currentSeller() {
       return this.$store.state.auth.seller;

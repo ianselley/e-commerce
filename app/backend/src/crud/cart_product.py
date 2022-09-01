@@ -7,6 +7,10 @@ def get_cart_product(db: Session, cart_product_id: int):
     return db.query(models.CartProduct).filter_by(id=cart_product_id).first()
 
 
+def get_cart_product_by_product_id(db: Session, product_id: int, buyer_id: int):
+    return db.query(models.CartProduct).filter_by(product_id=product_id, buyer_id=buyer_id).first()
+
+
 def add_to_cart(db: Session, cart_product: schemas.CartProductCreate):
     cart_product_created = models.CartProduct(**cart_product.dict())
     db.add(cart_product_created)

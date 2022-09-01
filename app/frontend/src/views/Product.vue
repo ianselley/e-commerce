@@ -1,16 +1,20 @@
 <template>
-  <div>
-    <div v-if="product" class="flex justify-between">
+  <div class="flex justify-center mx-6">
+    <div v-if="productExists" class="flex">
       <DisplayImages :images="product.images" />
-      <div class="cart-extra w-40 pb-8 border border-black rounded-lg">
+      <div class="width-text px-10 text-left">
+        <div class="text-xl font-semibold">{{ product.seller.brand }}</div>
+        {{ product.title }} - {{ product.description }}
+      </div>
+      <div
+        class="bg-white w-48 p-6 border border-gray-300 rounded-lg cart-extra"
+      >
         <div v-if="product.available && productHasStock">
           <p><Price :price="product.price" :available="product.available" /></p>
-          <p v-if="productHasStock" class="font-bold text-lime-600">In stock</p>
-          <AddToCart
-            v-if="buyer"
-            :productId="parseInt(productId)"
-            :stock="product.stock"
-          />
+          <p v-if="productHasStock" class="font-bold text-lime-600 mt-1">
+            In stock
+          </p>
+          <AddToCart :productId="parseInt(productId)" :stock="product.stock" />
         </div>
         <p v-else class="font-bold text-red-500">Currently not available</p>
       </div>
@@ -38,11 +42,11 @@ export default {
     };
   },
   computed: {
-    buyer() {
-      return this.$store.state.auth.buyer;
-    },
     product() {
       return this.$store.state.product.product;
+    },
+    productExists() {
+      return this.product != null;
     },
     productHasStock() {
       return this.product.stock > 0;
@@ -61,5 +65,23 @@ export default {
 <style lang="postcss" scoped>
 .cart-extra {
   height: fit-content;
+  min-width: max-content;
+}
+
+.width-text {
+  min-width: 16rem;
+  max-width: 46rem;
+}
+
+@screen lg {
+  .width-text {
+    min-width: 22rem;
+  }
+}
+
+@screen xl {
+  .width-text {
+    min-width: 34rem;
+  }
 }
 </style>

@@ -36,7 +36,7 @@ export default {
           this.$store.state.auth.buyer.main_address_id))
     ) {
       this.$router.push('/profile');
-      this.$store.commit(
+      this.$store.dispatch(
         'alert/setMessage',
         'You are already registered, you would have to log out to access the signup page'
       );

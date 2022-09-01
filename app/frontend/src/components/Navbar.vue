@@ -4,6 +4,7 @@
     class="px-10 py-6 mb-8 sticky top-0 z-30 flex flex-row justify-between bg-white bg-opacity-70 backdrop-filter backdrop-blur-md shadow"
   >
     <IanSelleyLogo />
+    <SearchBar v-if="home" />
     <div id="endpoints" class="flex flex-row content-center space-x-8">
       <router-link to="/">
         <HomeLogo class="color-fill" />
@@ -28,6 +29,7 @@
 
 <script>
 import HomeLogo from '@/components/HomeLogo.vue';
+import SearchBar from '@/components/SearchBar.vue';
 import ProfileLogo from '@/components/ProfileLogo.vue';
 import IanSelleyLogo from '@/components/IanSelleyLogo.vue';
 import ShoppingCartLogo from '@/components/ShoppingCartLogo.vue';
@@ -35,6 +37,7 @@ export default {
   name: 'Navbar',
   components: {
     HomeLogo,
+    SearchBar,
     ProfileLogo,
     IanSelleyLogo,
     ShoppingCartLogo,
@@ -57,6 +60,9 @@ export default {
     },
     currentBuyer() {
       return this.$store.state.auth.buyer;
+    },
+    home() {
+      return this.$route.path == '/';
     },
   },
   methods: {

@@ -4,7 +4,7 @@
       <span class="text-3xl italic font-semibold">{{ commafy(price) }} </span>
       €
     </span>
-    <span v-else class="text-red-600 font-bold">Not available</span>
+    <span v-else class="text-red-600 font-bold leading-9">Not available</span>
   </div>
 </template>
 

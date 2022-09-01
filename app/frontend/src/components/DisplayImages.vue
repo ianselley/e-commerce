@@ -1,21 +1,29 @@
 <template>
   <div>
-    <div class="total-images">
-      <div v-for="image in images" :key="image" class="group-images">
+    <div class="flex">
+      <div class="flex flex-col space-y-2">
+        <div v-for="image in images" :key="image.id">
+          <Image
+            v-if="image"
+            :src="image.id"
+            :alt="image.filename"
+            class="left-images"
+            :class="{
+              'border-2 border-amber-400 p-0.5 opacity-75':
+                image.id == selectedImage.id,
+            }"
+            @click="changeSelectedImage(image.id)"
+          />
+        </div>
+      </div>
+      <div class="h-96 w-96">
         <Image
-          v-if="image"
-          :src="image.id"
-          :alt="image.filename"
-          class="left-images"
-          @click="changeSelectedImage(image.id)"
+          v-if="selectedImage"
+          :src="selectedImage.id"
+          :alt="selectedImage.filename"
+          class="big-image"
         />
       </div>
-      <Image
-        v-if="selectedImage"
-        :src="selectedImage.id"
-        :alt="selectedImage.filename"
-        class="big-image"
-      />
     </div>
   </div>
 </template>
@@ -51,17 +59,13 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-.total-images {
-  display: flex;
-  flex-direction: row;
-}
 .left-images {
-  max-width: 3.5rem;
-  @apply mr-8 h-auto w-auto max-h-14;
+  max-width: 3rem;
+  @apply mr-4 h-auto w-auto max-h-14;
 }
+
 .big-image {
-  max-height: 42rem;
-  max-width: 42rem;
-  @apply h-auto w-auto;
+  max-width: 100%;
+  @apply mr-auto mb-auto block max-h-full;
 }
 </style>
