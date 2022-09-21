@@ -1,5 +1,8 @@
 <template>
-  <div class="flex justify-center items-center space-x-2">
+  <div
+    v-if="totalPages"
+    class="flex justify-center items-center space-x-2 width"
+  >
     <button @click="movePage(-5)">&lsaquo;&lsaquo;5</button>
     <button @click="movePage(-1)">&lsaquo;1</button>
     <div>{{ currentPage }} / {{ totalPages }}</div>
@@ -30,4 +33,8 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped></style>
+<style lang="postcss" scoped>
+.width {
+  max-width: fit-content;
+}
+</style>

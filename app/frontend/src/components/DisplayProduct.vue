@@ -11,9 +11,8 @@
           />
         </div>
       </div>
-      <p class="two-lines overflow-hidden">
+      <p class="one-line overflow-hidden mb-4">
         <strong>{{ product.title }}</strong>
-        <span v-if="product.description"> - {{ product.description }}</span>
       </p>
     </div>
     <div class="mt-4 flex justify-around items-center">
@@ -42,7 +41,7 @@
       <button
         :disabled="loadingAvailability || !productHasImages"
         @click="changeProductAvailability"
-        class="w-full"
+        class="w-full paddingx-4px"
         :title="
           !productHasImages
             ? 'To be able to change the availability of the product, you need to upload at least one image'
@@ -139,10 +138,15 @@ export default {
   @apply absolute max-h-full w-auto h-auto;
 }
 
-.two-lines {
-  height: 3rem;
+.paddingx-4px {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.one-line {
+  height: 1.5rem;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
 }
 </style>

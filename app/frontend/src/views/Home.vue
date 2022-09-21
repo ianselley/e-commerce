@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-center">
+  <div class="flex flex-col items-center">
     <div
       class="p-8 grid grid-cols-3 lg:grid-cols-4 w-full max-w-screen-xl gap-x-4 gap-y-6"
     >

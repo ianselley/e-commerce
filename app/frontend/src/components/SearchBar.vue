@@ -35,6 +35,7 @@ export default {
 <style lang="postcss" scoped>
 input {
   width: 100%;
+  height: 40px;
   max-width: 500px;
   padding: 10px 45px;
   background: white url('../assets/search-icon.svg') no-repeat 15px center;

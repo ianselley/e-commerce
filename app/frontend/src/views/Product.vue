@@ -3,8 +3,11 @@
     <div v-if="productExists" class="flex">
       <DisplayImages :images="product.images" />
       <div class="width-text px-10 text-left">
-        <div class="text-xl font-semibold">{{ product.seller.brand }}</div>
-        {{ product.title }} - {{ product.description }}
+        <div class="text-xl font-semibold mb-4">{{ product.seller.brand }}</div>
+        <p>
+          <span class="text-lg underline">{{ product.title }}</span>
+        </p>
+        <p>{{ product.description }}</p>
       </div>
       <div
         class="bg-white w-48 p-6 border border-gray-300 rounded-lg cart-extra"

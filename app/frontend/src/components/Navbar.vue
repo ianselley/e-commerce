@@ -9,7 +9,6 @@
       <router-link to="/">
         <HomeLogo class="color-fill" />
       </router-link>
-      <router-link to="/about">About</router-link>
       <router-link v-if="!loggedIn" to="/signup">Signup</router-link>
       <router-link v-if="!loggedIn" to="/login" class="button-a">
         <button>Login</button>
@@ -74,7 +73,6 @@ export default {
       if (!this.currentUser) {
         this.$router.push('/login');
       }
-      this.$store.dispatch('auth/logout');
     },
   },
 };
