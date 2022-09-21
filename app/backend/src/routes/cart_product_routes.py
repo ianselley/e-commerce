@@ -20,9 +20,15 @@ def add_to_cart(product_id: int, quantity: int, db: Session = Depends(utils.db.g
     buyer = crud.user.get_buyer_by_user_id(db=db, user_id=user_id)
     if not buyer:
         raise HTTPException(status_code=400, detail="Buyer not found")
+    cart_product = crud.cart_product.get_cart_product_by_product_id(db=db, product_id=product_id, buyer_id=buyer.id)
+    if cart_product and cart_product.quantity + quantity > product.stock:
+        raise HTTPException(status_code=400, detail=f'This product has only {product.stock} units in stock, and you already have {cart_product.quantity} in your cart')
     cart_product_schema = schemas.CartProductCreate(quantity=quantity, buyer_id=buyer.id, product_id=product.id)
-    cart_product = crud.cart_product.add_to_cart(db=db, cart_product=cart_product_schema)
-    return cart_product
+    if not cart_product:
+        new_cart_product = crud.cart_product.add_to_cart(db=db, cart_product=cart_product_schema)
+    else:
+        new_cart_product = crud.cart_product.change_quantity(db=db, cart_product_id=cart_product.id, quantity=quantity + cart_product.quantity)
+    return new_cart_product
 
 
 @router.put("", response_model=schemas.CartProduct)

@@ -1,7 +1,11 @@
 import ProductService from '@/services/product.service';
 
-const allProducts = JSON.parse(localStorage.getItem('allProducts')) || [];
+const searchedProducts =
+  JSON.parse(localStorage.getItem('searchedProducts')) || [];
 const sellerProducts = JSON.parse(localStorage.getItem('sellerProducts')) || [];
+const currentPage = 1;
+const productsPerPage = 10;
+const substring = '';
 
 function findProductIndex(list, productId) {
   return list.findIndex((product) => product.id == productId);
@@ -9,10 +13,16 @@ function findProductIndex(list, productId) {
 
 export const product = {
   namespaced: true,
-  state: { allProducts, sellerProducts },
+  state: {
+    searchedProducts,
+    sellerProducts,
+    substring,
+    currentPage,
+    productsPerPage,
+  },
   mutations: {
-    setAllProducts(state, value) {
-      state.allProducts = value;
+    setSearchedProducts(state, value) {
+      state.searchedProducts = value;
     },
     setSellerProducts(state, value) {
       state.sellerProducts = value;
@@ -20,7 +30,26 @@ export const product = {
     setProduct(state, value) {
       state.product = value;
     },
+    setSubstring(state, value) {
+      if (state.substring != value) {
+        state.currentPage = 1;
+      }
+      state.substring = value;
+    },
+    setTotalPages(state, totalProducts) {
+      state.totalPages = Math.ceil(totalProducts / state.productsPerPage);
+    },
+    movePage(state, number) {
+      let value = number + state.currentPage;
+      if (value > state.totalPages) {
+        value = state.totalPages;
+      } else if (value < 1) {
+        value = 1;
+      }
+      state.currentPage = value;
+    },
     registerProduct(state, product) {
+      product.available = false;
       state.sellerProducts.push(product);
     },
     editProduct(state, { product, productId }) {
@@ -29,8 +58,11 @@ export const product = {
         productId
       );
       state.sellerProducts[sellerProductIndex] = product;
-      const allProductIndex = findProductIndex(state.allProducts, productId);
-      state.allProducts[allProductIndex] = product;
+      const searchedProductIndex = findProductIndex(
+        state.searchedProducts,
+        productId
+      );
+      state.searchedProducts[searchedProductIndex] = product;
     },
     uploadImages(state, { productId, images }) {
       const productIndex = findProductIndex(state.sellerProducts, productId);
@@ -46,16 +78,24 @@ export const product = {
       state.sellerProducts[productIndex].images = state.sellerProducts[
         productIndex
       ].images.filter((image) => !imageIds.includes(image.id));
+      if (state.sellerProducts[productIndex].images.length == 0) {
+        state.sellerProducts[productIndex].available = false;
+      }
     },
     removeSellerProducts(state) {
       state.sellerProducts = null;
     },
   },
   actions: {
-    getAllProducts({ commit }) {
-      return ProductService.getAllProducts().then((response) => {
-        commit('setAllProducts', response);
-        return Promise.resolve(response);
+    getSearchedProducts({ commit, state }) {
+      return ProductService.getSearchedProducts(
+        state.substring,
+        state.currentPage,
+        state.productsPerPage
+      ).then((response) => {
+        commit('setSearchedProducts', response[0]);
+        commit('setTotalPages', response[1]);
+        return Promise.resolve(response[0]);
       });
     },
 

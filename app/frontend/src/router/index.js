@@ -7,11 +7,6 @@ const routes = [
     component: () => import('@/views/Home.vue'),
   },
   {
-    path: '/about',
-    name: 'About',
-    component: () => import('@/views/About.vue'),
-  },
-  {
     path: '/signup',
     name: 'Signup',
     component: () => import('@/views/Signup.vue'),
@@ -51,6 +46,13 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0 };
+    }
+  },
 });
 
 export default router;

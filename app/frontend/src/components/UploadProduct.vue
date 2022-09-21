@@ -6,9 +6,18 @@
       :validation-schema="uploadProductSchema"
       onsubmit="return false;"
     >
-      <div>
+      <div class="form-content">
+        <div class="form-title">
+          <span v-if="edit">EDIT</span><span v-else>UPLOAD</span> PRODUCT
+        </div>
         <div>
-          <label for="title">Title</label>
+          <label
+            for="title"
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.title }"
+            >Title *
+            <span class="tooltip-text">{{ errors.title }}</span>
+          </label>
           <input
             id="title"
             name="title"
@@ -18,10 +27,15 @@
             type="text"
             autofocus
           />
-          <span>{{ errors.title }}</span>
         </div>
         <div>
-          <label for="description">Description</label>
+          <label
+            for="description"
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.description }"
+            >Description
+            <span class="tooltip-text">{{ errors.description }}</span>
+          </label>
           <input
             id="description"
             name="description"
@@ -30,10 +44,15 @@
             @blur="validateAll"
             type="text"
           />
-          <span>{{ errors.description }}</span>
         </div>
         <div>
-          <label for="price">Price</label>
+          <label
+            for="price"
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.price }"
+            >Price *
+            <span class="tooltip-text">{{ errors.price }}</span>
+          </label>
           <input
             id="price"
             name="price"
@@ -42,10 +61,15 @@
             @blur="validateAll"
             type="text"
           />
-          <span>{{ errors.price }}</span>
         </div>
         <div>
-          <label for="stock">Stock</label>
+          <label
+            for="stock"
+            class="tooltip"
+            :class="{ 'tooltip-error': errors.stock }"
+            >Stock *
+            <span class="tooltip-text">{{ errors.stock }}</span>
+          </label>
           <input
             id="stock"
             name="stock"
@@ -54,17 +78,19 @@
             @blur="validateAll"
             type="text"
           />
-          <span>{{ errors.stock }}</span>
         </div>
         <div>
           <button type="submit" :disabled="loading || !isValid">
-            <span v-show="loading">LOADING</span>
-            <span v-show="!loading">Submit product and add images</span>
+            <span v-if="loading">LOADING</span>
+            <span v-else
+              ><span v-if="edit">Save changes</span
+              ><span v-else>Submit product and add images</span></span
+            >
           </button>
         </div>
       </div>
     </form>
-    <UploadImages v-if="productId" :productId="productId" />
+    <UploadImages v-if="productId" :productId="productId" class="m-6" />
   </div>
 </template>
 
@@ -85,6 +111,9 @@ export default {
   props: {
     product: {
       default: { ...emptyValues },
+    },
+    edit: {
+      default: false,
     },
   },
   data() {

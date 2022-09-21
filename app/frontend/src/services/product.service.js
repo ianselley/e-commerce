@@ -96,10 +96,12 @@ class ProductService {
     });
   }
 
-  getAllProducts() {
+  getSearchedProducts(search, page, productsPerPage) {
+    const skip = (page - 1) * productsPerPage;
     const options = {
       endpoint: '/product/all',
       method: 'get',
+      params: { substring: search, skip, limit: productsPerPage },
     };
     return axiosRequest(options);
   }

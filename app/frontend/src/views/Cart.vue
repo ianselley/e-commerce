@@ -36,7 +36,11 @@ export default {
       return this.$store.state.auth.buyer;
     },
     shoppingCart() {
-      return (this.currentBuyer && this.currentBuyer.shopping_cart) || [];
+      return (
+        (this.currentBuyer &&
+          this.currentBuyer.shopping_cart.slice().reverse()) ||
+        []
+      );
     },
     cartIsEmpty() {
       return this.shoppingCart.length == 0;

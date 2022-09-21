@@ -1,26 +1,44 @@
 <template>
-  <div class="root">
-    <button @click="toggleImages">Select Images To Delete</button>
-    <div v-show="showImages" class="images">
-      <div v-for="image in images" :key="image" class="thumbnail">
-        <input
-          type="checkbox"
-          :value="image.id"
-          @change="check($event, image.id)"
-        />
-        <Image :src="image.id" :alt="image.filename" class="thumbnail" />
+  <div>
+    <Modal
+      :key="modalKey"
+      button-text="Select images to delete"
+      button-class="w-full"
+    >
+      <div class="bg-white big-width sticky top-0 py-4 z-20">
+        <button :disabled="loading || noneChecked" @click="deleteImages">
+          Delete Images
+        </button>
       </div>
-      <button :disabled="loading" @click="deleteImages">Delete Images</button>
-    </div>
+      <div class="grid grid-cols-3 gap-y-8 gap-x-3 m-8 mt-0">
+        <div
+          v-for="image in images"
+          :key="image"
+          class="h-0 w-full pb-full relative mb-6 space-x-2"
+        >
+          <input
+            :id="image.id"
+            type="checkbox"
+            :value="image.id"
+            @change="check($event, image.id)"
+          />
+          <label :for="image.id" class="flex items-center justify-center">
+            <Image :src="image.id" :alt="image.filename" class="image" />
+          </label>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import Image from '@/components/Image.vue';
+import Modal from '@/components/Modal.vue';
 export default {
   name: 'DeleteImages',
   components: {
     Image,
+    Modal,
   },
   props: {
     productId: Number,
@@ -28,22 +46,25 @@ export default {
   },
   data() {
     return {
+      modalKey: 0,
       loading: false,
-      showImages: false,
       checkedIds: {},
     };
   },
   mounted() {
     this.initializeCheckedIds();
   },
+  computed: {
+    noneChecked() {
+      return Object.values(this.checkedIds).every((item) => item === false);
+    },
+  },
   methods: {
     initializeCheckedIds() {
       for (let image of this.$props.images) {
+        this.checkedIds = {};
         this.checkedIds[image.id] = false;
       }
-    },
-    toggleImages() {
-      this.showImages = !this.showImages;
     },
     check(e, id) {
       this.checkedIds[id] = e.target.checked;
@@ -70,29 +91,20 @@ export default {
           this.loading = false;
           this.$store.dispatch('alert/setMessage', error);
         });
+      this.modalKey++;
     },
   },
 };
 </script>
 
 <style lang="postcss" scoped>
-.root {
-  margin-bottom: 1rem;
+.big-width {
+  width: 50rem;
 }
 
-.images {
-  margin-top: 0.5rem;
-}
-
-.thumbnail :deep(.image) {
-  max-width: 3rem;
-  max-height: 3rem;
-  height: auto;
-  width: auto;
-}
-
-.thumbnail {
-  display: inline-block;
-  margin: 0.3rem 0.2rem 0;
+.image {
+  margin-top: 100%;
+  max-width: 100%;
+  @apply absolute max-h-full w-auto h-auto;
 }
 </style>

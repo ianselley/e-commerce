@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Modal button-text="Edit Product">
-      <UploadProduct :product="product" />
+    <Modal button-text="Edit product" :button-class="'w-full'">
+      <UploadProduct :product="product" :edit="true" />
     </Modal>
   </div>
 </template>

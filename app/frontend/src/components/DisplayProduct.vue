@@ -6,26 +6,53 @@
           <Image
             v-if="productHasImages"
             :src="product.images[0].id"
+            :alt="product.images[0].filename"
             class="image"
           />
         </div>
       </div>
-      <p class="two-lines overflow-hidden">
+      <p class="one-line overflow-hidden mb-4">
         <strong>{{ product.title }}</strong>
-        <span v-if="product.description"> - {{ product.description }}</span>
       </p>
     </div>
-    <p>
+    <div class="mt-4 flex justify-around items-center">
       <Price :price="product.price" :available="product.available" />
-    </p>
-    <div v-if="userIsOwner && edit">
-      <ChangeProductAvailability
-        :productId="product.id"
-        :available="product.available"
-      />
+      <span v-if="userIsOwner && edit" class="text-xs">
+        Stock: <strong>{{ product.stock }}</strong>
+      </span>
+    </div>
+    <div
+      v-if="userIsOwner && edit"
+      class="mt-3 flex justify-around items-center text-xs"
+    >
+      <div>
+        Money made:
+        <strong>{{ commafy(product.money_made.toFixed(2)) }}</strong
+        >€
+      </div>
+      <div>
+        Items sold: <strong>{{ commafy(product.items_sold) }}</strong>
+      </div>
+    </div>
+    <div
+      v-if="userIsOwner && edit"
+      class="mt-6 flex flex-col justify-items-stretch space-y-3"
+    >
+      <button
+        :disabled="loadingAvailability || !productHasImages"
+        @click="changeProductAvailability"
+        class="w-full paddingx-4px"
+        :title="
+          !productHasImages
+            ? 'To be able to change the availability of the product, you need to upload at least one image'
+            : ''
+        "
+      >
+        Make product <span v-if="available">un</span>available
+      </button>
       <EditProduct :product="product" />
-      <UploadImages :productId="product.id" />
       <DeleteImages :productId="product.id" :images="product.images" />
+      <UploadImagesButton :productId="product.id" />
     </div>
   </div>
 </template>
@@ -34,29 +61,31 @@
 import Image from '@/components/Image.vue';
 import Price from '@/components/Price.vue';
 import EditProduct from '@/components/EditProduct.vue';
-import UploadImages from '@/components/UploadImages.vue';
 import DeleteImages from '@/components/DeleteImages.vue';
-import ChangeProductAvailability from '@/components/ChangeProductAvailability.vue';
+import UploadImagesButton from './UploadImagesButton.vue';
 export default {
   name: 'DisplayProduct',
   components: {
     Image,
     Price,
     EditProduct,
-    UploadImages,
     DeleteImages,
-    ChangeProductAvailability,
+    UploadImagesButton,
   },
   props: {
     product: Object,
     edit: {
       default: false,
     },
+    available: Boolean,
   },
   data() {
     return {
+      loadingAvailability: false,
       productHasAttributes:
-        this.product.title && this.product.price && this.product.stock,
+        this.product.title &&
+        this.product.price !== null &&
+        this.product.stock !== null,
     };
   },
   computed: {
@@ -64,10 +93,7 @@ export default {
       return this.$store.state.auth.seller;
     },
     userIsOwner() {
-      return (
-        this.owner &&
-        this.$store.state.auth.seller.id == this.$props.product.seller_id
-      );
+      return this.owner && this.owner.id == this.$props.product.seller_id;
     },
     productHasImages() {
       return this.$props.product.images.length > 0;
@@ -77,25 +103,50 @@ export default {
     productPage() {
       this.$router.push(`/product/${this.product.id}`);
     },
+    commafy(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
+    changeProductAvailability() {
+      if (!this.productHasImages) {
+        this.$store.dispatch('alert/setMessage', 'You need at least one image');
+        return;
+      }
+      this.loadingAvailability = true;
+      this.$store
+        .dispatch('product/changeProductAvailability', this.$props.product.id)
+        .then(() => {
+          this.loadingAvailability = false;
+        })
+        .catch((error) => {
+          this.$store.dispatch('alert/setMessage', error);
+          this.loadingAvailability = false;
+        });
+    },
   },
 };
 </script>
 
 <style lang="postcss" scoped>
 .base {
-  @apply bg-white border rounded;
+  @apply bg-white border rounded p-3 pb-6;
   @apply transition duration-500 ease-in-out hover:shadow;
 }
 
 .image {
   margin-top: 100%;
-  @apply absolute max-w-full max-h-full w-auto h-auto;
+  max-width: 100%;
+  @apply absolute max-h-full w-auto h-auto;
 }
 
-.two-lines {
-  height: 3rem;
+.paddingx-4px {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.one-line {
+  height: 1.5rem;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
 }
 </style>

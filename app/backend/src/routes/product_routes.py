@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse
 from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 from pathlib import Path
+from typing import Union
 
 from src import schemas, crud, utils
 
@@ -39,20 +40,16 @@ def upload_images(product_id: int = Form(...), images: list[UploadFile] = File(.
         raise HTTPException(status_code=400, detail="Product already has 10 images, and can't have more")
     if (len_p_im := len(product.images)) + (len_im := len(images)) > 10:
         raise HTTPException(status_code=400, detail=f"Product can't have more than 10 images. Already has {len_p_im} and trying to add {len_im}")
-
     for image in images:
         if not image.content_type.startswith("image/"):
             raise HTTPException(status_code=400, detail="Invalid image type")
-
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")
     if not user_id:
         raise HTTPException(status_code=400, detail="Invalid token")
-
     user = crud.user.get_user(db=db, user_id=user_id)
     if not user.seller.id == product.seller_id:
         raise HTTPException(status_code=400, detail="You are not the owner of this product")
-        
     list_of_images = crud.product.upload_images(db=db, images=images, product_id=product_id)
     return list_of_images
 
@@ -69,6 +66,8 @@ def change_product_availability(product_id: int, db: Session = Depends(utils.db.
     seller_db = crud.user.get_seller_by_user_id(db=db, user_id=user_id)
     if not product.seller_id == seller_db.id:
         raise HTTPException(status_code=400, detail="You are not the owner of this product")
+    if len(product.images) == 0:
+        raise HTTPException(status_code=400, detail="Product has no images, and can't be available")
     product_updated = crud.product.change_product_availability(db=db, product_id=product_id)
     return product_updated
 
@@ -78,30 +77,29 @@ def delete_images(product_id: int, image_ids: str, db: Session = Depends(utils.d
     product = crud.product.get_product(db, product_id=product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    
     image_ids = image_ids.split(",")
     valid_image_ids = [str(db_image.id) for db_image in product.images]
     for image_id in image_ids:
         if image_id not in valid_image_ids:
             raise HTTPException(status_code=400, detail="Invalid image")
-
     token_data = utils.user.decode(token)
     user_id = token_data.get("sub")
     if not user_id:
         raise HTTPException(status_code=400, detail="Invalid token")
-
     user = crud.user.get_user(db=db, user_id=user_id)
     if not user.seller.id == product.seller_id:
-        raise HTTPException(status_code=400, detail="You are not the owner of this product")
-        
+        raise HTTPException(status_code=400, detail="You are not the owner of this product") 
     list_of_deleted_image_ids = crud.product.delete_images(db=db, image_ids=image_ids)
+    if len(product.images) == 0 and product.available:
+        crud.product.change_product_availability(db=db, product_id=product_id)
     return list_of_deleted_image_ids
 
 
-@router.get("/all", response_model=list[schemas.ProductReturn])
+@router.get("/all", response_model=list[Union[list[schemas.ProductReturn], int]])
 def get_all_products(substring: str = "", skip: int = 0, limit: int = 20, db: Session = Depends(utils.db.get_db)):
     products = crud.product.get_products(db=db, substring=substring, skip=skip, limit=limit)
-    return products
+    total_products = crud.product.get_total_products(db=db, substring=substring)
+    return [products, total_products]
 
 
 @router.get("/images/{image_id}", response_class=FileResponse)

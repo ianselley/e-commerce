@@ -1,9 +1,10 @@
 <template>
   <div>
     <span v-if="available">
-      <span class="price">{{ price.toFixed(2) }} </span>€
+      <span class="text-3xl italic font-semibold">{{ commafy(price) }} </span>
+      €
     </span>
-    <span v-else class="not-available">Not available</span>
+    <span v-else class="text-red-600 font-bold leading-9">Not available</span>
   </div>
 </template>
 
@@ -17,18 +18,15 @@ export default {
       default: true,
     },
   },
+  methods: {
+    commafy(x) {
+      return x
+        .toFixed(2)
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
+  },
 };
 </script>
 
-<style lang="postcss" scoped>
-.price {
-  font-size: 30px;
-  font-weight: 600;
-  font-style: italic;
-}
-
-.not-available {
-  font-weight: 700;
-  color: red;
-}
-</style>
+<style lang="postcss" scoped></style>

@@ -1,14 +1,17 @@
 <template>
-  <div>
-    <Modal button-text="UPLOAD PRODUCT" modal-class="p-12">
+  <div class="max-w-screen-xl mx-auto">
+    <Modal button-text="UPLOAD PRODUCT">
       <UploadProduct />
     </Modal>
-    <DisplayProduct
-      v-for="product in sellerProducts"
-      :key="product"
-      :product="product"
-      :edit="true"
-    />
+    <div class="p-8 grid grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-6">
+      <DisplayProduct
+        v-for="product in sellerProducts"
+        :key="product"
+        :product="product"
+        :edit="true"
+        :available="product.available"
+      />
+    </div>
   </div>
 </template>
 
@@ -31,7 +34,7 @@ export default {
       return this.$store.state.auth.loggedInAs == 'seller';
     },
     sellerProducts() {
-      return this.$store.state.product.sellerProducts;
+      return this.$store.state.product.sellerProducts.slice().reverse();
     },
     currentSeller() {
       return this.$store.state.auth.seller;

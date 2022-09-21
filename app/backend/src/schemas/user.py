@@ -63,7 +63,8 @@ class SellerCreate(SellerBase):
 class SellerReturn(SellerBase):
     id: int
     user_id: int
-    number_of_products_sold: int
+    total_sold: int
+    total_made: float
 
     class Config:
         orm_mode = True

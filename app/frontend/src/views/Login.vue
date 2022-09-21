@@ -59,7 +59,7 @@ export default {
   created() {
     if (this.loggedIn) {
       this.$router.push('/profile');
-      this.$store.commit(
+      this.$store.dispatch(
         'alert/setMessage',
         'You are already logged in, you would have to log out to access this'
       );

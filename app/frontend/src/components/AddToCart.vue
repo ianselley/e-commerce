@@ -1,12 +1,25 @@
 <template>
-  <div>
-    <div class="quantity">Quantity:</div>
-    <select ref="quantity">
-      <option v-for="quantity in maxProducts" :key="quantity" :value="quantity">
-        {{ quantity }}
-      </option>
-    </select>
-    <button @click="addToCart">ADD TO CART</button>
+  <div class="mt-2">
+    <div v-if="userIsBuyer" class="flex flex-col">
+      <div>
+        <div class="inline-block mr-1">Quantity</div>
+        <select ref="quantity" class="text-center">
+          <option
+            v-for="quantity in maxProducts"
+            :key="quantity"
+            :value="quantity"
+          >
+            {{ quantity }}
+          </option>
+        </select>
+      </div>
+      <button @click="addToCart" :disabled="loading" class="mt-3">
+        ADD TO CART
+      </button>
+    </div>
+    <div v-else class="max-w-48">
+      To be able to add this product to your cart you have to log in as a buyer
+    </div>
   </div>
 </template>
 
@@ -28,6 +41,9 @@ export default {
     },
     maxProducts() {
       return Math.min(this.$props.stock, 30);
+    },
+    userIsBuyer() {
+      return this.$store.state.auth.loggedInAs == 'buyer';
     },
   },
   methods: {
@@ -52,9 +68,4 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
-.quantity {
-  display: inline-block;
-  margin-right: 0.7rem;
-}
-</style>
+<style lang="postcss" scoped></style>

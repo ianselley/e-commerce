@@ -14,6 +14,12 @@ input {
   @apply focus:outline-none focus:border-violet-500;
 }
 
+input[type='checkbox'],
+input[type='radio']:not([name='role']) {
+  accent-color: #d97706;
+  @apply w-min inline;
+}
+
 button:not(.icon-button) {
   @apply bg-violet-400 text-white font-bold py-2 px-4 rounded-lg;
   @apply transition ease-in-out duration-300 hover:bg-violet-500;
@@ -52,6 +58,14 @@ button.register-button:disabled {
 
 label {
   @apply inline-block w-full text-left text-violet-900 mb-1;
+}
+
+select {
+  @apply rounded-md bg-amber-50 border border-amber-300;
+}
+
+option {
+  @apply bg-white text-center;
 }
 
 .main-title {
@@ -112,4 +126,8 @@ label {
 .link:hover {
   cursor: pointer;
   @apply text-amber-600;
+}
+
+.border-spacing-1 {
+  border-spacing: 0.25rem 0.25rem;
 }

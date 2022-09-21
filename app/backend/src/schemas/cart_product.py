@@ -14,7 +14,6 @@ class CartProductCreate(CartProductBase):
 
 class CartProductReturn(CartProductBase):
     id: int
-    purchased: bool
 
     class Config:
         orm_mode = True
@@ -22,10 +21,8 @@ class CartProductReturn(CartProductBase):
 
 from src.schemas.user import BuyerReturn
 from src.schemas.product import ProductReturn
-from src.schemas.order import OrderReturn
 
 
 class CartProduct(CartProductReturn):
     buyer: Optional[BuyerReturn]
     product: Optional[ProductReturn]
-    order: Optional[OrderReturn]

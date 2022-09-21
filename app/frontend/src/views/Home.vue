@@ -1,37 +1,43 @@
 <template>
-  <div
-    class="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-screen-xl gap-x-4 gap-y-6"
-  >
-    <DisplayProduct
-      v-for="product in allProducts"
-      :key="product"
-      :product="product"
-    />
+  <div class="flex flex-col items-center">
+    <div
+      class="p-8 grid grid-cols-3 lg:grid-cols-4 w-full max-w-screen-xl gap-x-4 gap-y-6"
+    >
+      <DisplayProduct
+        v-for="product in searchedProducts"
+        :key="product"
+        :product="product"
+      />
+    </div>
+    <FooterPages />
   </div>
 </template>
 
 <script>
+import FooterPages from '@/components/FooterPages.vue';
 import DisplayProduct from '@/components/DisplayProduct.vue';
 export default {
   name: 'Home',
   components: {
+    FooterPages,
     DisplayProduct,
   },
-  data() {
-    return {
-      allProducts: [],
-    };
+  computed: {
+    searchedProducts() {
+      return this.$store.state.product.searchedProducts;
+    },
+    productsPerPage() {
+      return this.$store.state.product.productsPerPage;
+    },
+    currentPage() {
+      return this.$store.state.product.currentPage;
+    },
   },
   methods: {
     getAllProducts() {
-      this.$store
-        .dispatch('product/getAllProducts')
-        .then((response) => {
-          this.allProducts = response;
-        })
-        .catch((error) => {
-          this.$store.commit('alert/setMessage', error);
-        });
+      this.$store.dispatch('product/getSearchedProducts').catch((error) => {
+        this.$store.dispatch('alert/setMessage', error);
+      });
     },
   },
   created() {
@@ -40,9 +46,4 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
-.max-w-screen-xl {
-  max-width: 1280px;
-  @apply mx-auto;
-}
-</style>
+<style lang="postcss" scoped></style>

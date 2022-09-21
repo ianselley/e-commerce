@@ -1,5 +1,5 @@
 <template>
-  <div class="inline-block flex content-center">
+  <div class="inline-block flex content-center items-center">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 133.153 24.167"

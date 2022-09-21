@@ -13,6 +13,7 @@ def get_product(db: Session, product_id: int):
 
 def create_product(db: Session, product: schemas.ProductCreate, user_id: int):
     product_created = models.Product(**product.dict())
+    product_created.available = False
     seller = crud.user.get_seller_by_user_id(db=db, user_id=user_id)
     product_created.seller = seller
     db.add(product_created)
@@ -64,15 +65,24 @@ def change_product_availability(db: Session, product_id: int):
     return product
 
 
-def get_products(db: Session, substring: str = "", skip: int = 0, limit: int = 20):
+def get_products_by_string(db: Session, substring: str = ""):
     query = db.query(models.Product).order_by(models.Product.id.desc())
     criterion = or_(
         models.Product.title.contains(substring),
         models.Product.description.contains(substring),
         models.Seller.brand.contains(substring),
     )
-        
-    return query.join(models.Seller).filter(criterion).offset(skip).limit(limit).all()
+    return query.join(models.Seller).filter(models.Product.available).filter(criterion)
+
+
+def get_products(db: Session, substring: str = "", skip: int = 0, limit: int = 20):
+    products_query = get_products_by_string(db=db, substring=substring)
+    return products_query.offset(skip).limit(limit).all()
+
+
+def get_total_products(db: Session, substring: str = ""):
+    products_query = get_products_by_string(db=db, substring=substring)
+    return products_query.count()
 
 
 def get_image(db: Session, image_id: int):

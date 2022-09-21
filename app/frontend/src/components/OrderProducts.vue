@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="sticky top-48 z-50 w-56 rounded-sm bg-white p-4">
-      <strong>Total:</strong> <Price :price="cartTotal" class="inline-block" />
+      <div class="mb-4">
+        <strong>Total: </strong
+        ><Price :price="cartTotal" class="inline-block" />
+      </div>
       <Modal
         :key="modalKey"
         button-text="Process order"
@@ -25,24 +28,27 @@
             <div v-show="changeSelectedAddress" class="space-y-4">
               <div
                 v-for="address in addresses"
-                :key="address"
+                :key="address.id"
                 class="flex space-x-4"
               >
                 <input
+                  :id="address.id"
                   type="radio"
                   name="selectAddress"
                   :value="address.id"
                   @change="temporarySave(address.id)"
                 />
-                <DisplayAddress
-                  :address="address"
-                  :edit="false"
-                  class="w-full"
-                />
+                <label :for="address.id">
+                  <DisplayAddress
+                    :address="address"
+                    :edit="false"
+                    class="w-full"
+                  />
+                </label>
               </div>
               <button
                 :disabled="loading"
-                @click="saveSelectedAddress(temporaryAddressId)"
+                @click="saveSelectedAddress()"
                 class="mt-2"
               >
                 Send to selected address
@@ -52,27 +58,40 @@
           <div>
             <p><strong>2. Payment method</strong></p>
             As this website doesn't actually work with real products or sellers,
-            this field isn't needed
+            this field isn't needed. It is here just to show where it would be.
           </div>
           <div>
             <p><strong>3. Select products</strong></p>
+            <div>
+              Unselected products will remain in the cart and won't be delivered
+            </div>
             <div
               v-for="cartProduct in shopping_cart"
-              :key="cartProduct"
+              :key="cartProduct.id"
               class="flex"
             >
               <input
+                v-if="
+                  cartProduct.product.available &&
+                  cartProduct.product.stock >= cartProduct.quantity
+                "
+                :id="cartProduct.id"
                 type="checkbox"
                 :value="cartProduct.id"
                 checked
                 @change="check($event, cartProduct.id)"
               />
-              <DisplayCartProduct :cart-product="cartProduct" class="w-full" />
+              <label :for="cartProduct.id">
+                <DisplayCartProduct
+                  :cart-product="cartProduct"
+                  class="w-full"
+                />
+              </label>
             </div>
           </div>
           <div>
-            <strong>Total:</strong>
-            <Price :price="cartTotal" class="inline-block" />
+            <strong>Total: </strong>
+            <Price :price="selectedTotal" class="inline-block" />
           </div>
           <button :disabled="allCheckedIdsFalse" @click="orderProducts">
             Order Products
@@ -131,7 +150,11 @@ export default {
       return this.$store.state.auth.buyer;
     },
     shopping_cart() {
-      return (this.currentBuyer && this.currentBuyer.shopping_cart) || [];
+      return (
+        (this.currentBuyer &&
+          this.currentBuyer.shopping_cart.slice().reverse()) ||
+        []
+      );
     },
     emptyCart() {
       return this.shopping_cart.length == 0;
@@ -140,8 +163,25 @@ export default {
       if (this.emptyCart) {
         return 0;
       }
-      return this.currentBuyer.shopping_cart.reduce((prev, curr) => {
-        return prev + curr.quantity * curr.product.price;
+      return this.shopping_cart.reduce((prev, curr) => {
+        return (
+          prev +
+          curr.quantity *
+            curr.product.price *
+            (curr.product.available && curr.product.stock >= curr.quantity
+              ? 1
+              : 0)
+        );
+      }, 0);
+    },
+    selectedTotal() {
+      return this.shopping_cart.reduce((prev, curr) => {
+        return (
+          prev +
+          curr.quantity *
+            curr.product.price *
+            (this.checkedIds[curr.id] && curr.product.available ? 1 : 0)
+        );
       }, 0);
     },
     buyerHasAddresses() {
@@ -209,7 +249,12 @@ export default {
     initializeChechedIds() {
       this.checkedIds = {};
       for (let cartProduct of this.shopping_cart) {
-        this.checkedIds[cartProduct.id] = true;
+        if (
+          cartProduct.product.available &&
+          cartProduct.product.stock >= cartProduct.quantity
+        ) {
+          this.checkedIds[cartProduct.id] = true;
+        }
       }
     },
     check(e, id) {
@@ -233,10 +278,10 @@ export default {
       }
       const cartProductIds = cartProductIdsList.join(',');
       const addressId = this.selectedAddressId || this.mainAddress.id;
+
       this.$store
         .dispatch('order/orderProducts', { addressId, cartProductIds })
         .then(() => {
-          this.$store.commit('modal/activateModal');
           this.loading = false;
         })
         .catch((error) => {
@@ -249,9 +294,7 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-input[type='checkbox'],
-input[type='radio'] {
-  accent-color: #d97706;
-  @apply w-min inline;
+label {
+  @apply text-black;
 }
 </style>

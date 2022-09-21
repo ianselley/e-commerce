@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Text, VARCHAR
+from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text, VARCHAR
 from sqlalchemy.orm import relationship
 
 from src.database import Base
@@ -36,7 +36,8 @@ class Seller(Base):
 
     id = Column(Integer, primary_key=True)
     brand = Column(String(64), nullable=False)
-    number_of_products_sold = Column(Integer, default=0)
+    total_sold = Column(Integer, default=0)
+    total_made = Column(Float, default=0)
     user_id = Column(Integer, ForeignKey('users.id'))
 
     user = relationship("User", back_populates="seller")

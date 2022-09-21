@@ -1,18 +1,25 @@
 <template>
-  <div>
-    <div v-if="product" class="image-info-cart">
+  <div class="flex justify-center mx-6">
+    <div v-if="productExists" class="flex">
       <DisplayImages :images="product.images" />
-      <div class="cart">
+      <div class="width-text px-10 text-left">
+        <div class="text-xl font-semibold mb-4">{{ product.seller.brand }}</div>
+        <p>
+          <span class="text-lg underline">{{ product.title }}</span>
+        </p>
+        <p>{{ product.description }}</p>
+      </div>
+      <div
+        class="bg-white w-48 p-6 border border-gray-300 rounded-lg cart-extra"
+      >
         <div v-if="product.available && productHasStock">
           <p><Price :price="product.price" :available="product.available" /></p>
-          <p v-if="productHasStock" class="available">In stock</p>
-          <AddToCart
-            v-if="buyer"
-            :productId="parseInt(productId)"
-            :stock="product.stock"
-          />
+          <p v-if="productHasStock" class="font-bold text-lime-600 mt-1">
+            In stock
+          </p>
+          <AddToCart :productId="parseInt(productId)" :stock="product.stock" />
         </div>
-        <p v-else class="not-available">Currently not available</p>
+        <p v-else class="font-bold text-red-500">Currently not available</p>
       </div>
     </div>
     <NotFound v-else />
@@ -34,61 +41,50 @@ export default {
   },
   data() {
     return {
-      found: undefined,
-      loading: false,
       productId: this.$route.params.id,
     };
   },
   computed: {
-    buyer() {
-      return this.$store.state.auth.buyer;
-    },
     product() {
       return this.$store.state.product.product;
+    },
+    productExists() {
+      return this.product != null;
     },
     productHasStock() {
       return this.product.stock > 0;
     },
   },
-  mounted() {
-    this.loading = true;
+  created() {
     this.$store
       .dispatch('product/getProduct', this.productId)
-      .then(() => {
-        this.found = true;
-        this.loading = false;
-      })
-      .catch(() => {
-        this.found = false;
+      .catch((error) => {
+        this.$store.dispatch('alert/setMessage', error);
       });
   },
 };
 </script>
 
 <style lang="postcss" scoped>
-.image-info-cart {
-  display: flex;
-  justify-content: space-between;
-}
-
-.cart {
-  width: 10rem;
+.cart-extra {
   height: fit-content;
-  padding-bottom: 2rem;
-  border: 1px solid black;
-  border-radius: 1.5rem;
+  min-width: max-content;
 }
 
-.available,
-.not-available {
-  font-weight: 700;
+.width-text {
+  min-width: 16rem;
+  max-width: 46rem;
 }
 
-.available {
-  color: rgb(120, 171, 61);
+@screen lg {
+  .width-text {
+    min-width: 22rem;
+  }
 }
 
-.not-available {
-  color: red;
+@screen xl {
+  .width-text {
+    min-width: 34rem;
+  }
 }
 </style>
