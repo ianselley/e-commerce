@@ -50,7 +50,7 @@
             for="price"
             class="tooltip"
             :class="{ 'tooltip-error': errors.price }"
-            >Price *
+            >Price (€)*
             <span class="tooltip-text">{{ errors.price }}</span>
           </label>
           <input

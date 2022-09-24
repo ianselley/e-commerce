@@ -13,8 +13,10 @@ def email_is_valid(email):
 
 
 def telephone_is_valid(telephone):
+    if telephone == " " or telephone == "":
+        return True
     number = phonenumbers.parse(telephone)
-    if telephone == "" or phonenumbers.is_valid_number(number):
+    if phonenumbers.is_valid_number(number):
         return True
     return False
 
