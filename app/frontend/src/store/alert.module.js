@@ -13,7 +13,7 @@ export const alert = {
   },
   actions: {
     setMessage({ commit }, value) {
-      if (value.toString() == 'Error: Network Error') {
+      if (value != null && value.toString() == 'Error: Network Error') {
         value = 'Server Error. Try again in a couple of seconds';
       }
       commit('setMessage', value);
