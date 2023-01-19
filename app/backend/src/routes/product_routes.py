@@ -10,6 +10,7 @@ from src import schemas, crud, utils
 
 router = APIRouter()
 token_auth_schema = HTTPBearer()
+MAX_IMAGES = 10
 
 @router.get("", response_model=schemas.Product)
 def get_product(product_id: int, db: Session = Depends(utils.db.get_db)):
@@ -34,12 +35,12 @@ def upload_images(product_id: int = Form(...), images: list[UploadFile] = File(.
     product = crud.product.get_product(db, product_id=product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    if (len_im := len(images)) > 10:
-        raise HTTPException(status_code=400, detail=f"Too many images ({len_im}), you can only upload 10 images")
-    if len(product.images) == 10:
-        raise HTTPException(status_code=400, detail="Product already has 10 images, and can't have more")
-    if (len_p_im := len(product.images)) + (len_im := len(images)) > 10:
-        raise HTTPException(status_code=400, detail=f"Product can't have more than 10 images. Already has {len_p_im} and trying to add {len_im}")
+    if (len_im := len(images)) > MAX_IMAGES:
+        raise HTTPException(status_code=400, detail=f"Too many images ({len_im}), you can only upload {MAX_IMAGES} images")
+    if len(product.images) == MAX_IMAGES:
+        raise HTTPException(status_code=400, detail=f"Product already has {MAX_IMAGES} images, and can't have more")
+    if (len_p_im := len(product.images)) + (len_im := len(images)) > MAX_IMAGES:
+        raise HTTPException(status_code=400, detail=f"Product can't have more than {MAX_IMAGES} images. Already has {len_p_im} and trying to add {len_im}")
     for image in images:
         if not image.content_type.startswith("image/"):
             raise HTTPException(status_code=400, detail="Invalid image type")

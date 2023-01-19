@@ -4,7 +4,7 @@ const searchedProducts =
   JSON.parse(localStorage.getItem('searchedProducts')) || [];
 const sellerProducts = JSON.parse(localStorage.getItem('sellerProducts')) || [];
 const currentPage = 1;
-const productsPerPage = 10;
+const productsPerPage = 8;
 const substring = '';
 
 function findProductIndex(list, productId) {

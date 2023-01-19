@@ -2,6 +2,7 @@
   <div>
     <form onsubmit="return false;">
       <div class="flex flex-col space-y-2">
+        <div class="font-bold mb-2 text-lg">SELECT OR DRAG IMAGES</div>
         <input
           type="file"
           name="images"
