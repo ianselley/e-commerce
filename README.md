@@ -85,3 +85,17 @@ docker-compose up --build
 ```
 
 Now you should be able to view the web at: http://{your ip address}:8001
+
+
+<!-- TECH STACK -->
+
+## Tech stack
+
+- [Python 3](https://www.python.org)
+- [JavaScript](https://www.javascript.com)
+- [Tailwind](https://tailwindcss.com)
+- [Docker](https://www.docker.com/)
+- [Vuejs](https://vuejs.org/)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [MySQL](https://www.mysql.com/)
+- [SQLAlchemy](https://www.sqlalchemy.org/)
