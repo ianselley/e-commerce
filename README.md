@@ -1,12 +1,8 @@
 # e-commerce
 
-### Website public at: http://82.223.161.230:8001/
-
-&nbsp;
-
 ## About The Project
 
-An e-commerce web inspired by Amazon and Wallapop.
+An e-commerce web app inspired by Amazon and Wallapop.
 
 ## Getting Started
 
@@ -18,8 +14,6 @@ You need to have installed the following:
 - docker
 
 ### Installation
-
-FOR THE MOMENT, IT IS NOT WORKING DUE TO A BUG IN THE DATABASE CONTAINER
 
 In the terminal/command prompt write the following commands
 
